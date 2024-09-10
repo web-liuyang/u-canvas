@@ -1,0 +1,21 @@
+{
+	"name": "u-canvas",
+	"version": "0.0.1",
+	"main": "main.uts",
+	"scripts": {},
+	"keywords": [
+		"canvas",
+		"paint",
+		"uniapp",
+		"uniapp x"
+	],
+	"author": "web-liuyang",
+	"description": "",
+	"devDependencies": {
+		"@dcloudio/uni-app-x": "^0.7.30",
+		"@dcloudio/uni-helper-json": "^1.0.13",
+		"@types/html5plus": "^1.0.5",
+		"@types/uni-app": "^1.4.8",
+		"typescript": "^5.5.4"
+	}
+}

@@ -1,0 +1,81 @@
+<script lang="ts" setup>
+import { UCanvas, Text, Rectangle, Polyline, Ring, Pie, Circle, Polygon } from "@/lib";
+const uCanvas = new UCanvas({ canvasId: "ucanvas", componentInstance: this });
+
+onReady(async () => {
+	await uCanvas.ensureInitialize();
+	uCanvas.add(new Rectangle({ x1: 10, y1: 10, x2: 110, y2: 110 }));
+	uCanvas.add(new Text({ x: 20, y: 130, text: "Rectangle" }));
+
+	uCanvas.add(
+		new Polyline({
+			points: [
+				[140, 110],
+				[240, 60],
+				[140, 10],
+			],
+		})
+	);
+	uCanvas.add(new Text({ x: 160, y: 130, text: "Polyline" }));
+
+	uCanvas.add(
+		new Polygon({
+			points: [
+				[270, 110],
+				[360, 60],
+				[270, 10],
+			],
+		})
+	);
+	uCanvas.add(new Text({ x: 280, y: 130, text: "Polygon" }));
+
+	uCanvas.add(
+		new Pie({
+			center: [60, 220],
+			radius: 50,
+			startAngle: 0,
+			endAngle: Math.PI + Math.PI / 3,
+		})
+	);
+	uCanvas.add(new Text({ x: 50, y: 290, text: "Pie" }));
+
+	uCanvas.add(
+		new Circle({
+			center: [190, 220],
+			radius: 50,
+		})
+	);
+	uCanvas.add(new Text({ x: 170, y: 290, text: "Circle" }));
+
+	uCanvas.add(
+		new Ring({
+			center: [320, 220],
+			innerRadius: 30,
+			outerRadius: 50,
+			startAngle: 0,
+			endAngle: Math.PI + Math.PI / 1.5,
+		})
+	);
+	uCanvas.add(new Text({ x: 300, y: 290, text: "Ring" }));
+
+	uCanvas.render();
+});
+</script>
+
+<template>
+	<view class="container">
+		<canvas id="ucanvas" />
+	</view>
+</template>
+
+<style>
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+#ucanvas {
+	width: 100%;
+	height: 100%;
+}
+</style>
