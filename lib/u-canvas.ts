@@ -8,7 +8,7 @@ export interface UCanvasOptions {
 export class UCanvas {
 	protected element!: UniCanvasElement;
 
-	protected get ctx(): CanvasRenderingContext2D {
+	public get ctx(): CanvasRenderingContext2D {
 		// @ts-expect-error
 		return this.element.getContext("2d")!;
 	}
