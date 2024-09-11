@@ -8,8 +8,9 @@ export { Any } from "./any";
 export { Polyline } from "./polyline";
 export { Polygon } from "./polygon";
 export { Text } from "./text";
+export { Image } from "./image";
 
-export { generateUUID } from "./utils";
+export { generateUUID, createPatternBitmap } from "./utils";
 
 export { Style } from "./style";
 export { TextStyle } from "./text-style";
