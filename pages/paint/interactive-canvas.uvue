@@ -1,0 +1,117 @@
+<script lang="ts" setup>
+import { ref } from "vue";
+
+const props = defineProps<{ id: string }>();
+
+const emit = defineEmits<{
+	onTap: [event: UniPointerEvent];
+	onTouchstart: [event: UniPointerEvent];
+	onTouchmove: [event: UniPointerEvent];
+	onTouchend: [event: UniPointerEvent];
+	onTouchcancel: [event: UniPointerEvent];
+}>();
+
+const PRESS_TIMEOUT = 200;
+
+const pressing = ref(false);
+const moving = ref(false);
+
+const onTapTimestamp = ref(0);
+const onTapTimer = ref(0);
+
+const onTouchstart = (e: UniTouchEvent) => {
+	e.preventDefault();
+	pressing.value = true;
+	onTapTimestamp.value = Date.now();
+
+	if (onTapTimer.value) {
+		clearTimeout(onTapTimer.value);
+		onTapTimer.value = 0;
+	}
+	onTapTimer.value = setTimeout(() => {
+		emit("onTouchstart", e);
+	}, PRESS_TIMEOUT);
+};
+
+const onTouchmove = (e: UniTouchEvent) => {
+	e.preventDefault();
+	emit("onTouchmove", e);
+	moving.value = true;
+};
+
+const onTouchend = (e: UniTouchEvent) => {
+	e.preventDefault();
+
+	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
+		emit("onTap", e);
+		if (onTapTimer.value) {
+			clearTimeout(onTapTimer.value);
+			onTapTimer.value = 0;
+		}
+	} else if (pressing.value && moving.value) {
+		emit("onTouchend", e);
+	}
+
+	pressing.value = false;
+	moving.value = false;
+};
+
+const onTouchcancel = (e: UniTouchEvent) => {
+	e.preventDefault();
+	emit("onTouchcancel", e);
+	pressing.value = false;
+	moving.value = false;
+};
+
+const onMousedown = (e: UniMouseEvent) => {
+	e.preventDefault();
+	pressing.value = true;
+	onTapTimestamp.value = Date.now();
+
+	if (onTapTimer.value) {
+		clearTimeout(onTapTimer.value);
+		onTapTimer.value = 0;
+	}
+	onTapTimer.value = setTimeout(() => {
+		emit("onTouchstart", e);
+	}, PRESS_TIMEOUT);
+};
+
+const onMousemove = (e: UniMouseEvent) => {
+	e.preventDefault();
+	if (pressing.value) {
+		emit("onTouchmove", e);
+		moving.value = true;
+	}
+};
+
+const onMouseup = (e: UniMouseEvent) => {
+	e.preventDefault();
+
+	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
+		emit("onTap", e);
+		if (onTapTimer.value) {
+			clearTimeout(onTapTimer.value);
+			onTapTimer.value = 0;
+		}
+	} else if (pressing.value && moving.value) {
+		emit("onTouchend", e);
+	}
+
+	pressing.value = false;
+	moving.value = false;
+};
+</script>
+
+<template>
+	<canvas
+		:id="props.id"
+		@mousedown="onMousedown"
+		@mousemove="onMousemove"
+		@mouseup="onMouseup"
+		@touchstart="onTouchstart"
+		@touchmove="onTouchmove"
+		@touchend="onTouchend"
+		@touchcancel="onTouchcancel"
+	/>
+</template>
