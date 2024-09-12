@@ -1,5 +1,6 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
+import { Rectangle } from "./rectangle";
 
 export interface ImageOptions extends GraphicOptions {
 	image: CanvasImageSource;
@@ -31,7 +32,7 @@ export class Image extends Graphic<ImageOptions> {
 		this.h = options.h;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const { image, x, y, w, h } = this;
 			const path = new Path2D();
@@ -47,7 +48,7 @@ export class Image extends Graphic<ImageOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<ImageOptions>): Image {
+	public override copyWith(options: CopyWithParameter<ImageOptions>): Image {
 		return new Image({
 			id: this.id,
 			image: options.image ?? this.image,
@@ -61,7 +62,19 @@ export class Image extends Graphic<ImageOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
+		const { image, x, y, w, h } = this;
+
+		// const rect = new Rectangle({
+		// 	id: "hit",
+		// 	x,
+		// 	y,
+		// 	w: w,
+		// 	h: h,
+		// });
+
+		// if (rect.hit(point)) return true;
+
 		return false;
 	}
 

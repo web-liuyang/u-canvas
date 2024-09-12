@@ -1,5 +1,5 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;
@@ -31,7 +31,7 @@ export class Pie extends Graphic<PieOptions> {
 		this.endAngle = options.endAngle;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const { cx, cy, radius, startAngle, endAngle } = this;
 			const path = new Path2D();
@@ -43,7 +43,7 @@ export class Pie extends Graphic<PieOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<PieOptions>): Pie {
+	public override copyWith(options: CopyWithParameter<PieOptions>): Pie {
 		return new Pie({
 			id: this.id,
 			cx: options.cx ?? this.cx,
@@ -57,7 +57,7 @@ export class Pie extends Graphic<PieOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
 		const { cx, cy, radius, startAngle, endAngle } = this;
 		const [dx, dy] = [x - cx, y - cy];

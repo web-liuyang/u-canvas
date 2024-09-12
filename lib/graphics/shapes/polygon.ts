@@ -1,6 +1,6 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
-import { isPointOnLineSegment } from "./utils";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
+import { isPointOnLineSegment } from "../utils";
 
 export interface LineOptions extends GraphicOptions {
 	points: Point[];
@@ -17,7 +17,7 @@ export class Polygon extends Graphic<LineOptions> {
 		this.points = options.points;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const path = new Path2D();
 			for (const vertex of this.points) {
@@ -31,7 +31,7 @@ export class Polygon extends Graphic<LineOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<LineOptions>): Polygon {
+	public override copyWith(options: CopyWithParameter<LineOptions>): Polygon {
 		return new Polygon({
 			id: this.id,
 			points: options.points ?? this.points,
@@ -41,7 +41,7 @@ export class Polygon extends Graphic<LineOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		let currentPoint = this.points[0];
 		for (let i = 1; i < this.points.length; i++) {
 			const isOnSegment = isPointOnLineSegment(point, [currentPoint, this.points[i]]);

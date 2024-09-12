@@ -1,9 +1,5 @@
-import { Style } from "./style";
+import { Style } from "./styles";
 import { generateUUID, getStyle } from "./utils";
-
-export interface Drawable {
-	paint(ctx: CanvasRenderingContext2D): void;
-}
 
 export type GraphicId = string;
 
@@ -17,7 +13,7 @@ export interface GraphicOptions {
 export type CopyWithParameter<T extends GraphicOptions> = Partial<Omit<T, "id">>;
 
 export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
-	implements Drawable, Cloneable<CopyWithParameter<T>>, Equatable<Graphic>
+	implements Paintable, Cloneable<CopyWithParameter<T>>, Equatable<Graphic>, Hittable
 {
 	public abstract readonly type: string;
 
@@ -41,7 +37,7 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 
 	public abstract copyWith(options: CopyWithParameter<T>): Graphic<T>;
 
-	public abstract hit(point: Point): boolean;
+	public abstract hitTest(point: Point): boolean;
 
 	// public abstract towingPointPaint(ctx: CanvasRenderingContext2D): void;
 
@@ -62,8 +58,7 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 
 	public equals(other: Graphic): boolean {
 		return (
-			this === other ||
-			(this.type === other.type && this.id === other.id && this.style.equals(other.style))
+			this === other || (this.type === other.type && this.id === other.id && this.style.equals(other.style))
 			// &&
 			// this.selected === other.selected &&
 			// this.editing === other.editing

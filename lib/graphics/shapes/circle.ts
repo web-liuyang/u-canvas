@@ -1,5 +1,5 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
 
 export interface CircleOptions extends GraphicOptions {
 	cx: number;
@@ -23,7 +23,7 @@ export class Circle extends Graphic<CircleOptions> {
 		this.radius = options.radius;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const { cx, cy, radius } = this;
 			const path = new Path2D();
@@ -33,7 +33,7 @@ export class Circle extends Graphic<CircleOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<CircleOptions>): Circle {
+	public override copyWith(options: CopyWithParameter<CircleOptions>): Circle {
 		return new Circle({
 			id: this.id,
 			cx: options.cx ?? this.cx,
@@ -45,7 +45,7 @@ export class Circle extends Graphic<CircleOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
 		const { cx, cy, radius } = this;
 

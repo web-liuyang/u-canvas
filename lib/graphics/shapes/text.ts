@@ -1,8 +1,7 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
-
-import { TextStyle } from "./text-style";
-import { getTextStyle } from "./utils";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
+import { TextStyle } from "../styles";
+import { getTextStyle } from "../utils";
 
 export interface TextOptions extends GraphicOptions {
 	x: number;
@@ -69,7 +68,7 @@ export class Text extends Graphic<TextOptions> {
 			style: options.style ?? this.style,
 		});
 	}
-	public override hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		// const [x, y] = point;
 		const { x, y, text } = this;
 		return false;

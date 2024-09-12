@@ -1,5 +1,5 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
 
 export interface RingOptions extends GraphicOptions {
 	center: Point;
@@ -32,7 +32,7 @@ export class Ring extends Graphic<RingOptions> {
 		this.center = options.center;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const [x, y] = this.center;
 			const { innerRadius, outerRadius, startAngle, endAngle } = this;
@@ -47,7 +47,7 @@ export class Ring extends Graphic<RingOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<RingOptions>): Ring {
+	public override copyWith(options: CopyWithParameter<RingOptions>): Ring {
 		return new Ring({
 			id: this.id,
 			center: options.center ?? this.center,
@@ -61,7 +61,7 @@ export class Ring extends Graphic<RingOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
 		const {
 			center: [cx, cy],

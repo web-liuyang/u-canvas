@@ -1,4 +1,4 @@
-import { Graphic } from "./graphics";
+import { Child, Container } from "./container";
 
 export interface UCanvasOptions {
 	canvasId: string;
@@ -13,7 +13,7 @@ export class UCanvas {
 		return this.element.getContext("2d")!;
 	}
 
-	private graphics: Graphic[] = [];
+	protected root!: Container;
 
 	private options: UCanvasOptions;
 
@@ -60,10 +60,14 @@ export class UCanvas {
 		const element = await this.getCanvasElement(this.options);
 		this.element = element;
 		this.resetRatio(uni.getDeviceInfo().devicePixelRatio);
+		this.root = new Container({
+			w: this.element.width,
+			h: this.element.height,
+		});
 	}
 
-	public add(g: Graphic) {
-		this.graphics.push(g);
+	public add(p: Child) {
+		this.root.addChild(p);
 	}
 
 	public clear() {
@@ -73,8 +77,6 @@ export class UCanvas {
 	public render() {
 		this.clear();
 
-		for (const g of this.graphics) {
-			g.paint(this.ctx);
-		}
+		this.root.paint(this.ctx);
 	}
 }

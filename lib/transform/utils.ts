@@ -24,14 +24,14 @@ export function isPointInPolygon(point: Point, polygon: Point[]) {
  * Matrix multiplication
  * a * b
  *
- * A * B : 左乘的效果是先用 A对B 进行变换，然后再将A应用于变换后的结果。
+ * A * B : 左乘的效果是先用 A对 B 进行变换，然后再将 A 应用于变换后的结果。
  *
- * B * A : 右乘的效果是先用 B对A 进行变换，然后再将B应用于变换后的结果。
+ * B * A : 右乘的效果是先用 B 对 A 进行变换，然后再将B应用于变换后的结果。
  *
  *
  * 例如 A * B
  *
- * 先把A的abcd应用给B的tx,ty，然后A与B的abcd相乘，txty相加
+ * 先把 A 的 a b c d 应用给 B 的 tx 与 ty，然后 A 与 B 的 a b c d 相乘，最后与 A 的 tx 与 ty 相加
  */
 export function multiply(mA: Matrix, mB: Matrix): Matrix {
   const a = mA.a * mB.a + mA.c * mB.b + mA.e * 0;

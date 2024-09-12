@@ -1,5 +1,5 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
 import { Rectangle } from "./rectangle";
 
 export interface AnyOptions extends GraphicOptions {
@@ -16,7 +16,7 @@ export class Any extends Graphic<AnyOptions> {
 		this.points = options.points;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const path = new Path2D();
 
@@ -30,7 +30,7 @@ export class Any extends Graphic<AnyOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<AnyOptions>): Any {
+	public override copyWith(options: CopyWithParameter<AnyOptions>): Any {
 		return new Any({
 			id: this.id,
 			points: options.points ?? this.points,
@@ -40,7 +40,7 @@ export class Any extends Graphic<AnyOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		for (const [x, y] of this.points) {
 			const rect = Rectangle.fromCenter({
 				id: "hit",
@@ -51,7 +51,7 @@ export class Any extends Graphic<AnyOptions> {
 				// selected: false,
 			});
 
-			if (rect.hit(point)) return true;
+			if (rect.hitTest(point)) return true;
 		}
 
 		return false;

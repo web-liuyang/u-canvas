@@ -1,5 +1,5 @@
-import type { CopyWithParameter, GraphicOptions } from "./graphic";
-import { Graphic } from "./graphic";
+import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Graphic } from "../graphic";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
@@ -56,7 +56,7 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.h = options.h;
 	}
 
-	public paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
 			const { x, y, w, h } = this;
 			const path = new Path2D();
@@ -66,7 +66,7 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		});
 	}
 
-	public copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {
+	public override copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {
 		return new Rectangle({
 			id: this.id,
 			x: options.x ?? this.x,
@@ -79,7 +79,7 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		});
 	}
 
-	public hit(point: Point): boolean {
+	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
 		const { x: leftTopX, y: leftTopY, w, h } = this;
 		const rightBottomX = leftTopX + w;

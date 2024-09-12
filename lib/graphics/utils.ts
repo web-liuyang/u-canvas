@@ -1,9 +1,5 @@
-import type { StrokeCap, StrokeJoin } from "./stroke";
 // import { v4 as uuid } from "uuid";
-import { Style } from "./style";
-import { Stroke } from "./stroke";
-import { Fill } from "./fill";
-import { TextStyle } from "./text-style";
+import { Style, StrokeCap, StrokeJoin, Stroke, Fill, TextStyle } from "./styles";
 
 export function generateUUID(): string {
 	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {

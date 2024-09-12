@@ -1,0 +1,1 @@
+// export { Paintable } from "./paint";

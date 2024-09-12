@@ -7,17 +7,26 @@ declare type VoidFunction = () => void;
 
 declare type ValueFunction<T> = (value: T) => void;
 
+declare interface Paintable {
+	paint(ctx: CanvasRenderingContext2D): void;
+}
+
 declare interface Cloneable<T> {
-  copyWith(options: T): unknown;
+	copyWith(options: T): unknown;
+}
+
+declare interface Hittable {
+	hitTest(point: Point): bool;
 }
 
 declare interface Equatable<T> {
-  equals(other: T): boolean;
+	equals(other: T): boolean;
 }
 
-declare interface Component {
-  node: HTMLElement;
-  clean(): void;
-  update(...args: unknown[]): void;
-  render(): void;
+declare interface Parent<T> {
+	parent?: T;
 }
+/**
+ * P is parent type
+ */
+declare type Child<P> = Paintable & Hittable & Equatable<unknown> & Parent<P>;
