@@ -5,8 +5,6 @@ import { Offset } from "../offset";
 export interface ContainerOptions extends Parent {
 	x: number;
 	y: number;
-	// w: number;
-	// h: number;
 	children?: Child[];
 }
 
@@ -15,11 +13,6 @@ export class Container extends Transform implements Paintable, Hittable, Equatab
 
 	public readonly y: number;
 
-	// public readonly w: number;
-
-	// public readonly h: number;
-
-	// public readonly parent?: Container;
 	public readonly parent?: Container;
 
 	public readonly children: Child[];
@@ -28,14 +21,14 @@ export class Container extends Transform implements Paintable, Hittable, Equatab
 		super();
 		this.x = options.x;
 		this.y = options.y;
-		// this.w = options.w;
-		// this.h = options.h;
 		this.parent = options.parent;
 		this.children = options.children ?? [];
+		this.children.forEach(child => (child.parent = this));
 	}
 
 	public paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
-		this.children.forEach(child => child.paint(ctx, offset));
+		const offsetSelf = new Offset(this.x, this.y).add(offset);
+		this.children.forEach(child => child.paint(ctx, offsetSelf));
 	}
 
 	public hitTest(point: Point): boolean {
@@ -43,25 +36,24 @@ export class Container extends Transform implements Paintable, Hittable, Equatab
 	}
 
 	public addChild(child: Child): void {
+		child.parent = this;
 		this.children.push(child);
 	}
 
 	public removeChild(child: Child): void {
 		const index = this.children.indexOf(child);
 		if (index !== -1) {
+			child.parent = undefined;
 			this.children.splice(index, 1);
 		}
 	}
 
 	public clear(): void {
+		this.children.forEach(child => (child.parent = undefined));
 		this.children.length = 0;
 	}
 
 	public equals(other: Container): boolean {
-		return (
-			this === other || this.children.every(child => child.equals(other))
-			// (this.w === other.w &&
-			// this.h === other.h &&
-		);
+		return this === other || this.children.every(child => child.equals(other));
 	}
 }

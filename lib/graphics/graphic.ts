@@ -1,46 +1,54 @@
-import { Cloneable, Equatable, Hittable, Paintable, Point } from "../types";
+import { Cloneable, Equatable, Hittable, Paintable, Point, CoordinateScope, Parent } from "../types";
+import { Offset } from "../offset";
 import { Style } from "./styles";
 import { generateUUID, getStyle } from "./utils";
+import { Transform } from "../transform";
+import { Container } from "../container";
 
 export type GraphicId = string;
 
 export interface GraphicOptions {
 	id?: GraphicId;
-	// selected?: boolean;
-	// editing?: boolean;
+	coordinateScope?: CoordinateScope;
 	style?: Style;
 }
 
 export type CopyWithParameter<T extends GraphicOptions> = Partial<Omit<T, "id">>;
 
 export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
-	implements Paintable, Cloneable<CopyWithParameter<T>>, Equatable<Graphic>, Hittable
+	extends Transform
+	implements Paintable, Cloneable<CopyWithParameter<T>>, Equatable<Graphic>, Hittable, Parent
 {
+	public parent?: Container;
+
 	public abstract readonly type: string;
 
 	public readonly id: NonNullable<T["id"]>;
 
-	// public readonly selected: boolean;
-
-	// public readonly editing: boolean;
+	public readonly coordinateScope: GraphicOptions["coordinateScope"];
 
 	public readonly style: Style;
 
 	constructor(options: Partial<T>) {
+		super();
 		this.id = options.id ?? generateUUID();
-
-		// this.selected = options.selected ?? false;
-		// this.editing = options.editing ?? false;
+		this.coordinateScope = options.coordinateScope ?? CoordinateScope.local;
 		this.style = options.style ?? new Style();
 	}
 
-	public abstract paint(ctx: CanvasRenderingContext2D): void;
+	public abstract paint(ctx: CanvasRenderingContext2D, offset: Offset): void;
+
+	public calLocationWithScope(point: Point, offset: Offset): Point {
+		if (this.coordinateScope === CoordinateScope.local) {
+			return [point[0] + offset.dx, point[1] + offset.dy];
+		}
+
+		return point;
+	}
 
 	public abstract copyWith(options: CopyWithParameter<T>): Graphic<T>;
 
 	public abstract hitTest(point: Point): boolean;
-
-	// public abstract towingPointPaint(ctx: CanvasRenderingContext2D): void;
 
 	protected draw(ctx: CanvasRenderingContext2D, fn: () => void): void {
 		const style = getStyle(ctx);
@@ -58,11 +66,6 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	}
 
 	public equals(other: Graphic): boolean {
-		return (
-			this === other || (this.type === other.type && this.id === other.id && this.style.equals(other.style))
-			// &&
-			// this.selected === other.selected &&
-			// this.editing === other.editing
-		);
+		return this === other || (this.type === other.type && this.id === other.id && this.style.equals(other.style));
 	}
 }
