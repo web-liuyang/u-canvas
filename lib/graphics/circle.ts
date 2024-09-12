@@ -2,29 +2,32 @@ import type { CopyWithParameter, GraphicOptions } from "./graphic";
 import { Graphic } from "./graphic";
 
 export interface CircleOptions extends GraphicOptions {
-	center: Point;
+	cx: number;
+	cy: number;
 	radius: number;
 }
 
 export class Circle extends Graphic<CircleOptions> {
 	public override readonly type = "Circle";
 
-	public readonly radius: number;
+	public readonly cx: number;
 
-	public readonly center: Point;
+	public readonly cy: number;
+
+	public readonly radius: number;
 
 	constructor(options: CircleOptions) {
 		super(options);
+		this.cx = options.cx;
+		this.cy = options.cy;
 		this.radius = options.radius;
-		this.center = options.center;
 	}
 
 	public paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
-			const [x, y] = this.center;
-			const radius = this.radius;
+			const { cx, cy, radius } = this;
 			const path = new Path2D();
-			path.arc(x, y, radius, 0, 2 * Math.PI);
+			path.arc(cx, cy, radius, 0, 2 * Math.PI);
 			ctx.stroke(path);
 			ctx.fill(path);
 		});
@@ -33,7 +36,8 @@ export class Circle extends Graphic<CircleOptions> {
 	public copyWith(options: CopyWithParameter<CircleOptions>): Circle {
 		return new Circle({
 			id: this.id,
-			center: options.center ?? this.center,
+			cx: options.cx ?? this.cx,
+			cy: options.cy ?? this.cy,
 			radius: options.radius ?? this.radius,
 			// selected: options.selected ?? this.selected,
 			// editing: options.editing ?? this.editing,
@@ -43,10 +47,7 @@ export class Circle extends Graphic<CircleOptions> {
 
 	public hit(point: Point): boolean {
 		const [x, y] = point;
-		const {
-			center: [cx, cy],
-			radius,
-		} = this;
+		const { cx, cy, radius } = this;
 
 		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return true;
 
@@ -103,11 +104,6 @@ export class Circle extends Graphic<CircleOptions> {
 	// }
 
 	public override equals(other: Circle): boolean {
-		return (
-			super.equals(other) &&
-			this.center[0] === other.center[0] &&
-			this.center[1] === other.center[1] &&
-			this.radius === other.radius
-		);
+		return super.equals(other) && this.cx === other.cx && this.cy === other.cy && this.radius === other.radius;
 	}
 }

@@ -31,7 +31,8 @@ onReady(async () => {
 
 	uCanvas.add(
 		new Pie({
-			center: [60, 220],
+			cx: 60,
+			cy: 220,
 			radius: 50,
 			startAngle: 0,
 			endAngle: Math.PI + Math.PI / 3,
@@ -41,7 +42,8 @@ onReady(async () => {
 
 	uCanvas.add(
 		new Circle({
-			center: [190, 220],
+			cx: 190,
+			cy: 220,
 			radius: 50,
 		})
 	);

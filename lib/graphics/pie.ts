@@ -2,7 +2,8 @@ import type { CopyWithParameter, GraphicOptions } from "./graphic";
 import { Graphic } from "./graphic";
 
 export interface PieOptions extends GraphicOptions {
-	center: Point;
+	cx: number;
+	cy: number;
 	radius: number;
 	startAngle: number;
 	endAngle: number;
@@ -11,30 +12,31 @@ export interface PieOptions extends GraphicOptions {
 export class Pie extends Graphic<PieOptions> {
 	public override readonly type = "Pie";
 
+	public readonly cx: number;
+
+	public readonly cy: number;
+
 	public readonly radius: number;
 
 	public readonly startAngle: number;
 
 	public readonly endAngle: number;
 
-	public readonly center: Point;
-
 	constructor(options: PieOptions) {
 		super(options);
+		this.cx = options.cx;
+		this.cy = options.cy;
 		this.radius = options.radius;
 		this.startAngle = options.startAngle;
 		this.endAngle = options.endAngle;
-
-		this.center = options.center;
 	}
 
 	public paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
-			const [x, y] = this.center;
-			const { radius, startAngle, endAngle } = this;
+			const { cx, cy, radius, startAngle, endAngle } = this;
 			const path = new Path2D();
-			path.moveTo(x, y);
-			path.arc(x, y, radius, startAngle, endAngle);
+			path.moveTo(cx, cy);
+			path.arc(cx, cy, radius, startAngle, endAngle);
 			path.closePath();
 			ctx.fill(path);
 			ctx.stroke(path);
@@ -44,7 +46,8 @@ export class Pie extends Graphic<PieOptions> {
 	public copyWith(options: CopyWithParameter<PieOptions>): Pie {
 		return new Pie({
 			id: this.id,
-			center: options.center ?? this.center,
+			cx: options.cx ?? this.cx,
+			cy: options.cy ?? this.cy,
 			radius: options.radius ?? this.radius,
 			startAngle: options.startAngle ?? this.startAngle,
 			endAngle: options.endAngle ?? this.endAngle,
@@ -56,13 +59,7 @@ export class Pie extends Graphic<PieOptions> {
 
 	public hit(point: Point): boolean {
 		const [x, y] = point;
-		const {
-			center: [cx, cy],
-			radius,
-			startAngle,
-			endAngle,
-		} = this;
-
+		const { cx, cy, radius, startAngle, endAngle } = this;
 		const [dx, dy] = [x - cx, y - cy];
 		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
@@ -79,8 +76,8 @@ export class Pie extends Graphic<PieOptions> {
 	public override equals(other: Pie): boolean {
 		return (
 			super.equals(other) &&
-			this.center[0] === other.center[0] &&
-			this.center[1] === other.center[1] &&
+			this.cx === other.cx &&
+			this.cy === other.cy &&
 			this.radius === other.radius &&
 			this.startAngle === other.startAngle &&
 			this.endAngle === other.endAngle
