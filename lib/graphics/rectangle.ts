@@ -11,8 +11,8 @@ export interface RectangleOptions extends GraphicOptions {
 export interface RectangleFromCenterOptions extends GraphicOptions {
 	x: number;
 	y: number;
-	width: number;
-	height: number;
+	w: number;
+	h: number;
 }
 
 export class Rectangle extends Graphic<RectangleOptions> {
@@ -25,6 +25,28 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	public readonly w: number;
 
 	public readonly h: number;
+
+	public get cx(): number {
+		return this.x + this.w / 2;
+	}
+
+	public get cy(): number {
+		return this.y + this.h / 2;
+	}
+
+	public static fromCenter(options: RectangleFromCenterOptions): Rectangle {
+		const { x, y, w, h } = options;
+		return new Rectangle({
+			id: options.id,
+			x: x - w / 2,
+			y: y - h / 2,
+			w: w,
+			h: h,
+			// selected: options.selected,
+			// editing: options.editing,
+			style: options.style,
+		});
+	}
 
 	constructor(options: RectangleOptions) {
 		super(options);

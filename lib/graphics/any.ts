@@ -46,8 +46,8 @@ export class Any extends Graphic<AnyOptions> {
 				id: "hit",
 				x,
 				y,
-				width: 10,
-				height: 10,
+				w: 10,
+				h: 10,
 				// selected: false,
 			});
 
