@@ -1,11 +1,36 @@
 <script lang="ts" setup>
-import { createPatternBitmap, UCanvas, Text, Rectangle, Polyline, Ring, Pie, Circle, Polygon, Image } from "@/lib";
+import {
+	createPatternBitmap,
+	UCanvas,
+	Container,
+	Text,
+	Rectangle,
+	Polyline,
+	Ring,
+	Pie,
+	Circle,
+	Polygon,
+	Image,
+} from "@/lib";
+
 const uCanvas = new UCanvas({ canvasId: "ucanvas", componentInstance: this });
 
 onReady(async () => {
 	await uCanvas.ensureInitialize();
-	uCanvas.add(new Rectangle({ x: 10, y: 10, w: 100, h: 100 }));
-	uCanvas.add(new Text({ x: 20, y: 130, text: "Rectangle" }));
+
+	const rect = new Container({
+		x: 50,
+		y: 50,
+		children: [
+			new Rectangle({ x: 10, y: 10, w: 100, h: 100 }),
+			//
+			new Text({ x: 20, y: 130, text: "Rectangle" }),
+		],
+	});
+
+	uCanvas.add(rect);
+	// uCanvas.add(new Rectangle({ x: 10, y: 10, w: 100, h: 100 }));
+	// uCanvas.add(new Text({ x: 20, y: 130, text: "Rectangle" }));
 
 	uCanvas.add(
 		new Polyline({
