@@ -111,7 +111,7 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
-	"include": ["lib/**/*.ts", "pages/**/*.ts", "lib/**/*.vue", "pages/**/*.uvue"],
+	"include": ["lib/**/*.ts", "pages/**/*.ts", "lib/**/*.vue", "pages/**/*.uvue", "vitest.setup.ts"],
 	"exclude": ["node_modules", "dist"],
 	"vueCompilerOptions": {
 		"extensions": [

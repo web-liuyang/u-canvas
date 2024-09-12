@@ -13,8 +13,7 @@ export function generateUUID(): string {
 	});
 }
 
-export type GetStyleOptions = Pick<CanvasFillStrokeStyles, "strokeStyle" | "fillStyle"> &
-	Pick<CanvasPathDrawingStyles, "lineWidth" | "lineCap" | "lineJoin">;
+export type GetStyleOptions = CanvasRenderingContext2D;
 
 export type GetTextStyleOptions = CanvasRenderingContext2D;
 
@@ -64,6 +63,14 @@ export function isPointOnLineSegment(point: Point, line: [Point, Point]): boolea
 	return true;
 }
 
+export function repeatArray(array: Uint8ClampedArray, count: number): Uint8ClampedArray {
+	const result = new Uint8ClampedArray(array.length * count);
+	for (let i = 0; i < count; i++) {
+		result.set(array, i * array.length);
+	}
+	return result;
+}
+
 export interface CreatePatternBitmapOptions {
 	data: Uint8ClampedArray;
 	bytesPerScanline: number;
@@ -74,14 +81,6 @@ export interface CreatePatternBitmapOptions {
 	 * @default [1, 1]
 	 */
 	array?: [number, number];
-}
-
-export function repeatArray(array: Uint8ClampedArray, count: number): Uint8ClampedArray {
-	const result = new Uint8ClampedArray(array.length * count);
-	for (let i = 0; i < count; i++) {
-		result.set(array, i * array.length);
-	}
-	return result;
 }
 
 export function createPatternBitmap(options: CreatePatternBitmapOptions): Promise<ImageBitmap> {
