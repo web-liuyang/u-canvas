@@ -1,6 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
+import { Point } from "../../types";
 
 export interface PolylineOptions extends GraphicOptions {
 	points: Point[];

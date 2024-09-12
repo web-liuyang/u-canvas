@@ -1,6 +1,6 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
-import { Rectangle } from "./rectangle";
+import { Point } from "../../types";
 
 export interface ImageOptions extends GraphicOptions {
 	image: CanvasImageSource;

@@ -1,4 +1,7 @@
-import { Child, Container } from "./container";
+import { Container } from "./container";
+import { Offset } from "./offset";
+import { Matrix } from "./transform";
+import { Child } from "./types";
 
 export interface UCanvasOptions {
 	canvasId: string;
@@ -61,9 +64,12 @@ export class UCanvas {
 		this.element = element;
 		this.resetRatio(uni.getDeviceInfo().devicePixelRatio);
 		this.root = new Container({
-			w: this.element.width,
-			h: this.element.height,
+			x: 0,
+			y: 0,
 		});
+
+		this.root.matrix = Matrix.fromDOMMatrix(this.ctx.getTransform());
+		console.log(this.root);
 	}
 
 	public add(p: Child) {
@@ -77,6 +83,6 @@ export class UCanvas {
 	public render() {
 		this.clear();
 
-		this.root.paint(this.ctx);
+		this.root.paint(this.ctx, new Offset(0, 0));
 	}
 }

@@ -1,1 +1,1 @@
-export { ContainerOptions, Container, Child } from "./container";
+export { ContainerOptions, Container } from "./container";

@@ -1,4 +1,5 @@
 // import { v4 as uuid } from "uuid";
+import { Line, Point } from "../types";
 import { Style, StrokeCap, StrokeJoin, Stroke, Fill, TextStyle } from "./styles";
 
 export function generateUUID(): string {
@@ -43,7 +44,7 @@ export function getTextStyle(options: GetTextStyleOptions): TextStyle {
 	});
 }
 
-export function isPointOnLineSegment(point: Point, line: [Point, Point]): boolean {
+export function isPointOnLineSegment(point: Point, line: Line): boolean {
 	const vectorAP = [point[0] - line[0][0], point[1] - line[0][1]];
 	const vectorAB = [line[1][0] - line[0][0], line[1][1] - line[0][1]];
 

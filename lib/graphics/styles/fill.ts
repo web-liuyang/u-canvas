@@ -1,3 +1,5 @@
+import { Cloneable, Equatable } from "../../types";
+
 interface FillOptions {
 	color: string;
 }

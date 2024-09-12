@@ -1,6 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Rectangle } from "./rectangle";
+import { Point } from "../../types";
 
 export interface AnyOptions extends GraphicOptions {
 	points: Point[];

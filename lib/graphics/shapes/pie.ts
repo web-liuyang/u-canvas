@@ -1,5 +1,6 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
+import { Point } from "../../types";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;

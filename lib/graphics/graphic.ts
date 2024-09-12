@@ -1,3 +1,4 @@
+import { Cloneable, Equatable, Hittable, Paintable, Point } from "../types";
 import { Style } from "./styles";
 import { generateUUID, getStyle } from "./utils";
 

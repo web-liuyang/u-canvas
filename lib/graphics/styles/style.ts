@@ -1,3 +1,4 @@
+import { Cloneable, Equatable } from "../../types";
 import { Fill } from "./fill";
 import { Stroke } from "./stroke";
 

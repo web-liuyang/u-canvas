@@ -1,3 +1,5 @@
+import { Cloneable, Equatable } from "../../types";
+
 export enum StrokeCap {
 	butt = "butt",
 	round = "round",

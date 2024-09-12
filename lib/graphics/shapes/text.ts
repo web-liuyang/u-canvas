@@ -1,4 +1,5 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import { Point } from "../../types";
 import { Graphic } from "../graphic";
 import { TextStyle } from "../styles";
 import { getTextStyle } from "../utils";
