@@ -1,7 +1,4 @@
 import { defineProject } from "vitest/config";
-import { resolve } from "path";
-
-
 
 export default defineProject({
 	test: {
@@ -23,5 +20,4 @@ export default defineProject({
 		// so it will show an error
 		// reporters: ["json"],
 	},
-	
 });

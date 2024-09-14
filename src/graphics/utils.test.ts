@@ -1,10 +1,7 @@
 import type { GetStyleOptions, GetTextStyleOptions } from "./utils";
 import { describe, it, expect } from "vitest";
 import { createImageData, getStyle, getTextStyle } from "./utils";
-import { Style } from "./style";
-import { Stroke, StrokeCap, StrokeJoin } from "./stroke";
-import { Fill } from "./fill";
-import { TextStyle } from "./text-style";
+import { Style, Stroke, StrokeCap, StrokeJoin, Fill, TextStyle } from "./styles";
 
 describe("getStyle", () => {
 	it("getStyle(object)", () => {
@@ -15,12 +12,12 @@ describe("getStyle", () => {
 				lineWidth: 1,
 				lineCap: StrokeCap.butt,
 				lineJoin: StrokeJoin.miter,
-			} as GetStyleOptions)
+			} as GetStyleOptions),
 		).toEqual(
 			new Style({
 				stroke: new Stroke({ color: "#000", width: 1, cap: StrokeCap.butt, join: StrokeJoin.miter }),
 				fill: new Fill({ color: "#000" }),
-			})
+			}),
 		);
 	});
 
@@ -40,7 +37,7 @@ describe("getStyle", () => {
 				lineWidth: 1,
 				lineCap: StrokeCap.butt,
 				lineJoin: StrokeJoin.miter,
-			} as GetTextStyleOptions)
+			} as GetTextStyleOptions),
 		).toEqual(
 			new TextStyle({
 				fontSize: 20,
@@ -53,7 +50,7 @@ describe("getStyle", () => {
 				textRendering: "auto",
 				stroke: new Stroke({ color: "#000", width: 1, cap: StrokeCap.butt, join: StrokeJoin.miter }),
 				fill: new Fill({ color: "#000" }),
-			})
+			}),
 		);
 	});
 

@@ -1,0 +1,29 @@
+{
+	"name": "u-canvas",
+	"version": "0.0.1",
+	"main": "main.uts",
+	"scripts": {
+		"test": "vitest"
+	},
+	"keywords": [
+		"canvas",
+		"paint",
+		"uniapp",
+		"uniapp x"
+	],
+	"author": "web-liuyang",
+	"description": "",
+	"devDependencies": {
+		"@dcloudio/uni-app-x": "^0.7.30",
+		"@dcloudio/uni-helper-json": "^1.0.13",
+		"@types/html5plus": "^1.0.5",
+		"@types/uni-app": "^1.4.8",
+		"happy-dom": "^15.7.4",
+		"typescript": "^5.5.4",
+		"vitest": "^2.0.5",
+		"vitest-canvas-mock": "^0.3.3"
+	},
+	"dependencies": {
+		"vconsole": "^3.15.1"
+	}
+}
