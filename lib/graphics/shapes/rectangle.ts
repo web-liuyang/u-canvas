@@ -1,6 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
+import { Offset } from "../../offset";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
@@ -57,9 +58,10 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.h = options.h;
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
-			const { x, y, w, h } = this;
+			const [x, y] = this.calLocationWithScope([this.x, this.y], offset);
+			const { w, h } = this;
 			const path = new Path2D();
 			path.rect(x, y, w, h);
 			ctx.stroke(path);

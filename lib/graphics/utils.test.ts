@@ -1,6 +1,6 @@
 import type { GetStyleOptions, GetTextStyleOptions } from "./utils";
 import { describe, it, expect } from "vitest";
-import { createPatternBitmap, getStyle, getTextStyle } from "./utils";
+import { createImageData, getStyle, getTextStyle } from "./utils";
 import { Style } from "./style";
 import { Stroke, StrokeCap, StrokeJoin } from "./stroke";
 import { Fill } from "./fill";
@@ -58,7 +58,7 @@ describe("getStyle", () => {
 	});
 
 	it("createPatternBitmap(object)", async () => {
-		const imageBitmap = await createPatternBitmap({
+		const imageBitmap = await createImageData({
 			data: new Uint8ClampedArray([
 				parseInt("10", 2), //
 				parseInt("01", 2),

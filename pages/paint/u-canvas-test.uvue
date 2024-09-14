@@ -1,0 +1,41 @@
+<script lang="ts" setup>
+import { onMounted, nextTick } from "vue";
+onMounted(() => {
+	nextTick(() => {
+		uni.createCanvasContextAsync({
+			id: "ucanvas",
+			success: (context: CanvasContext) => {
+				const canvasContext = context.getContext("2d")!;
+				const canvas = canvasContext.canvas;
+
+				const dpr = uni.getDeviceInfo().devicePixelRatio ?? 1;
+				const window = uni.getWindowInfo();
+				const w = window.windowWidth;
+				const h = window.windowHeight;
+				canvas.width = w * dpr;
+				canvas.height = h * dpr;
+				canvas.style.width = `${w}px`;
+				canvas.style.height = `${h}px`;
+
+				const path = new Path2D();
+				path.rect(0, 70, 100, 100);
+
+				canvasContext.fillStyle = "red";
+				canvasContext.fill(path);
+				// canvasContext.stroke(path);
+			},
+		});
+	});
+});
+</script>
+
+<template>
+	<canvas id="ucanvas" class="ucanvas"></canvas>
+</template>
+
+<style>
+.ucanvas {
+	width: 100%;
+	height: 100%;
+}
+</style>

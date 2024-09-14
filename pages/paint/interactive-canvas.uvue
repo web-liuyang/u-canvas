@@ -4,11 +4,11 @@ import { ref } from "vue";
 const props = defineProps<{ id: string }>();
 
 const emit = defineEmits<{
-	onTap: [event: UniPointerEvent];
-	onTouchstart: [event: UniPointerEvent];
-	onTouchmove: [event: UniPointerEvent];
-	onTouchend: [event: UniPointerEvent];
-	onTouchcancel: [event: UniPointerEvent];
+	(e: "onTap", event: UniTouchEvent): void;
+	(e: "onTouchstart", event: UniTouchEvent): void;
+	(e: "onTouchmove", event: UniTouchEvent): void;
+	(e: "onTouchend", event: UniTouchEvent): void;
+	(e: "onTouchcancel", event: UniTouchEvent): void;
 }>();
 
 const PRESS_TIMEOUT = 200;
@@ -73,14 +73,14 @@ const onMousedown = (e: UniMouseEvent) => {
 		onTapTimer.value = 0;
 	}
 	onTapTimer.value = setTimeout(() => {
-		emit("onTouchstart", e);
+		emit("onTouchstart", e as unknown as UniTouchEvent);
 	}, PRESS_TIMEOUT);
 };
 
 const onMousemove = (e: UniMouseEvent) => {
 	e.preventDefault();
 	if (pressing.value) {
-		emit("onTouchmove", e);
+		emit("onTouchmove", e as unknown as UniTouchEvent);
 		moving.value = true;
 	}
 };
@@ -89,13 +89,13 @@ const onMouseup = (e: UniMouseEvent) => {
 	e.preventDefault();
 
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
-		emit("onTap", e);
+		emit("onTap", e as unknown as UniTouchEvent);
 		if (onTapTimer.value) {
 			clearTimeout(onTapTimer.value);
 			onTapTimer.value = 0;
 		}
 	} else if (pressing.value && moving.value) {
-		emit("onTouchend", e);
+		emit("onTouchend", e as unknown as UniTouchEvent);
 	}
 
 	pressing.value = false;

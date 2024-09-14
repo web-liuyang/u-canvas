@@ -3,7 +3,7 @@ import { Graphic } from "../graphic";
 import { Point } from "../../types";
 
 export interface ImageOptions extends GraphicOptions {
-	image: CanvasImageSource;
+	image: { src: string } | ImageData;
 	x: number;
 	y: number;
 	w?: number;
@@ -13,15 +13,15 @@ export interface ImageOptions extends GraphicOptions {
 export class Image extends Graphic<ImageOptions> {
 	public override readonly type = "Image";
 
-	public readonly image: CanvasImageSource;
+	public readonly image: ImageOptions["image"];
 
-	public readonly x: number;
+	public readonly x: ImageOptions["x"];
 
-	public readonly y: number;
+	public readonly y: ImageOptions["y"];
 
-	public readonly w?: number;
+	public readonly w?: ImageOptions["w"];
 
-	public readonly h?: number;
+	public readonly h?: ImageOptions["h"];
 
 	constructor(options: ImageOptions) {
 		super(options);
@@ -37,10 +37,20 @@ export class Image extends Graphic<ImageOptions> {
 			const { image, x, y, w, h } = this;
 			const path = new Path2D();
 
-			if (w !== undefined && h !== undefined) {
-				ctx.drawImage(image, x, y, w, h);
+			if (image instanceof ImageData) {
+				if (w !== undefined && h !== undefined) {
+					ctx.putImageData(image, x, y);
+				} else {
+					ctx.putImageData(image, x, y);
+				}
 			} else {
-				ctx.drawImage(image, x, y);
+				if (w !== undefined && h !== undefined) {
+					// @ts-expect-error uniapp-x api
+					ctx.drawImage(image, x, y, w, h);
+				} else {
+					// @ts-expect-error uniapp-x api
+					ctx.drawImage(image, x, y);
+				}
 			}
 
 			ctx.stroke(path);

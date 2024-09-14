@@ -1,4 +1,4 @@
-// / <reference types='@dcloudio/types' />
+/// <reference types='@dcloudio/uni-app-x' />
 import "vue";
 
 declare module "@vue/runtime-core" {

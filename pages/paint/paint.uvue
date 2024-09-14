@@ -1,16 +1,41 @@
 <script lang="ts" setup>
-import uCanvas from "./u-canvas.uvue";
+	import uCanvas from "./u-canvas.uvue";
+	import uCanvasTest from "./u-canvas-test.uvue";
+
+	// onReady(() => {
+	// 	uni.createCanvasContextAsync({
+	// 		id: 'ucanvas',
+	// 		success: (context : CanvasContext) => {
+	// 			const canvasContext = context.getContext('2d')!;
+	// 			const canvas = canvasContext.canvas;
+	// 			// 处理高清屏逻辑
+	// 			const dpr = uni.getDeviceInfo().devicePixelRatio ?? 1;
+	// 			const window = uni.getWindowInfo();
+	// 			canvas.width = window.windowWidth * dpr;
+	// 			canvas.height = window.windowHeight * dpr;
+	// 			canvas.style.width = `${window.windowWidth}px`;
+	// 			canvas.style.height = `${window.windowHeight}px`;
+	// 			canvasContext.scale(dpr, dpr); // 仅需调用一次，当调用 reset 方法后需要再次 scale
+	// 			canvasContext.strokeRect(0, 0, 370, 370,);
+	// 		}
+	// 	})
+	// });
 </script>
 
 <template>
 	<view class="container">
+		<!-- <canvas id="ucanvas" class="ucanvas"></canvas> -->
 		<uCanvas />
+		<!-- <uCanvasTest class="ucanvas" /> -->
 	</view>
 </template>
 
 <style>
-.container {
-	width: 100%;
-	height: 100%;
-}
+	.container {
+		width: 100%;
+		height: 100%;
+	}
+	.ucanvas {
+		border: 1px solid red;
+	}
 </style>

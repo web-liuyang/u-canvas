@@ -5,11 +5,13 @@ import { Child } from "./types";
 
 export interface UCanvasOptions {
 	canvasId: string;
-	componentInstance: any;
+	componentInstance?: any;
 }
 
 export class UCanvas {
 	protected element!: UniCanvasElement;
+
+	protected canvasContext!: CanvasContext;
 
 	public get ctx(): CanvasRenderingContext2D {
 		// @ts-expect-error
@@ -24,51 +26,46 @@ export class UCanvas {
 		this.options = options;
 	}
 
-	private async getCanvasElement(options: UCanvasOptions): Promise<UniCanvasElement> {
-		const { canvasId } = options;
-		const canvas = uni.getElementById(canvasId) as UniCanvasElement;
-		return canvas;
+	private async getCanvasContext(options: UCanvasOptions): Promise<CanvasContext> {
+		return new Promise((res: (context: CanvasContext) => void, rej) => {
+			const { canvasId, componentInstance } = options;
+			uni.createCanvasContextAsync({
+				id: canvasId,
+				component: componentInstance,
+				success: res,
+				fail: rej,
+			});
+		});
+	}
 
-		// HBuilderX 4.25+
-		// 异步调用方式, 跨平台写法
-		// const { canvasId, componentInstance } = options;
-		// uni.createCanvasContextAsync({
-		// 	id: canvasId,
-		// 	component: componentInstance,
-		// 	success: (canvasContext) => {
-		// 		this.ctx = canvasContext.getContext('2d')!;
-		// 		const canvas = canvasContext.canvas;
-		// 		console.log(canvas);
-		// 		// 处理高清屏逻辑
-		// 		const dpr = uni.getDeviceInfo().devicePixelRatio ?? 1;
-		// 		canvas.width = canvas.offsetWidth * dpr;
-		// 		canvas.height = canvas.offsetHeight * dpr;
-		// 		canvas.scale(dpr, dpr); // 仅需调用一次，当调用 reset 方法后需要再次 scale
-		// 	},
-		// 	fail: (error) => {
-		// 		console.log("ERROR: ", error);
-		// 	}
-		// });
+	private async getCanvasElement(options: UCanvasOptions): Promise<UniCanvasElement> {
+		return uni.getElementById(options.canvasId) as UniCanvasElement;
 	}
 
 	// 处理高清屏逻辑
-	private resetRatio(dpr: number = 1) {
-		this.element.width = this.element.offsetWidth * dpr;
-		this.element.height = this.element.offsetHeight * dpr;
-
-		this.ctx.scale(dpr, dpr);
+	private resetRatio(element: UniCanvasElement, w: number, h: number, dpr: number) {
+		element.width = w * dpr;
+		element.height = h * dpr;
+		// @ts-expect-error
+		element.style.width = `${w}px`;
+		// @ts-expect-error
+		element.style.height = `${h}px`;
 	}
 
 	public async ensureInitialize() {
+		const canvasContext = await this.getCanvasContext(this.options);
 		const element = await this.getCanvasElement(this.options);
+		const devicePixelRatio = uni.getDeviceInfo().devicePixelRatio || 1;
+		this.canvasContext = canvasContext;
 		this.element = element;
-		this.resetRatio(uni.getDeviceInfo().devicePixelRatio);
+		const window = uni.getWindowInfo();
+		this.resetRatio(element, window.windowWidth, window.windowHeight, devicePixelRatio);
 		this.root = new Container({
 			x: 0,
-			y: 0,
+			y: 100,
 		});
 
-		this.root.matrix = Matrix.fromDOMMatrix(this.ctx.getTransform());
+		this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
 		console.log(this.root);
 	}
 

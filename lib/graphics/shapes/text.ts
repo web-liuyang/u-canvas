@@ -1,5 +1,6 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Point } from "../../types";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
 import { TextStyle } from "../styles";
 import { getTextStyle } from "../utils";
@@ -51,9 +52,10 @@ export class Text extends Graphic<TextOptions> {
 		ctx.textRendering = style.textRendering;
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
-			const { x, y, text } = this;
+			const [x, y] = this.calLocationWithScope([this.x, this.y], offset);
+			const { text } = this;
 			ctx.fillText(text, x, y);
 			ctx.strokeText(text, x, y);
 		});

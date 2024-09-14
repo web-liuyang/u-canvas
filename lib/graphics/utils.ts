@@ -68,7 +68,7 @@ export function repeatArray(array: Uint8ClampedArray, count: number): Uint8Clamp
 	return result;
 }
 
-export interface CreatePatternBitmapOptions {
+export interface CreateImageDataOptions {
 	data: Uint8ClampedArray;
 	bytesPerScanline: number;
 	// TODO
@@ -80,7 +80,7 @@ export interface CreatePatternBitmapOptions {
 	array?: [number, number];
 }
 
-export function createPatternBitmap(options: CreatePatternBitmapOptions): Promise<ImageBitmap> {
+export function createImageData(options: CreateImageDataOptions): ImageData {
 	const { data, bytesPerScanline, array = [1, 1] } = options;
 
 	const [row, col] = array;
@@ -108,5 +108,7 @@ export function createPatternBitmap(options: CreatePatternBitmapOptions): Promis
 	const repeatedPixels = repeatArray(pixels, row);
 	const imageData = new ImageData(repeatedPixels, w * col);
 
-	return createImageBitmap(imageData);
+	return imageData;
+	// Web
+	// return createImageBitmap(imageData);
 }
