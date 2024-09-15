@@ -1,18 +1,13 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import * as a from "./a";
-console.log(a);
-console.log(a.aa);
-console.log(a.bb);
-console.log(a.ICTouchEvent);
-// import {
-// 	//
-// 	ICTapEvent,
-// 	ICTouchcancelEvent,
-// 	ICTouchendEvent,
-// 	ICTouchmoveEvent,
-// 	ICTouchstartEvent,
-// } from "./event";
+import {
+	//
+	ICTapEvent,
+	ICTouchcancelEvent,
+	ICTouchendEvent,
+	ICTouchmoveEvent,
+	ICTouchstartEvent,
+} from "./event";
 
 const props = defineProps<{ id: string }>();
 
@@ -30,7 +25,7 @@ const pressing = ref(false);
 const moving = ref(false);
 
 const onTapTimestamp = ref(0);
-const onTapTimer = ref(0);
+const onTapTimer = ref<NodeJS.Timeout>();
 
 const onTouchstart = (e: UniTouchEvent) => {
 	e.preventDefault();
@@ -39,31 +34,36 @@ const onTouchstart = (e: UniTouchEvent) => {
 
 	if (onTapTimer.value) {
 		clearTimeout(onTapTimer.value);
-		onTapTimer.value = 0;
+		onTapTimer.value = undefined;
 	}
 	onTapTimer.value = setTimeout(() => {
-		emit("onTouchstart", new ICTouchstartEvent(e.touches[0]));
+		const uniTouch = (e instanceof MouseEvent ? e : e.touches[0]) as UniTouch;
+		emit("onTouchstart", new ICTouchstartEvent(uniTouch));
+		moving.value = true;
 	}, PRESS_TIMEOUT);
 };
 
 const onTouchmove = (e: UniTouchEvent) => {
 	e.preventDefault();
-	emit("onTouchmove", new ICTouchmoveEvent(e.touches[0]));
-	moving.value = true;
+	if (moving.value) {
+		const uniTouch = (e instanceof MouseEvent ? e : e.touches[0]) as UniTouch;
+		emit("onTouchmove", new ICTouchmoveEvent(uniTouch));
+	}
 };
 
 const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
 
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
-		emit("onTap", new ICTapEvent(e.touches[0]));
-		console.log("A");
+		const uniTouch = (e instanceof MouseEvent ? e : e.touches[0]) as UniTouch;
+		emit("onTap", new ICTapEvent(uniTouch));
 		if (onTapTimer.value) {
 			clearTimeout(onTapTimer.value);
-			onTapTimer.value = 0;
+			onTapTimer.value = undefined;
 		}
 	} else if (pressing.value && moving.value) {
-		emit("onTouchend", new ICTouchendEvent(e.touches[0]));
+		const uniTouch = (e instanceof MouseEvent ? e : e.touches[0]) as UniTouch;
+		emit("onTouchend", new ICTouchendEvent(uniTouch));
 	}
 
 	pressing.value = false;
@@ -72,10 +72,32 @@ const onTouchend = (e: UniTouchEvent) => {
 
 const onTouchcancel = (e: UniTouchEvent) => {
 	e.preventDefault();
-	emit("onTouchcancel", new ICTouchcancelEvent(e.touches[0]));
+	const uniTouch = (e instanceof MouseEvent ? e : e.touches[0]) as UniTouch;
+	emit("onTouchcancel", new ICTouchcancelEvent(uniTouch));
 	pressing.value = false;
 	moving.value = false;
 };
+
+// const onMousedown = (e: UniMouseEvent) => {
+// 	e.preventDefault();
+// 	pressing.value = true;
+// 	onTapTimestamp.value = Date.now();
+
+// 	if (onTapTimer.value) {
+// 		clearTimeout(onTapTimer.value);
+// 		onTapTimer.value = undefined;
+// 	}
+// 	onTapTimer.value = setTimeout(() => {
+// 		emit("onTouchstart", new ICTouchstartEvent(e as unknown as UniTouch));
+// 	}, PRESS_TIMEOUT);
+
+// };
+// const onMousemove = (e: UniMouseEvent) => {
+// 	console.log("onMousemove", e);
+// };
+// const onMouseup = (e: UniMouseEvent) => {
+// 	console.log("onMouseup", e);
+// };
 </script>
 
 <template>

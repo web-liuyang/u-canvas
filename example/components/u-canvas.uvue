@@ -17,7 +17,7 @@ import {
 
 import { onMounted, nextTick } from "vue";
 import interactiveCanvas from "./interactive-canvas.uvue";
-// import { ICTapEvent, ICTouchcancelEvent, ICTouchendEvent, ICTouchmoveEvent, ICTouchstartEvent } from "./events/event";
+import { ICTapEvent, ICTouchcancelEvent, ICTouchendEvent, ICTouchmoveEvent, ICTouchstartEvent } from "./event";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 

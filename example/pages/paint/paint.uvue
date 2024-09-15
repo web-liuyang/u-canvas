@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import uCanvas from "u-canvas-components/src/u-canvas.uvue";
+// import uCanvas from "u-canvas-components/src/u-canvas.uvue";
+import uCanvas from "@/components/u-canvas.uvue";
+
 // import uCanvas from "./u-canvas.uvue";
 // import uCanvasTest from "./u-canvas-test.uvue";
 

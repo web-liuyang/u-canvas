@@ -2,16 +2,7 @@
 	"name": "u-canvas-components",
 	"version": "0.0.1",
 	"description": "",
-	"files": [
-		"src/"
-	],
-	"main": "./src/**/*",
-	"module": "./src/**/*",
-	"scripts": {
-		"dev": "",
-		"build": "",
-		"format": "prettier --write src/**/*.ts"
-	},
+	"scripts": {},
 	"keywords": [],
 	"author": "web-liuyang",
 	"dependencies": {
