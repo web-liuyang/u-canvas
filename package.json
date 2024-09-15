@@ -1,30 +1,19 @@
 {
-	"name": "u-canvas",
+	"name": "u-canvas-repo",
 	"version": "1.0.0",
 	"description": "",
-	"files": [
-		"dist"
-	],
-	"type": "module",
-	"main": "./dist/cjs/u-canvas.js",
-	"module": "./dist/es/u-canvas.js",
-	"types": "./dist/types/index.d.ts",
 	"scripts": {
-		"dev": "vite build --watch",
-		"build": "vite build",
-		"format": "prettier --write src/**/*.ts"
+		"dev:u-canvas": "cd packages/u-canvas && vite build --watch",
+		"build:u-canvas": "cd packages/u-canvas && vite build",
+		"format": "prettier --write packages/**/*.ts"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "web-liuyang",
 	"devDependencies": {
 		"@dcloudio/uni-app-x": "^0.7.30",
 		"@types/node": "^22.5.5",
-		"@vue/runtime-core": "^3.5.5",
-		"hbuilderx-plugin-hbuilderx-language-services": "1.1.0-2024091016",
 		"prettier": "^3.3.3",
 		"typescript": "^5.6.2",
-		"vconsole": "^3.15.1",
 		"vite": "^5.4.5",
 		"vite-plugin-dts": "^4.2.1",
 		"vitest": "^2.1.1",

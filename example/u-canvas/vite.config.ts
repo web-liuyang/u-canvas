@@ -37,8 +37,5 @@ export default defineConfig({
 		// 		},
 		// 	},
 		// },
-		watch: {
-			buildDelay: 1000,
-		},
 	},
 });

@@ -2,7 +2,7 @@ import { defineProject } from "vitest/config";
 
 export default defineProject({
 	test: {
-		setupFiles: ["./vitest.setup.ts"],
+		setupFiles: ["./vitest.setup.mts"],
 		environment: "happy-dom",
 		deps: {
 			optimizer: {
@@ -20,4 +20,5 @@ export default defineProject({
 		// so it will show an error
 		// reporters: ["json"],
 	},
+	
 });
