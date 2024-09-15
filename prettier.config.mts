@@ -1,8 +1,6 @@
-/**
- * @see https://prettier.io/docs/en/configuration.html
- * @type {import("prettier").Config}
- */
-const config = {
+import { Config } from "prettier";
+
+const config: Config = {
 	// 字符串使用单引号
 	singleQuote: false,
 	// 每行末尾自动添加分号

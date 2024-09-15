@@ -14,12 +14,8 @@
 	"author": "web-liuyang",
 	"description": "",
 	"dependencies": {
-		"@vue/reactivity": "3.5.5",
-		"@vue/runtime-core": "3.5.5",
-		"@vue/shared": "3.5.5",
-		"u-canvas": "workspace:*"
+		"u-canvas": "workspace:*",
+		"u-canvas-components": "workspace:*"
 	},
-	"devDependencies": {
-		"vue": "3.5.5"
-	}
+	"devDependencies": {}
 }

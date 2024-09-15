@@ -3,8 +3,13 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
+		"dev": "pnpm dev:u-canvas & pnpm dev:u-canvas-components",
 		"dev:u-canvas": "cd packages/u-canvas && vite build --watch",
+		"dev:u-canvas-components": "cd packages/u-canvas-components && vite build --watch",
+
+		"build": "pnpm build:u-canvas & pnpm build:u-canvas-components",
 		"build:u-canvas": "cd packages/u-canvas && vite build",
+		"build:u-canvas-components": "cd packages/u-canvas-components && vite build",
 		"format": "prettier --write packages/**/*.ts"
 	},
 	"keywords": [],
@@ -17,6 +22,7 @@
 		"vite": "^5.4.5",
 		"vite-plugin-dts": "^4.2.1",
 		"vitest": "^2.1.1",
-		"vitest-canvas-mock": "^0.3.3"
+		"vitest-canvas-mock": "^0.3.3",
+		"vue": "3.5.5"
 	}
 }

@@ -32,27 +32,26 @@ importers:
       vitest-canvas-mock:
         specifier: ^0.3.3
         version: 0.3.3(vitest@2.1.1(@types/node@22.5.5))
-
-  example:
-    dependencies:
-      '@vue/reactivity':
-        specifier: 3.5.5
-        version: 3.5.5
-      '@vue/runtime-core':
-        specifier: 3.5.5
-        version: 3.5.5
-      '@vue/shared':
-        specifier: 3.5.5
-        version: 3.5.5
-      u-canvas:
-        specifier: workspace:*
-        version: link:../packages/u-canvas
-    devDependencies:
       vue:
         specifier: 3.5.5
         version: 3.5.5(typescript@5.6.2)
 
+  example:
+    dependencies:
+      u-canvas:
+        specifier: workspace:*
+        version: link:../packages/u-canvas
+      u-canvas-components:
+        specifier: workspace:*
+        version: link:../packages/u-canvas-components
+
   packages/u-canvas: {}
+
+  packages/u-canvas-components:
+    dependencies:
+      u-canvas:
+        specifier: workspace:*
+        version: link:../u-canvas
 
 packages:
 

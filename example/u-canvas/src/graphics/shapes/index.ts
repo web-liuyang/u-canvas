@@ -1,9 +1,0 @@
-export { Circle } from "./circle";
-export { Ring } from "./ring";
-export { Pie } from "./pie";
-export { Rectangle } from "./rectangle";
-export { Any } from "./any";
-export { Polyline } from "./polyline";
-export { Polygon } from "./polygon";
-export { Text } from "./text";
-export { Image } from "./image";

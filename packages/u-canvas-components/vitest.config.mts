@@ -1,11 +1,8 @@
 import { defineProject } from "vitest/config";
-import { resolve } from "path";
-
-
 
 export default defineProject({
 	test: {
-		setupFiles: ["./vitest.setup.ts"],
+		setupFiles: ["./vitest.setup.mts"],
 		environment: "happy-dom",
 		deps: {
 			optimizer: {

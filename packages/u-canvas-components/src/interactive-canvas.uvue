@@ -72,6 +72,7 @@ const onMousedown = (e: UniMouseEvent) => {
 		clearTimeout(onTapTimer.value);
 		onTapTimer.value = 0;
 	}
+
 	onTapTimer.value = setTimeout(() => {
 		emit("onTouchstart", e as unknown as UniTouchEvent);
 	}, PRESS_TIMEOUT);
@@ -104,6 +105,7 @@ const onMouseup = (e: UniMouseEvent) => {
 </script>
 
 <template>
+	<!-- @vue-expect-error -->
 	<canvas
 		:id="props.id"
 		@mousedown="onMousedown"
