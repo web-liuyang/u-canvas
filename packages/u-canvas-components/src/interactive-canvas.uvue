@@ -1,18 +1,15 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import * as a from "./a";
-console.log(a);
-console.log(a.aa);
-console.log(a.bb);
-console.log(a.ICTouchEvent);
-// import {
-// 	//
-// 	ICTapEvent,
-// 	ICTouchcancelEvent,
-// 	ICTouchendEvent,
-// 	ICTouchmoveEvent,
-// 	ICTouchstartEvent,
-// } from "./event";
+import {
+	//
+	ICTapEvent,
+	ICTouchcancelEvent,
+	ICTouchendEvent,
+	ICTouchmoveEvent,
+	ICTouchstartEvent,
+	ICZoominEvent,
+	ICZoomoutEvent,
+} from "./event";
 
 const props = defineProps<{ id: string }>();
 
@@ -22,6 +19,8 @@ const emit = defineEmits<{
 	(e: "onTouchmove", event: ICTouchmoveEvent): void;
 	(e: "onTouchend", event: ICTouchendEvent): void;
 	(e: "onTouchcancel", event: ICTouchcancelEvent): void;
+	(e: "onZoomin", event: ICZoominEvent): void;
+	(e: "onZoomout", event: ICZoomoutEvent): void;
 }>();
 
 const PRESS_TIMEOUT = 200;
@@ -30,40 +29,56 @@ const pressing = ref(false);
 const moving = ref(false);
 
 const onTapTimestamp = ref(0);
-const onTapTimer = ref(0);
+const onTapTimer = ref<number>();
+
+const eventState = ref<UniTouchEvent>();
+
+const resolveUniTouch = (e: UniTouchEvent | MouseEvent | TouchEvent): UniTouch => {
+	// #ifdef WEB
+	if (e instanceof MouseEvent) return e as unknown as UniTouch;
+	// #endif
+	return e.touches[0];
+};
 
 const onTouchstart = (e: UniTouchEvent) => {
 	e.preventDefault();
 	pressing.value = true;
 	onTapTimestamp.value = Date.now();
+	eventState.value = e;
 
 	if (onTapTimer.value) {
 		clearTimeout(onTapTimer.value);
-		onTapTimer.value = 0;
+		onTapTimer.value = undefined;
 	}
 	onTapTimer.value = setTimeout(() => {
-		emit("onTouchstart", new ICTouchstartEvent(e.touches[0]));
+		const uniTouch = resolveUniTouch(e);
+		emit("onTouchstart", new ICTouchstartEvent(uniTouch));
+		moving.value = true;
 	}, PRESS_TIMEOUT);
 };
 
 const onTouchmove = (e: UniTouchEvent) => {
 	e.preventDefault();
-	emit("onTouchmove", new ICTouchmoveEvent(e.touches[0]));
-	moving.value = true;
+	if (moving.value) {
+		const uniTouch = resolveUniTouch(e);
+		emit("onTouchmove", new ICTouchmoveEvent(uniTouch));
+		eventState.value = e;
+	}
 };
 
 const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
 
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
-		emit("onTap", new ICTapEvent(e.touches[0]));
-		console.log("A");
+		const uniTouch = resolveUniTouch(eventState.value ?? e);
+		emit("onTap", new ICTapEvent(uniTouch));
 		if (onTapTimer.value) {
 			clearTimeout(onTapTimer.value);
-			onTapTimer.value = 0;
+			onTapTimer.value = undefined;
 		}
 	} else if (pressing.value && moving.value) {
-		emit("onTouchend", new ICTouchendEvent(e.touches[0]));
+		const uniTouch = resolveUniTouch(eventState.value ?? e);
+		emit("onTouchend", new ICTouchendEvent(uniTouch));
 	}
 
 	pressing.value = false;
@@ -72,9 +87,21 @@ const onTouchend = (e: UniTouchEvent) => {
 
 const onTouchcancel = (e: UniTouchEvent) => {
 	e.preventDefault();
-	emit("onTouchcancel", new ICTouchcancelEvent(e.touches[0]));
+	const uniTouch = resolveUniTouch(eventState.value ?? e);
+	emit("onTouchcancel", new ICTouchcancelEvent(uniTouch));
 	pressing.value = false;
 	moving.value = false;
+};
+
+const onWheel = (e: WheelEvent) => {
+	const sign = Math.sign(e.deltaY);
+	if (sign === 0) return;
+	const uniTouch = resolveUniTouch(e);
+	if (sign < 0) {
+		emit("onZoomin", new ICZoominEvent(uniTouch));
+	} else {
+		emit("onZoomout", new ICZoomoutEvent(uniTouch));
+	}
 };
 </script>
 
@@ -85,6 +112,7 @@ const onTouchcancel = (e: UniTouchEvent) => {
 		@mousedown="onTouchstart"
 		@mousemove="onTouchmove"
 		@mouseup="onTouchend"
+		@wheel="onWheel"
 		@touchstart="onTouchstart"
 		@touchmove="onTouchmove"
 		@touchend="onTouchend"

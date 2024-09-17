@@ -19,6 +19,8 @@ export enum ICEventType {
 	"touchmove" = "touchmove",
 	"touchend" = "touchend",
 	"touchcancel" = "touchcancel",
+	"zoomin" = "zoomin",
+	"zoomout" = "zoomout",
 }
 
 export class ICTouchEvent implements TouchInfo {
@@ -76,5 +78,17 @@ export class ICTouchendEvent extends ICTouchEvent {
 export class ICTouchcancelEvent extends ICTouchEvent {
 	constructor(uniTouch: UniTouch) {
 		super(ICEventType.touchcancel, uniTouch);
+	}
+}
+
+export class ICZoominEvent extends ICTouchEvent {
+	constructor(uniTouch: UniTouch) {
+		super(ICEventType.zoomin, uniTouch);
+	}
+}
+
+export class ICZoomoutEvent extends ICTouchEvent {
+	constructor(uniTouch: UniTouch) {
+		super(ICEventType.zoomout, uniTouch);
 	}
 }

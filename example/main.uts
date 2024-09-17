@@ -1,8 +1,13 @@
 import App from "./App.uvue";
 import { createSSRApp } from "vue";
-// import VConsole from "vconsole";
+
+// #ifdef WEB
+import VConsole from "vconsole";
+new VConsole();
+// #endif
+
 export function createApp() {
-	const info = uni.getSystemInfoSync();
+	// const info = uni.getSystemInfoSync();
 	// if (info.platform === "ios") {
 	// 	new VConsole();
 	// }

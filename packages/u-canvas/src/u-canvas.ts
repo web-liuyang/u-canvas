@@ -60,11 +60,7 @@ export class UCanvas {
 		this.element = element;
 		const window = uni.getWindowInfo();
 		this.resetRatio(element, window.windowWidth, window.windowHeight, devicePixelRatio);
-		this.root = new Container({
-			x: 0,
-			y: 100,
-		});
-
+		this.root = new Container({ x: 0, y: 0 });
 		this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
 	}
 

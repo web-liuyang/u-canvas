@@ -17,7 +17,15 @@ import {
 
 import { onMounted, nextTick } from "vue";
 import interactiveCanvas from "./interactive-canvas.uvue";
-// import { ICTapEvent, ICTouchcancelEvent, ICTouchendEvent, ICTouchmoveEvent, ICTouchstartEvent } from "./events/event";
+import {
+	ICTapEvent,
+	ICTouchcancelEvent,
+	ICTouchendEvent,
+	ICTouchmoveEvent,
+	ICTouchstartEvent,
+	ICZoominEvent,
+	ICZoomoutEvent,
+} from "./event";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
@@ -148,6 +156,14 @@ const onTouchend = (e: ICTouchendEvent) => {
 const onTouchcancel = (e: ICTouchcancelEvent) => {
 	console.log("touchcancel", e);
 };
+
+const onZoomin = (e: ICZoominEvent) => {
+	console.log("zoomin", e);
+};
+
+const onZoomout = (e: ICZoomoutEvent) => {
+	console.log("zoomout", e);
+};
 </script>
 
 <template>
@@ -159,6 +175,8 @@ const onTouchcancel = (e: ICTouchcancelEvent) => {
 		@onTouchmove="onTouchmove"
 		@onTouchend="onTouchend"
 		@onTouchcancel="onTouchcancel"
+		@onZoomin="onZoomin"
+		@onZoomout="onZoomout"
 	/>
 </template>
 
