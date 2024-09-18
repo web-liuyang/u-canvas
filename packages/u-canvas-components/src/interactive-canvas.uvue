@@ -33,6 +33,17 @@ const moving = ref(false);
 const onTapTimestamp = ref(0);
 const onTapTimer = ref<number>();
 
+const onSetTimeout = (handler: TimerHandler, timeout?: number) => {
+	onTapTimer.value = setTimeout(handler, timeout);
+};
+
+const onClearTimeout = () => {
+	if (onTapTimer.value) {
+		clearTimeout(onTapTimer.value);
+		onTapTimer.value = undefined;
+	}
+};
+
 // 在模拟事件时，事件系统并没有返回足够的信息
 // 所以需要缓存上一个 事件信息，以便统一返回
 const eventState = ref<UniTouchEvent>();
@@ -45,22 +56,24 @@ const onTouchstart = (e: UniTouchEvent) => {
 	onTapTimestamp.value = Date.now();
 	eventState.value = e;
 
-	if (onTapTimer.value) {
-		clearTimeout(onTapTimer.value);
-		onTapTimer.value = undefined;
-	}
-	onTapTimer.value = setTimeout(() => {
+	onClearTimeout();
+	// onSetTimeout(() => {
+	// 	const touchInfo = resolveTouchInfo(e);
+	// 	emit("onTouchstart", new ICTouchstartEvent(touchInfo));
+	// 	moving.value = true;
+	// 	originTouchInfo.value = touchInfo;
+	// }, PRESS_TIMEOUT);
+};
+
+const onTouchmove = (e: UniTouchEvent) => {
+	e.preventDefault();
+	if (pressing.value && !moving.value) {
+		onClearTimeout();
 		const touchInfo = resolveTouchInfo(e);
 		emit("onTouchstart", new ICTouchstartEvent(touchInfo));
 		moving.value = true;
 		originTouchInfo.value = touchInfo;
-	}, PRESS_TIMEOUT);
-};
-
-const onTouchmove = (e: UniTouchEvent) => {
-	console.log(e)
-	e.preventDefault();
-	if (moving.value) {
+	} else if (moving.value) {
 		const uniTouch = resolveTouchInfo(e);
 		const [deltaX, deltaY] = [uniTouch.x - originTouchInfo.value!.x, uniTouch.y - originTouchInfo.value!.y];
 
@@ -72,13 +85,10 @@ const onTouchmove = (e: UniTouchEvent) => {
 const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
 
-	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
+	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT && !moving.value) {
 		const uniTouch = resolveTouchInfo(eventState.value ?? e);
 		emit("onTap", new ICTapEvent(uniTouch));
-		if (onTapTimer.value) {
-			clearTimeout(onTapTimer.value);
-			onTapTimer.value = undefined;
-		}
+		onClearTimeout();
 	} else if (pressing.value && moving.value) {
 		const uniTouch = resolveTouchInfo(eventState.value ?? e);
 		emit("onTouchend", new ICTouchendEvent(uniTouch));

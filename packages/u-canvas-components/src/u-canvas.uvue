@@ -170,13 +170,15 @@ const onTouchcancel = (e: ICTouchcancelEvent) => {
 
 const onZoomin = (e: ICZoominEvent) => {
 	console.log("zoomin", e);
-	const matrix = uCanvas.matrix.scale(1.1, 1.1, [e.x, e.y]);
+	const [x, y] = uCanvas.toGlobal([e.x * 2, e.y * 2]);
+	const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
 	uCanvas.matrix = matrix;
 };
 
 const onZoomout = (e: ICZoomoutEvent) => {
 	console.log("zoomout", e);
-	const matrix = uCanvas.matrix.scale(0.9, 0.9, [e.x, e.y]);
+	const [x, y] = uCanvas.toGlobal([e.x * 2, e.y * 2]);
+	const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
 	uCanvas.matrix = matrix;
 };
 </script>

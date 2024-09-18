@@ -1,7 +1,7 @@
 import { Container } from "./container";
 import { Offset } from "./offset";
 import { Matrix } from "./transform";
-import { Child } from "./types";
+import { Child, Point } from "./types";
 
 export interface UCanvasOptions {
 	canvasId: string;
@@ -87,6 +87,14 @@ export class UCanvas {
 	private setViewbox(matrix: Matrix): void {
 		const { width, height } = this.element;
 		this._viewbox = [-matrix.e / matrix.a, -matrix.f / matrix.d, width / matrix.a, height / matrix.d];
+	}
+
+	public toGlobal(point: Point): Point {
+		const [startX, startY] = this.viewbox;
+		const { a, d } = this.matrix;
+		const [x, y] = point;
+
+		return [startX + x / a, startY + y / d];
 	}
 
 	public add(p: Child) {

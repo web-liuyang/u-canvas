@@ -99,7 +99,6 @@ export class ICTouchcancelEvent extends ICTouchEvent {
 
 export class ICZoominEvent extends ICTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		console.log(touchInfo);
 		super(ICEventType.zoomin, touchInfo);
 	}
 }
