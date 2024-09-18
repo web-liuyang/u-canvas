@@ -69,6 +69,7 @@ export class UCanvas {
 		element.style.width = `${w}px`;
 		// @ts-expect-error
 		element.style.height = `${h}px`;
+		this.ctx.scale(dpr, dpr);
 	}
 
 	public async ensureInitialize() {
@@ -80,8 +81,7 @@ export class UCanvas {
 		const window = uni.getWindowInfo();
 		this.hidpi(element, window.windowWidth, window.windowHeight, devicePixelRatio);
 		this.root = new Container({ x: 0, y: 0 });
-		// this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
-		this.root.matrix = new Matrix([1, 0, 0, 1, 0, 0]);
+		this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
 	}
 
 	private setViewbox(matrix: Matrix): void {

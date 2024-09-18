@@ -151,8 +151,8 @@ const onTouchstart = (e: ICTouchstartEvent) => {
 
 const onTouchmove = (e: ICTouchmoveEvent) => {
 	console.log("touchmove", e);
-	const tx = originMatrix.value!.e + e.deltaX * 2;
-	const ty = originMatrix.value!.f + e.deltaY * 2;
+	const tx = originMatrix.value!.e + e.deltaX * originMatrix.value!.a;
+	const ty = originMatrix.value!.f + e.deltaY * originMatrix.value!.d;
 	const matrix = uCanvas.matrix.setTranslate(tx, ty);
 
 	uCanvas.matrix = matrix;
