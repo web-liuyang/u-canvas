@@ -15,7 +15,7 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: resolvePath("./src/index.ts"),
-			formats: ["es", "cjs"],
+			formats: ["es"],
 			name: "u-canvas",
 			// the proper extensions will be added
 			fileName: (format, entryName) => {

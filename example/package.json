@@ -14,7 +14,6 @@
 	"author": "web-liuyang",
 	"description": "",
 	"dependencies": {
-		"@dcloudio/vite-plugin-uni": "3.0.0-alpha-3000020210521001",
 		"u-canvas": "workspace:*",
 		"u-canvas-components": "workspace:*"
 	},

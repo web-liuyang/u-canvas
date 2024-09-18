@@ -5,7 +5,7 @@
 	"scripts": {},
 	"keywords": [],
 	"author": "web-liuyang",
-	"dependencies": {
+	"peerDependencies": {
 		"u-canvas": "workspace:*"
 	}
 }

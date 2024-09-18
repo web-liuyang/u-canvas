@@ -13,7 +13,7 @@ import {
 	Image,
 	Style,
 	Fill,
-} from "u-canvas";
+} from "@u-canvas";
 
 import { onMounted, nextTick } from "vue";
 import interactiveCanvas from "./interactive-canvas.uvue";
