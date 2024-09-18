@@ -9,6 +9,8 @@ import {
 	ICTouchstartEvent,
 	ICZoominEvent,
 	ICZoomoutEvent,
+	TouchInfo,
+	resolveTouchInfo,
 } from "./event";
 
 const props = defineProps<{ id: string }>();
@@ -31,14 +33,11 @@ const moving = ref(false);
 const onTapTimestamp = ref(0);
 const onTapTimer = ref<number>();
 
+// 在模拟事件时，事件系统并没有返回足够的信息
+// 所以需要缓存上一个 事件信息，以便统一返回
 const eventState = ref<UniTouchEvent>();
-
-const resolveUniTouch = (e: UniTouchEvent | MouseEvent | TouchEvent): UniTouch => {
-	// #ifdef WEB
-	if (e instanceof MouseEvent) return e as unknown as UniTouch;
-	// #endif
-	return e.touches[0];
-};
+// 用于计算 move 偏移量
+const originTouchInfo = ref<TouchInfo>();
 
 const onTouchstart = (e: UniTouchEvent) => {
 	e.preventDefault();
@@ -51,17 +50,21 @@ const onTouchstart = (e: UniTouchEvent) => {
 		onTapTimer.value = undefined;
 	}
 	onTapTimer.value = setTimeout(() => {
-		const uniTouch = resolveUniTouch(e);
-		emit("onTouchstart", new ICTouchstartEvent(uniTouch));
+		const touchInfo = resolveTouchInfo(e);
+		emit("onTouchstart", new ICTouchstartEvent(touchInfo));
 		moving.value = true;
+		originTouchInfo.value = touchInfo;
 	}, PRESS_TIMEOUT);
 };
 
 const onTouchmove = (e: UniTouchEvent) => {
+	console.log(e)
 	e.preventDefault();
 	if (moving.value) {
-		const uniTouch = resolveUniTouch(e);
-		emit("onTouchmove", new ICTouchmoveEvent(uniTouch));
+		const uniTouch = resolveTouchInfo(e);
+		const [deltaX, deltaY] = [uniTouch.x - originTouchInfo.value!.x, uniTouch.y - originTouchInfo.value!.y];
+
+		emit("onTouchmove", new ICTouchmoveEvent({ ...uniTouch, deltaX, deltaY }));
 		eventState.value = e;
 	}
 };
@@ -70,24 +73,26 @@ const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
 
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT) {
-		const uniTouch = resolveUniTouch(eventState.value ?? e);
+		const uniTouch = resolveTouchInfo(eventState.value ?? e);
 		emit("onTap", new ICTapEvent(uniTouch));
 		if (onTapTimer.value) {
 			clearTimeout(onTapTimer.value);
 			onTapTimer.value = undefined;
 		}
 	} else if (pressing.value && moving.value) {
-		const uniTouch = resolveUniTouch(eventState.value ?? e);
+		const uniTouch = resolveTouchInfo(eventState.value ?? e);
 		emit("onTouchend", new ICTouchendEvent(uniTouch));
 	}
 
 	pressing.value = false;
 	moving.value = false;
+	eventState.value = undefined;
+	originTouchInfo.value = undefined;
 };
 
 const onTouchcancel = (e: UniTouchEvent) => {
 	e.preventDefault();
-	const uniTouch = resolveUniTouch(eventState.value ?? e);
+	const uniTouch = resolveTouchInfo(eventState.value ?? e);
 	emit("onTouchcancel", new ICTouchcancelEvent(uniTouch));
 	pressing.value = false;
 	moving.value = false;
@@ -96,7 +101,7 @@ const onTouchcancel = (e: UniTouchEvent) => {
 const onWheel = (e: WheelEvent) => {
 	const sign = Math.sign(e.deltaY);
 	if (sign === 0) return;
-	const uniTouch = resolveUniTouch(e);
+	const uniTouch = resolveTouchInfo(e);
 	if (sign < 0) {
 		emit("onZoomin", new ICZoominEvent(uniTouch));
 	} else {

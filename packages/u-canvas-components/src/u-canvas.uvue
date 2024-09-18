@@ -15,7 +15,7 @@ import {
 	Fill,
 } from "@u-canvas";
 
-import { onMounted, nextTick } from "vue";
+import { onMounted, nextTick, ref } from "vue";
 import interactiveCanvas from "./interactive-canvas.uvue";
 import {
 	ICTapEvent,
@@ -26,6 +26,7 @@ import {
 	ICZoominEvent,
 	ICZoomoutEvent,
 } from "./event";
+import { Matrix } from "u-canvas";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
@@ -137,32 +138,46 @@ onMounted(() => {
 	});
 });
 
+const originMatrix = ref<Matrix>();
+
 const onTap = (e: ICTapEvent) => {
 	console.log("tap", e);
 };
 
 const onTouchstart = (e: ICTouchstartEvent) => {
 	console.log("touchstart", e);
+	originMatrix.value = uCanvas.matrix;
 };
 
 const onTouchmove = (e: ICTouchmoveEvent) => {
 	console.log("touchmove", e);
+	const tx = originMatrix.value!.e + e.deltaX * 2;
+	const ty = originMatrix.value!.f + e.deltaY * 2;
+	const matrix = uCanvas.matrix.setTranslate(tx, ty);
+
+	uCanvas.matrix = matrix;
 };
 
 const onTouchend = (e: ICTouchendEvent) => {
 	console.log("touchend", e);
+	originMatrix.value = undefined;
 };
 
 const onTouchcancel = (e: ICTouchcancelEvent) => {
 	console.log("touchcancel", e);
+	originMatrix.value = undefined;
 };
 
 const onZoomin = (e: ICZoominEvent) => {
 	console.log("zoomin", e);
+	const matrix = uCanvas.matrix.scale(1.1, 1.1, [e.x, e.y]);
+	uCanvas.matrix = matrix;
 };
 
 const onZoomout = (e: ICZoomoutEvent) => {
 	console.log("zoomout", e);
+	const matrix = uCanvas.matrix.scale(0.9, 0.9, [e.x, e.y]);
+	uCanvas.matrix = matrix;
 };
 </script>
 

@@ -8,6 +8,8 @@ export interface UCanvasOptions {
 	componentInstance?: any;
 }
 
+type Viewbox = [number, number, number, number];
+
 export class UCanvas {
 	protected element!: UniCanvasElement;
 
@@ -16,6 +18,23 @@ export class UCanvas {
 	public get ctx(): CanvasRenderingContext2D {
 		// @ts-expect-error
 		return this.element.getContext("2d")!;
+	}
+
+	private _viewbox: Viewbox = [0, 0, 0, 0];
+
+	public get viewbox(): Viewbox {
+		return [...this._viewbox];
+	}
+
+	public get matrix(): Matrix {
+		return this.root.matrix;
+	}
+
+	public set matrix(matrix: Matrix) {
+		this.root.matrix = matrix;
+		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
+		this.setViewbox(matrix);
+		this.render();
 	}
 
 	protected root!: Container;
@@ -43,7 +62,7 @@ export class UCanvas {
 	}
 
 	// 处理高清屏逻辑
-	private resetRatio(element: UniCanvasElement, w: number, h: number, dpr: number) {
+	private hidpi(element: UniCanvasElement, w: number, h: number, dpr: number) {
 		element.width = w * dpr;
 		element.height = h * dpr;
 		// @ts-expect-error
@@ -59,9 +78,15 @@ export class UCanvas {
 		this.canvasContext = canvasContext;
 		this.element = element;
 		const window = uni.getWindowInfo();
-		this.resetRatio(element, window.windowWidth, window.windowHeight, devicePixelRatio);
+		this.hidpi(element, window.windowWidth, window.windowHeight, devicePixelRatio);
 		this.root = new Container({ x: 0, y: 0 });
-		this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
+		// this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
+		this.root.matrix = new Matrix([1, 0, 0, 1, 0, 0]);
+	}
+
+	private setViewbox(matrix: Matrix): void {
+		const { width, height } = this.element;
+		this._viewbox = [-matrix.e / matrix.a, -matrix.f / matrix.d, width / matrix.a, height / matrix.d];
 	}
 
 	public add(p: Child) {
@@ -69,7 +94,7 @@ export class UCanvas {
 	}
 
 	public clear() {
-		// this.ctx.clearRect();
+		this.ctx.clearRect(...this._viewbox);
 	}
 
 	public render() {
