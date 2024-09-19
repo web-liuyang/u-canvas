@@ -82,6 +82,7 @@ export class UCanvas {
 		this.hidpi(element, window.windowWidth, window.windowHeight, devicePixelRatio);
 		this.root = new Container({ x: 0, y: 0 });
 		this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
+		this.setViewbox(this.root.matrix);
 	}
 
 	private setViewbox(matrix: Matrix): void {
@@ -101,8 +102,21 @@ export class UCanvas {
 		this.root.addChild(p);
 	}
 
+	private paintOrigin() {
+		const path = new Path2D();
+
+		path.moveTo(-100, 0);
+		path.lineTo(100, 0);
+
+		path.moveTo(0, -100);
+		path.lineTo(0, 100);
+
+		this.ctx.stroke(path);
+	}
+
 	public clear() {
 		this.ctx.clearRect(...this._viewbox);
+		this.paintOrigin();
 	}
 
 	public render() {
