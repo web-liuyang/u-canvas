@@ -1,5 +1,5 @@
 import { Parent, Child, Equatable, Paintable, Hittable, Point } from "../types";
-import { Transform } from "../transform";
+import { Matrix, Transform } from "../transform";
 import { Offset } from "../offset";
 
 export interface ContainerOptions extends Parent {

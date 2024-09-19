@@ -13,6 +13,7 @@ import {
 	Image,
 	Style,
 	Fill,
+	Matrix,
 } from "@u-canvas";
 
 import { onMounted, nextTick, ref } from "vue";
@@ -26,7 +27,6 @@ import {
 	ICZoominEvent,
 	ICZoomoutEvent,
 } from "./event";
-import { Matrix } from "u-canvas";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
@@ -44,10 +44,24 @@ onMounted(() => {
 			],
 		});
 
-		uCanvas.add(rect);
-		// uCanvas.add(
-		// 	new Rectangle({ x: 10, y: 10, w: 100, h: 100, style: new Style({ fill: new Fill({ color: "red" }) }) })
-		// );
+		// uCanvas.add(rect);
+		uCanvas.add(
+			new Rectangle({ x: 100, y: 100, w: 100, h: 100, style: new Style({ fill: new Fill({ color: "red" }) }) })
+		);
+
+		const r = new Rectangle({
+			x: 200,
+			y: 100,
+			w: 100,
+			h: 100,
+			style: new Style({ fill: new Fill({ color: "blue" }) }),
+		});
+
+		// r.matrix = new Matrix([0.5, 0, 0, 0.5, 10, 10]);
+		// r.scale(0.5, 0.5);
+		// r.translate(10, 10);
+
+		uCanvas.add(r);
 		// uCanvas.add(new Text({ x: 20, y: 130, text: "Rectangle" }));
 
 		// uCanvas.add(

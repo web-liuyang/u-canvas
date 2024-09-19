@@ -43,7 +43,7 @@ export class Matrix {
 	}
 
 	/**
-	 * Matrix multiplication
+	 * Matrix multiplication matrix
 	 */
 	public multiply(other: Matrix, direction: MultiplicativeDirection = MultiplicativeDirection.Right): Matrix {
 		switch (direction) {
@@ -54,9 +54,29 @@ export class Matrix {
 		}
 	}
 
+	/**
+	 * Matrix multiplication vector
+	 */
+	public applyVector(vector: Point): Point {
+		const [x, y] = vector;
+
+		const x1 = this.a * x + this.c * y + this.e;
+		const y1 = this.b * x + this.d * y + this.f;
+
+		return [x1, y1];
+	}
+
 	public translate(tx: number, ty: number): Matrix {
 		const translationMatrix = new Matrix([1, 0, 0, 1, tx, ty]);
 		const matrix = this.multiply(translationMatrix);
+		return matrix;
+	}
+
+	public rotate(theta: number): Matrix {
+		const cos = Math.cos(theta);
+		const sin = Math.sin(theta);
+		const rotationMatrix = new Matrix([cos, -sin, sin, cos, 0, 0]);
+		const matrix = this.multiply(rotationMatrix);
 		return matrix;
 	}
 
