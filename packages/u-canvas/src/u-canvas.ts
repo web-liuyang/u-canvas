@@ -105,11 +105,11 @@ export class UCanvas {
 	private paintOrigin() {
 		const path = new Path2D();
 
-		path.moveTo(-100, 0);
+		path.moveTo(0, 0);
 		path.lineTo(100, 0);
-
-		path.moveTo(0, -100);
+		path.lineTo(100, 100);
 		path.lineTo(0, 100);
+		path.lineTo(0, 0);
 
 		this.ctx.stroke(path);
 	}
