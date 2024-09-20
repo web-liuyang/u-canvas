@@ -9,13 +9,13 @@ export interface ContainerOptions extends Parent {
 }
 
 export class Container extends Transform implements Paintable, Hittable, Equatable<Container>, Parent {
-	public readonly x: number;
+	public x: number;
 
-	public readonly y: number;
+	public y: number;
 
-	public readonly parent?: Container;
+	public parent?: Container;
 
-	public readonly children: Child[];
+	public children: Child[];
 
 	constructor(options: ContainerOptions) {
 		super();

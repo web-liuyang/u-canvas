@@ -11,11 +11,11 @@ export interface CircleOptions extends GraphicOptions {
 export class Circle extends Graphic<CircleOptions> {
 	public override readonly type = "Circle";
 
-	public readonly cx: number;
+	public cx: number;
 
-	public readonly cy: number;
+	public cy: number;
 
-	public readonly radius: number;
+	public radius: number;
 
 	constructor(options: CircleOptions) {
 		super(options);

@@ -21,13 +21,13 @@ export interface RectangleFromCenterOptions extends GraphicOptions {
 export class Rectangle extends Graphic<RectangleOptions> {
 	public override readonly type = "Rectangle";
 
-	public readonly x: number;
+	public x: number;
 
-	public readonly y: number;
+	public y: number;
 
-	public readonly w: number;
+	public w: number;
 
-	public readonly h: number;
+	public h: number;
 
 	public get cx(): number {
 		return this.x + this.w / 2;

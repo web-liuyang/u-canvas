@@ -10,7 +10,7 @@ export interface AnyOptions extends GraphicOptions {
 export class Any extends Graphic<AnyOptions> {
 	public override readonly type = "Any";
 
-	public readonly points: AnyOptions["points"];
+	public points: AnyOptions["points"];
 
 	constructor(options: AnyOptions) {
 		super(options);

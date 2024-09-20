@@ -20,13 +20,13 @@ export interface StrokeOptions {
 }
 
 export class Stroke implements Cloneable<StrokeOptions>, Equatable<Stroke> {
-	public readonly color: StrokeOptions["color"];
+	public color: StrokeOptions["color"];
 
-	public readonly width: StrokeOptions["width"];
+	public width: StrokeOptions["width"];
 
-	public readonly cap: StrokeOptions["cap"];
+	public cap: StrokeOptions["cap"];
 
-	public readonly join: StrokeOptions["join"];
+	public join: StrokeOptions["join"];
 
 	constructor(options?: Partial<StrokeOptions>) {
 		this.color = options?.color ?? "#000";

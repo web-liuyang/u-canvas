@@ -13,15 +13,15 @@ export interface PieOptions extends GraphicOptions {
 export class Pie extends Graphic<PieOptions> {
 	public override readonly type = "Pie";
 
-	public readonly cx: number;
+	public cx: number;
 
-	public readonly cy: number;
+	public cy: number;
 
-	public readonly radius: number;
+	public radius: number;
 
-	public readonly startAngle: number;
+	public startAngle: number;
 
-	public readonly endAngle: number;
+	public endAngle: number;
 
 	constructor(options: PieOptions) {
 		super(options);

@@ -8,9 +8,9 @@ export interface StyleOptions {
 }
 
 export class Style implements Cloneable<StyleOptions>, Equatable<Style> {
-	public readonly stroke: Stroke;
+	public stroke: Stroke;
 
-	public readonly fill: Fill;
+	public fill: Fill;
 
 	constructor(options?: Partial<StyleOptions>) {
 		this.stroke = options?.stroke ?? new Stroke();

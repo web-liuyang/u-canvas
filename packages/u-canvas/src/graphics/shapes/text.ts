@@ -16,13 +16,13 @@ export interface TextOptions extends GraphicOptions {
 export class Text extends Graphic<TextOptions> {
 	public override readonly type = "Text";
 
-	public readonly text: TextOptions["text"];
+	public text: TextOptions["text"];
 
-	public readonly x: TextOptions["x"];
+	public x: TextOptions["x"];
 
-	public readonly y: TextOptions["y"];
+	public y: TextOptions["y"];
 
-	public override readonly style: NonNullable<TextOptions["style"]>;
+	public override style: NonNullable<TextOptions["style"]>;
 
 	constructor(options: TextOptions) {
 		super(options);

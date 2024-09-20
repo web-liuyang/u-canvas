@@ -13,15 +13,15 @@ export interface ImageOptions extends GraphicOptions {
 export class Image extends Graphic<ImageOptions> {
 	public override readonly type = "Image";
 
-	public readonly image: ImageOptions["image"];
+	public image: ImageOptions["image"];
 
-	public readonly x: ImageOptions["x"];
+	public x: ImageOptions["x"];
 
-	public readonly y: ImageOptions["y"];
+	public y: ImageOptions["y"];
 
-	public readonly w?: ImageOptions["w"];
+	public w?: ImageOptions["w"];
 
-	public readonly h?: ImageOptions["h"];
+	public h?: ImageOptions["h"];
 
 	constructor(options: ImageOptions) {
 		super(options);

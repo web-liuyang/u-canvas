@@ -19,15 +19,15 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	extends Transform
 	implements Paintable, Cloneable<CopyWithParameter<T>>, Equatable<Graphic>, Hittable, Parent
 {
-	public parent?: Container;
-
 	public abstract readonly type: string;
 
 	public readonly id: NonNullable<T["id"]>;
 
-	public readonly coordinateScope: GraphicOptions["coordinateScope"];
+	public coordinateScope: GraphicOptions["coordinateScope"];
 
-	public readonly style: Style;
+	public style: Style;
+
+	public parent?: Container;
 
 	constructor(options: Partial<T>) {
 		super();

@@ -12,21 +12,21 @@ export interface TextStyleOptions extends StyleOptions {
 }
 
 export class TextStyle extends Style {
-	public readonly fontSize: TextStyleOptions["fontSize"];
+	public fontSize: TextStyleOptions["fontSize"];
 
-	public readonly fontFamily: TextStyleOptions["fontFamily"];
+	public fontFamily: TextStyleOptions["fontFamily"];
 
-	public readonly direction: TextStyleOptions["direction"];
+	public direction: TextStyleOptions["direction"];
 
-	public readonly letterSpacing: TextStyleOptions["letterSpacing"];
+	public letterSpacing: TextStyleOptions["letterSpacing"];
 
-	public readonly wordSpacing: TextStyleOptions["wordSpacing"];
+	public wordSpacing: TextStyleOptions["wordSpacing"];
 
-	public readonly textAlign: TextStyleOptions["textAlign"];
+	public textAlign: TextStyleOptions["textAlign"];
 
-	public readonly textBaseline: TextStyleOptions["textBaseline"];
+	public textBaseline: TextStyleOptions["textBaseline"];
 
-	public readonly textRendering: TextStyleOptions["textRendering"];
+	public textRendering: TextStyleOptions["textRendering"];
 
 	constructor(options?: Partial<TextStyleOptions>) {
 		super(options);

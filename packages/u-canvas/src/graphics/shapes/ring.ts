@@ -3,7 +3,8 @@ import { Graphic } from "../graphic";
 import { Point } from "../../types";
 
 export interface RingOptions extends GraphicOptions {
-	center: Point;
+	cx: number;
+	cy: number;
 	innerRadius: number;
 	outerRadius: number;
 	startAngle: number;
@@ -13,34 +14,36 @@ export interface RingOptions extends GraphicOptions {
 export class Ring extends Graphic<RingOptions> {
 	public override readonly type = "Ring";
 
-	public readonly innerRadius: number;
+	public cx: number;
 
-	public readonly outerRadius: number;
+	public cy: number;
 
-	public readonly startAngle: number;
+	public innerRadius: number;
 
-	public readonly endAngle: number;
+	public outerRadius: number;
 
-	public readonly center: Point;
+	public startAngle: number;
+
+	public endAngle: number;
 
 	constructor(options: RingOptions) {
 		super(options);
+		this.cx = options.cx;
+		this.cy = options.cy;
 		this.innerRadius = options.innerRadius;
 		this.outerRadius = options.outerRadius;
 		this.startAngle = options.startAngle;
 		this.endAngle = options.endAngle;
-
-		this.center = options.center;
 	}
 
 	public override paint(ctx: CanvasRenderingContext2D): void {
 		this.draw(ctx, () => {
-			const [x, y] = this.center;
+			const { cx, cy } = this;
 			const { innerRadius, outerRadius, startAngle, endAngle } = this;
 			const path = new Path2D();
 
-			path.arc(x, y, outerRadius, startAngle, endAngle);
-			path.arc(x, y, innerRadius, endAngle, startAngle, true);
+			path.arc(cx, cy, outerRadius, startAngle, endAngle);
+			path.arc(cx, cy, innerRadius, endAngle, startAngle, true);
 			path.closePath(); // 封闭路径
 
 			ctx.fill(path);
@@ -51,7 +54,8 @@ export class Ring extends Graphic<RingOptions> {
 	public override copyWith(options: CopyWithParameter<RingOptions>): Ring {
 		return new Ring({
 			id: this.id,
-			center: options.center ?? this.center,
+			cx: options.cx ?? this.cx,
+			cy: options.cy ?? this.cy,
 			innerRadius: options.innerRadius ?? this.innerRadius,
 			outerRadius: options.outerRadius ?? this.outerRadius,
 			startAngle: options.startAngle ?? this.startAngle,
@@ -64,13 +68,7 @@ export class Ring extends Graphic<RingOptions> {
 
 	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
-		const {
-			center: [cx, cy],
-			innerRadius,
-			outerRadius,
-			startAngle,
-			endAngle,
-		} = this;
+		const { cx, cy, innerRadius, outerRadius, startAngle, endAngle } = this;
 
 		const [dx, dy] = [x - cx, y - cy];
 		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -88,8 +86,8 @@ export class Ring extends Graphic<RingOptions> {
 	public override equals(other: Ring): boolean {
 		return (
 			super.equals(other) &&
-			this.center[0] === other.center[0] &&
-			this.center[1] === other.center[1] &&
+			this.cx === other.cx &&
+			this.cy === other.cy &&
 			this.innerRadius === other.innerRadius &&
 			this.outerRadius === other.outerRadius &&
 			this.startAngle === other.startAngle &&

@@ -10,7 +10,7 @@ export interface PolylineOptions extends GraphicOptions {
 export class Polyline extends Graphic<PolylineOptions> {
 	public override readonly type = "Polyline";
 
-	public readonly points: PolylineOptions["points"];
+	public points: PolylineOptions["points"];
 
 	constructor(options: PolylineOptions) {
 		super(options);

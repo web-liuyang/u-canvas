@@ -57,12 +57,13 @@ const onTouchstart = (e: UniTouchEvent) => {
 	eventState.value = e;
 
 	onClearTimeout();
-	// onSetTimeout(() => {
-	// 	const touchInfo = resolveTouchInfo(e);
-	// 	emit("onTouchstart", new ICTouchstartEvent(touchInfo));
-	// 	moving.value = true;
-	// 	originTouchInfo.value = touchInfo;
-	// }, PRESS_TIMEOUT);
+	onSetTimeout(() => {
+		// console.log("A")
+		const touchInfo = resolveTouchInfo(e);
+		emit("onTouchstart", new ICTouchstartEvent(touchInfo));
+		moving.value = true;
+		originTouchInfo.value = touchInfo;
+	}, PRESS_TIMEOUT);
 };
 
 const onTouchmove = (e: UniTouchEvent) => {

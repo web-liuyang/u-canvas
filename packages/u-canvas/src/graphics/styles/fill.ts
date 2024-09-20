@@ -5,7 +5,7 @@ interface FillOptions {
 }
 
 export class Fill implements Cloneable<FillOptions>, Equatable<Fill> {
-	public readonly color: string;
+	public color: string;
 
 	constructor(options?: Partial<FillOptions>) {
 		this.color = options?.color ?? "transparent";

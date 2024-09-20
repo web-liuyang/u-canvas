@@ -10,7 +10,7 @@ export interface LineOptions extends GraphicOptions {
 export class Polygon extends Graphic<LineOptions> {
 	public override readonly type = "Polygon";
 
-	public readonly points: LineOptions["points"];
+	public points: LineOptions["points"];
 
 	constructor(options: LineOptions) {
 		super(options);
