@@ -15,6 +15,8 @@ export class UCanvas {
 
 	protected canvasContext!: CanvasContext;
 
+	public readonly devicePixelRatio: number = uni.getDeviceInfo().devicePixelRatio || 1;
+
 	public get ctx(): CanvasRenderingContext2D {
 		return this.canvasContext.getContext("2d")!;
 	}
@@ -74,13 +76,12 @@ export class UCanvas {
 	public async ensureInitialize() {
 		const canvasContext = await this.getCanvasContext(this.options);
 		const element = await this.getCanvasElement(this.options);
-		const devicePixelRatio = uni.getDeviceInfo().devicePixelRatio || 1;
 		this.canvasContext = canvasContext;
 		this.element = element;
 		const window = uni.getWindowInfo();
-		this.hidpi(element, window.windowWidth, window.windowHeight, devicePixelRatio);
+		this.hidpi(element, window.windowWidth, window.windowHeight, this.devicePixelRatio);
 		this.root = new Container({ x: 0, y: 0 });
-		this.root.matrix = new Matrix([devicePixelRatio, 0, 0, devicePixelRatio, 0, 0]);
+		this.root.matrix = new Matrix([this.devicePixelRatio, 0, 0, this.devicePixelRatio, 0, 0]);
 		this.setViewbox(this.root.matrix);
 	}
 

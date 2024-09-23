@@ -3,7 +3,8 @@
 		{
 			"path": "pages/paint/paint",
 			"style": {
-				"navigationBarTitleText": "paint"
+				"navigationBarTitleText": "paint",
+				"navigationStyle": "custom"
 			}
 		},
 		{

@@ -73,15 +73,9 @@ export class ICTouchstartEvent extends ICTouchEvent {
 	}
 }
 
-export class ICTouchmoveEvent extends ICTouchEvent implements Delta {
-	public readonly deltaX: number;
-
-	public readonly deltaY: number;
-
-	constructor(touchInfo: TouchInfo & Delta) {
+export class ICTouchmoveEvent extends ICTouchEvent {
+	constructor(touchInfo: TouchInfo) {
 		super(ICEventType.touchmove, touchInfo);
-		this.deltaX = touchInfo.deltaX;
-		this.deltaY = touchInfo.deltaY;
 	}
 }
 
@@ -110,7 +104,6 @@ export class ICZoomoutEvent extends ICTouchEvent {
 }
 
 export const resolveTouchInfo = (e: UniTouchEvent | MouseEvent | TouchEvent): TouchInfo => {
-	// console.log(e);
 	// #ifdef WEB
 	if (e instanceof MouseEvent) {
 		return {
@@ -132,4 +125,21 @@ export const resolveTouchInfo = (e: UniTouchEvent | MouseEvent | TouchEvent): To
 		screenX: e.touches[0].screenX,
 		screenY: e.touches[0].screenY,
 	};
+};
+
+export const resolveMultiTouchInfo = (e: UniTouchEvent | TouchEvent): TouchInfo[] => {
+	const touchInfos: TouchInfo[] = [];
+
+	for (const touch of e.touches) {
+		touchInfos.push({
+			x: touch.clientX,
+			y: touch.clientY,
+			pageX: touch.pageX,
+			pageY: touch.pageY,
+			screenX: touch.screenX,
+			screenY: touch.screenY,
+		});
+	}
+
+	return touchInfos;
 };

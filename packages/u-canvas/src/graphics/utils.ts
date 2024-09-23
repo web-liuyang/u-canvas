@@ -112,3 +112,16 @@ export function createImageData(options: CreateImageDataOptions): ImageData {
 	// Web
 	// return createImageBitmap(imageData);
 }
+
+export function calMidpoint(points: Point[]): Point {
+	const [x, y] = points.reduce(
+		(prev, item) => {
+			prev[0] += item[0];
+			prev[1] += item[1];
+			return prev;
+		},
+		[0, 0]
+	);
+
+	return [x / points.length, y / points.length];
+}

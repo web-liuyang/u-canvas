@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import type { Point } from "@u-canvas";
+import { calMidpoint } from "@u-canvas";
 import {
 	//
 	ICTapEvent,
@@ -11,6 +13,7 @@ import {
 	ICZoomoutEvent,
 	TouchInfo,
 	resolveTouchInfo,
+	resolveMultiTouchInfo,
 } from "./event";
 
 const props = defineProps<{ id: string }>();
@@ -28,6 +31,7 @@ const emit = defineEmits<{
 const PRESS_TIMEOUT = 200;
 
 const pressing = ref(false);
+const multiPointerPressing = ref(false);
 const moving = ref(false);
 
 const onTapTimestamp = ref(0);
@@ -44,6 +48,7 @@ const onClearTimeout = () => {
 	}
 };
 
+// 在 onTouchstart 时保存新值
 // 在模拟事件时，事件系统并没有返回足够的信息
 // 所以需要缓存上一个 事件信息，以便统一返回
 const eventState = ref<UniTouchEvent>();
@@ -53,22 +58,58 @@ const originTouchInfo = ref<TouchInfo>();
 const onTouchstart = (e: UniTouchEvent) => {
 	e.preventDefault();
 	pressing.value = true;
+	multiPointerPressing.value = e.touches.length > 1;
 	onTapTimestamp.value = Date.now();
 	eventState.value = e;
 
 	onClearTimeout();
-	onSetTimeout(() => {
-		// console.log("A")
-		const touchInfo = resolveTouchInfo(e);
-		emit("onTouchstart", new ICTouchstartEvent(touchInfo));
-		moving.value = true;
-		originTouchInfo.value = touchInfo;
-	}, PRESS_TIMEOUT);
+
+	if (!multiPointerPressing.value) {
+		// 如果后期有长按事件，那么应该是在此处修改
+		onSetTimeout(() => {
+			const touchInfo = resolveTouchInfo(e);
+			emit("onTouchstart", new ICTouchstartEvent(touchInfo));
+			moving.value = true;
+			originTouchInfo.value = touchInfo;
+		}, PRESS_TIMEOUT);
+	}
 };
+
+function calculateZoomTypeAndCenter(p1: Point, p2: Point, zp1: Point, zp2: Point) {
+	// 计算初始距离和缩放后的距离
+	const initialDistance = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2));
+	const zoomedDistance = Math.sqrt(Math.pow(zp2[0] - zp1[0], 2) + Math.pow(zp2[1] - zp1[1], 2));
+	if (initialDistance === zoomedDistance) return undefined;
+	// 比较距离确定缩放类型
+	const sign = zoomedDistance > initialDistance ? -1 : 1;
+
+	// 计算中心点坐标
+	const cx = (p1[0] + p2[0] + zp1[0] + zp2[0]) / 4;
+	const cy = (p1[1] + p2[1] + zp1[1] + zp2[1]) / 4;
+
+	return { sign, cx, cy };
+}
 
 const onTouchmove = (e: UniTouchEvent) => {
 	e.preventDefault();
-	if (pressing.value && !moving.value) {
+	if (multiPointerPressing.value && eventState.value?.touches.length === e.touches.length) {
+		const origin: Point[] = resolveMultiTouchInfo(eventState.value).map(e => [e.x, e.y]);
+		const current: Point[] = resolveMultiTouchInfo(e).map(e => [e.x, e.y]);
+		const originMidpoint = calMidpoint(origin);
+		const currentMidpoint = calMidpoint(current);
+
+		const result = calculateZoomTypeAndCenter(origin[0], origin[1], current[0], current[1]);
+		if (!result) return;
+		// 还有些许问题
+		// console.log(result.cx, result.cy);
+		if (result.sign < 0) {
+			emit("onZoomin", new ICZoominEvent({ x: result.cx, y: result.cy }));
+		} else {
+			emit("onZoomout", new ICZoomoutEvent({ x: result.cx, y: result.cy }));
+		}
+
+		console.log(originMidpoint, currentMidpoint);
+	} else if (pressing.value && !moving.value) {
 		onClearTimeout();
 		const touchInfo = resolveTouchInfo(e);
 		emit("onTouchstart", new ICTouchstartEvent(touchInfo));
@@ -76,9 +117,9 @@ const onTouchmove = (e: UniTouchEvent) => {
 		originTouchInfo.value = touchInfo;
 	} else if (moving.value) {
 		const uniTouch = resolveTouchInfo(e);
-		const [deltaX, deltaY] = [uniTouch.x - originTouchInfo.value!.x, uniTouch.y - originTouchInfo.value!.y];
+		// const [deltaX, deltaY] = [uniTouch.x - originTouchInfo.value!.x, uniTouch.y - originTouchInfo.value!.y];
 
-		emit("onTouchmove", new ICTouchmoveEvent({ ...uniTouch, deltaX, deltaY }));
+		emit("onTouchmove", new ICTouchmoveEvent(uniTouch));
 		eventState.value = e;
 	}
 };
@@ -96,6 +137,7 @@ const onTouchend = (e: UniTouchEvent) => {
 	}
 
 	pressing.value = false;
+	multiPointerPressing.value = false;
 	moving.value = false;
 	eventState.value = undefined;
 	originTouchInfo.value = undefined;
@@ -105,6 +147,7 @@ const onTouchcancel = (e: UniTouchEvent) => {
 	e.preventDefault();
 	const uniTouch = resolveTouchInfo(eventState.value ?? e);
 	emit("onTouchcancel", new ICTouchcancelEvent(uniTouch));
+	multiPointerPressing.value = false;
 	pressing.value = false;
 	moving.value = false;
 };
@@ -119,7 +162,28 @@ const onWheel = (e: WheelEvent) => {
 		emit("onZoomout", new ICZoomoutEvent(uniTouch));
 	}
 };
+
+// web -> 只有单击与双击会触发 tap 事件
+// const onTapTT = e => {
+// 	console.log("onTapTT", e.touches);
+// };
 </script>
+
+<!-- 	
+
+	
+		@tap="onTapTT"
+
+		@mousedown="onTouchstart"
+		@mousemove="onTouchmove"
+		@mouseup="onTouchend"
+		@wheel="onWheel"
+
+		@touchstart="onTouchstart"
+		@touchmove="onTouchmove"
+		@touchend="onTouchend"
+		@touchcancel="onTouchcancel" 
+		-->
 
 <template>
 	<!-- @vue-expect-error -->
