@@ -16,8 +16,7 @@ export class UCanvas {
 	protected canvasContext!: CanvasContext;
 
 	public get ctx(): CanvasRenderingContext2D {
-		// @ts-expect-error
-		return this.element.getContext("2d")!;
+		return this.canvasContext.getContext("2d")!;
 	}
 
 	private _viewbox: Viewbox = [0, 0, 0, 0];
