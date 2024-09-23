@@ -1,4 +1,10 @@
 <script lang="ts">
+// #ifdef WEB
+document.documentElement.addEventListener("contextmenu", e => e.preventDefault(), false);
+// @ts-expect-error web api
+document.documentElement.addEventListener("touchmove", e => e.scale !== 1 && e.preventDefault(), { passive: false });
+// #endif
+
 let firstBackTime = 0;
 export default {
 	onLaunch: function () {
