@@ -154,7 +154,7 @@ const originTouchInfo = ref<TouchInfo>();
 
 const onTap = (e: ICTapEvent) => {
 	console.log("tap", e);
-	console.log(uCanvas.toGlobal([e.x * uCanvas.devicePixelRatio, e.y * uCanvas.devicePixelRatio]));
+	console.log(uCanvas.toGlobal([e.x, e.y]));
 };
 
 const onTouchstart = (e: ICTouchstartEvent) => {
@@ -165,8 +165,8 @@ const onTouchstart = (e: ICTouchstartEvent) => {
 const onTouchmove = (e: ICTouchmoveEvent) => {
 	const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
 
-	const tx = originMatrix.value!.e + deltaX * uCanvas.devicePixelRatio;
-	const ty = originMatrix.value!.f + deltaY * uCanvas.devicePixelRatio;
+	const tx = originMatrix.value!.e + deltaX * uCanvas.dpr;
+	const ty = originMatrix.value!.f + deltaY * uCanvas.dpr;
 
 	const matrix = uCanvas.matrix.setTranslate(tx, ty);
 
@@ -174,28 +174,23 @@ const onTouchmove = (e: ICTouchmoveEvent) => {
 };
 
 const onTouchend = (e: ICTouchendEvent) => {
-	// console.log("touchend", e);
 	originMatrix.value = undefined;
+	originTouchInfo.value = undefined;
 };
 
 const onTouchcancel = (e: ICTouchcancelEvent) => {
-	// console.log("touchcancel", e);
 	originMatrix.value = undefined;
+	originTouchInfo.value = undefined;
 };
 
 const onZoomin = (e: ICZoominEvent) => {
-	// console.log("zoomin", e);
-	// TODO 不清楚为什么非要 * 2，而不能直接 * metrix.a
-	// const [x, y] = uCanvas.toGlobal([e.x * uCanvas.matrix.a, e.y * uCanvas.matrix.d]);
-	const [x, y] = uCanvas.toGlobal([e.x * uCanvas.devicePixelRatio, e.y * uCanvas.devicePixelRatio]);
+	const [x, y] = uCanvas.toGlobal([e.x, e.y]);
 	const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
 	uCanvas.matrix = matrix;
 };
 
 const onZoomout = (e: ICZoomoutEvent) => {
-	// console.log("zoomout", e);
-	// const [x, y] = uCanvas.toGlobal([e.x * uCanvas.matrix.a, e.y * uCanvas.matrix.d]);
-	const [x, y] = uCanvas.toGlobal([e.x * uCanvas.devicePixelRatio, e.y * uCanvas.devicePixelRatio]);
+	const [x, y] = uCanvas.toGlobal([e.x, e.y]);
 	const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
 	uCanvas.matrix = matrix;
 };

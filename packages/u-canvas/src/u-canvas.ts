@@ -15,7 +15,7 @@ export class UCanvas {
 
 	protected canvasContext!: CanvasContext;
 
-	public readonly devicePixelRatio: number = uni.getDeviceInfo().devicePixelRatio || 1;
+	public readonly dpr: number = uni.getDeviceInfo().devicePixelRatio || 1;
 
 	public get ctx(): CanvasRenderingContext2D {
 		return this.canvasContext.getContext("2d")!;
@@ -79,9 +79,9 @@ export class UCanvas {
 		this.canvasContext = canvasContext;
 		this.element = element;
 		const window = uni.getWindowInfo();
-		this.hidpi(element, window.windowWidth, window.windowHeight, this.devicePixelRatio);
+		this.hidpi(element, window.windowWidth, window.windowHeight, this.dpr);
 		this.root = new Container({ x: 0, y: 0 });
-		this.root.matrix = new Matrix([this.devicePixelRatio, 0, 0, this.devicePixelRatio, 0, 0]);
+		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
 		this.setViewbox(this.root.matrix);
 	}
 
@@ -95,7 +95,7 @@ export class UCanvas {
 		const { a, d } = this.matrix;
 		const [x, y] = point;
 
-		return [startX + x / a, startY + y / d];
+		return [startX + (x * this.dpr) / a, startY + (y * this.dpr) / d];
 	}
 
 	public add(p: Child) {
