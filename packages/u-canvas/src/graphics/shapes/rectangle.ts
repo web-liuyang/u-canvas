@@ -70,7 +70,7 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
 			const path = new Path2D();
-			const [x, y] = this.calLocationWithScope([this.x, this.y], offset);
+			const [x, y] = [this.x, this.y] || this.calLocationWithScope([this.x, this.y], offset);
 			const [w, h] = [this.w, this.h];
 			path.rect(x, y, w, h);
 			ctx.stroke(path);
@@ -104,5 +104,12 @@ export class Rectangle extends Graphic<RectangleOptions> {
 
 	public override equals(other: Rectangle): boolean {
 		return super.equals(other) && this.x === other.x && this.y === other.y && this.w === other.w && this.h === other.h;
+	}
+
+	public on(type: string, fn: () => void) {
+		{
+			// x,y 自己当前相对父级坐标
+			// clientX,Y 相对于页面可显示区域左/顶边的距离
+		}
 	}
 }

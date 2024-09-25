@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { onMounted, nextTick } from "vue";
+
+let canvasContext: CanvasRenderingContext2D;
+
 onMounted(() => {
 	nextTick(() => {
 		uni.createCanvasContextAsync({
 			id: "ucanvas",
 			success: (context: CanvasContext) => {
-				const canvasContext = context.getContext("2d")!;
+				canvasContext = context.getContext("2d")!;
 				const canvas = canvasContext.canvas;
 
 				const dpr = uni.getDeviceInfo().devicePixelRatio ?? 1;
@@ -20,17 +23,55 @@ onMounted(() => {
 				const path = new Path2D();
 				path.rect(0, 70, 100, 100);
 
-				canvasContext.fillStyle = "red";
-				canvasContext.fill(path);
+				// canvasContext.fillStyle = "red";
+				// canvasContext.fill(path);
 				// canvasContext.stroke(path);
+				canvasContext.strokeRect(100, 100, 100, 100);
 			},
 		});
 	});
 });
+
+let origin: Touch;
+let originTxTy: [number, number] = [0, 0];
+
+const onTouchstart = (e: TouchEvent) => {
+	// console.log("touchstart", e);
+	origin = e.touches[0];
+};
+
+const onTouchmove = (e: TouchEvent) => {
+	// console.log("touchmove", e.touches[0]);
+	const [dx, dy] = [e.touches[0].clientX - origin.clientX, e.touches[0].clientY - origin.clientY];
+
+	const [tx, ty] = [originTxTy[0] + dx * 2, originTxTy[1] + dy * 2];
+	console.log(tx, ty);
+	canvasContext.setTransform(1, 0, 0, 1, tx, ty);
+	canvasContext.clearRect(-500, -500, 875, 1103);
+	// canvasContext.translate(tx, ty);
+	canvasContext.fillRect(0, 0, 100, 100);
+	// canvasContext.strokeRect(100, 100, 100, 100);
+	// canvasContext.strokeRect(100, 100, 100, 100);
+};
+
+const onTouchend = (e: TouchEvent) => {
+	console.log("touchend", e.touches[0]);
+};
+
+const onTouchcancel = (e: TouchEvent) => {
+	console.log("touchcancel", e.touches[0]);
+};
 </script>
 
 <template>
-	<canvas id="ucanvas" class="ucanvas"></canvas>
+	<canvas
+		id="ucanvas"
+		class="ucanvas"
+		@touchstart="onTouchstart"
+		@touchmove="onTouchmove"
+		@touchend="onTouchend"
+		@touchcancel="onTouchcancel"
+	></canvas>
 </template>
 
 <style>

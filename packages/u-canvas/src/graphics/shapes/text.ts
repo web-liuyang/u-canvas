@@ -54,7 +54,7 @@ export class Text extends Graphic<TextOptions> {
 
 	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
-			const [x, y] = this.calLocationWithScope([this.x, this.y], offset);
+			const [x, y] = [this.x, this.y] || this.calLocationWithScope([this.x, this.y], offset);
 			const { text } = this;
 			ctx.fillText(text, x, y);
 			ctx.strokeText(text, x, y);

@@ -6,7 +6,7 @@
 import uCanvas from "@u-canvas-components/src/u-canvas.uvue";
 
 // import uCanvas from "./u-canvas.uvue";
-// import uCanvasTest from "./u-canvas-test.uvue";
+import uCanvasTest from "./u-canvas-test.uvue";
 
 // onReady(() => {
 // 	uni.createCanvasContextAsync({
