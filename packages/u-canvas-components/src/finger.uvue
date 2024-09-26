@@ -78,13 +78,15 @@ const onTouchstart = (e: UniTouchEvent | MouseEvent) => {
 
 		pointerDistance.value = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2));
 	} else {
+		const touchInfo = resolveTouchInfo(e);
+		originTouchInfo.value = touchInfo;
 		// 如果后期有长按事件，那么应该是在此处修改
-		onSetTimeout(() => {
-			const touchInfo = resolveTouchInfo(e);
-			emit("onTouchstart", new FTouchstartEvent(touchInfo));
-			moving.value = true;
-			originTouchInfo.value = touchInfo;
-		}, PRESS_TIMEOUT);
+		// onSetTimeout(() => {
+		// 	const touchInfo = resolveTouchInfo(e);
+		// 	emit("onTouchstart", new FTouchstartEvent(touchInfo));
+		// 	moving.value = true;
+		// 	originTouchInfo.value = touchInfo;
+		// }, PRESS_TIMEOUT);
 	}
 };
 
@@ -104,9 +106,14 @@ const onTouchmove = (e: UniTouchEvent) => {
 		} else {
 			emit("onZoomout", new FZoomoutEvent(touchInfo));
 		}
-	} else if (pressing.value && !moving.value) {
-		onClearTimeout();
+	} else if (pressing.value && !multiPointerPressing.value && !moving.value) {
 		const touchInfo = resolveTouchInfo(e);
+		const max = Math.max(
+			Math.abs(originTouchInfo.value!.x - touchInfo.x),
+			Math.abs(originTouchInfo.value!.y - touchInfo.y)
+		);
+		if (max < 2) return;
+		onClearTimeout();
 		emit("onTouchstart", new FTouchstartEvent(touchInfo));
 		moving.value = true;
 		originTouchInfo.value = touchInfo;
@@ -196,9 +203,4 @@ const onWheel = (e: WheelEvent) => {
 	</view>
 </template>
 
-<style>
-.finger {
-	width: 100%;
-	height: 100%;
-}
-</style>
+<style></style>

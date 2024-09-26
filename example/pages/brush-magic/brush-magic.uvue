@@ -30,6 +30,7 @@ import {
 	FZoomoutEvent,
 	TouchInfo,
 } from "@/u-canvas-components/src/event";
+import { brushMagicEvent } from "./brush-magic-event";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
@@ -160,6 +161,7 @@ const onTap = (e: FTapEvent) => {
 };
 
 const onTouchstart = (e: FTouchstartEvent) => {
+	console.log("A");
 	originMatrix.value = uCanvas.matrix;
 	originTouchInfo.value = e.touchInfo;
 };
@@ -200,18 +202,20 @@ const onZoomout = (e: FZoomoutEvent) => {
 
 <template>
 	<view class="brush-magic">
-		<toolbar />
-		<interactive-canvas
-			id="ucanvas"
-			class="ucanvas"
-			@onTap="onTap"
-			@onTouchstart="onTouchstart"
-			@onTouchmove="onTouchmove"
-			@onTouchend="onTouchend"
-			@onTouchcancel="onTouchcancel"
-			@onZoomin="onZoomin"
-			@onZoomout="onZoomout"
-		/>
+		<evnet-target :event-target="brushMagicEvent">
+			<toolbar />
+			<interactive-canvas
+				id="ucanvas"
+				class="ucanvas"
+				@onTap="onTap"
+				@onTouchstart="onTouchstart"
+				@onTouchmove="onTouchmove"
+				@onTouchend="onTouchend"
+				@onTouchcancel="onTouchcancel"
+				@onZoomin="onZoomin"
+				@onZoomout="onZoomout"
+			/>
+		</evnet-target>
 	</view>
 </template>
 

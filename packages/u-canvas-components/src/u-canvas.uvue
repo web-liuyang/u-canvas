@@ -19,13 +19,13 @@ import {
 import { onMounted, nextTick, ref } from "vue";
 import interactiveCanvas from "./interactive-canvas.uvue";
 import {
-	ICTapEvent,
-	ICTouchcancelEvent,
-	ICTouchendEvent,
-	ICTouchmoveEvent,
-	ICTouchstartEvent,
-	ICZoominEvent,
-	ICZoomoutEvent,
+	FTapEvent,
+	FTouchcancelEvent,
+	FTouchendEvent,
+	FTouchmoveEvent,
+	FTouchstartEvent,
+	FZoominEvent,
+	FZoomoutEvent,
 	TouchInfo,
 } from "./event";
 
@@ -152,17 +152,17 @@ onMounted(() => {
 const originMatrix = ref<Matrix>();
 const originTouchInfo = ref<TouchInfo>();
 
-const onTap = (e: ICTapEvent) => {
-	console.log("tap", e);
-	console.log(uCanvas.toGlobal([e.x, e.y]));
+const onTap = (e: FTapEvent) => {
+	// console.log("tap", e);
+	// console.log(uCanvas.toGlobal([e.x, e.y]));
 };
 
-const onTouchstart = (e: ICTouchstartEvent) => {
+const onTouchstart = (e: FTouchstartEvent) => {
 	originMatrix.value = uCanvas.matrix;
 	originTouchInfo.value = e.touchInfo;
 };
 
-const onTouchmove = (e: ICTouchmoveEvent) => {
+const onTouchmove = (e: FTouchmoveEvent) => {
 	const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
 
 	const tx = originMatrix.value!.e + deltaX * uCanvas.dpr;
@@ -173,23 +173,23 @@ const onTouchmove = (e: ICTouchmoveEvent) => {
 	uCanvas.matrix = matrix;
 };
 
-const onTouchend = (e: ICTouchendEvent) => {
+const onTouchend = (e: FTouchendEvent) => {
 	originMatrix.value = undefined;
 	originTouchInfo.value = undefined;
 };
 
-const onTouchcancel = (e: ICTouchcancelEvent) => {
+const onTouchcancel = (e: FTouchcancelEvent) => {
 	originMatrix.value = undefined;
 	originTouchInfo.value = undefined;
 };
 
-const onZoomin = (e: ICZoominEvent) => {
+const onZoomin = (e: FZoominEvent) => {
 	const [x, y] = uCanvas.toGlobal([e.x, e.y]);
 	const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
 	uCanvas.matrix = matrix;
 };
 
-const onZoomout = (e: ICZoomoutEvent) => {
+const onZoomout = (e: FZoomoutEvent) => {
 	const [x, y] = uCanvas.toGlobal([e.x, e.y]);
 	const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
 	uCanvas.matrix = matrix;

@@ -1,206 +1,45 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import type { Point } from "@u-canvas";
-import { calMidpoint } from "@u-canvas";
+import finger from "./finger.uvue";
 import {
 	//
-	ICTapEvent,
-	ICTouchcancelEvent,
-	ICTouchendEvent,
-	ICTouchmoveEvent,
-	ICTouchstartEvent,
-	ICZoominEvent,
-	ICZoomoutEvent,
-	TouchInfo,
-	resolveTouchInfo,
-	resolveMultiTouchInfo,
+	FTapEvent,
+	FTouchcancelEvent,
+	FTouchendEvent,
+	FTouchmoveEvent,
+	FTouchstartEvent,
+	FZoominEvent,
+	FZoomoutEvent,
 } from "./event";
 
-const props = defineProps<{ id: string }>();
-
-const emit = defineEmits<{
-	(e: "onTap", event: ICTapEvent): void;
-	(e: "onTouchstart", event: ICTouchstartEvent): void;
-	(e: "onTouchmove", event: ICTouchmoveEvent): void;
-	(e: "onTouchend", event: ICTouchendEvent): void;
-	(e: "onTouchcancel", event: ICTouchcancelEvent): void;
-	(e: "onZoomin", event: ICZoominEvent): void;
-	(e: "onZoomout", event: ICZoomoutEvent): void;
+const props = defineProps<{
+	id: string;
+	onTap?: (event: FTapEvent) => void;
+	onTouchstart?: (event: FTouchstartEvent) => void;
+	onTouchmove?: (event: FTouchmoveEvent) => void;
+	onTouchend?: (event: FTouchendEvent) => void;
+	onTouchcancel?: (event: FTouchcancelEvent) => void;
+	onZoomin?: (event: FZoominEvent) => void;
+	onZoomout?: (event: FZoomoutEvent) => void;
 }>();
-
-const PRESS_TIMEOUT = 200;
-
-const pressing = ref(false);
-const multiPointerPressing = ref(false);
-const moving = ref(false);
-
-const onTapTimestamp = ref(0);
-const onTapTimer = ref<number>();
-
-const onSetTimeout = (handler: TimerHandler, timeout?: number) => {
-	onTapTimer.value = setTimeout(handler, timeout);
-};
-
-const onClearTimeout = () => {
-	if (onTapTimer.value) {
-		clearTimeout(onTapTimer.value);
-		onTapTimer.value = undefined;
-	}
-};
-
-// 在 onTouchstart 时保存新值
-// 在模拟事件时，事件系统并没有返回足够的信息
-// 所以需要缓存上一个 事件信息，以便统一返回
-const eventState = ref<UniTouchEvent | MouseEvent>();
-// 用于计算 move 偏移量
-const originTouchInfo = ref<TouchInfo>();
-
-const pointerDistance = ref<number>(0);
-
-const onTouchstart = (e: UniTouchEvent | MouseEvent) => {
-	e.preventDefault();
-	pressing.value = true;
-	multiPointerPressing.value = e instanceof MouseEvent ? false : e.touches.length > 1;
-	onTapTimestamp.value = Date.now();
-	eventState.value = e;
-
-	onClearTimeout();
-
-	if (multiPointerPressing.value) {
-		const [p1, p2] = resolveMultiTouchInfo(eventState.value as UniTouchEvent)
-			.map(e => [e.x, e.y])
-			.slice(0, 2) as Point[];
-
-		pointerDistance.value = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2));
-	} else {
-		// 如果后期有长按事件，那么应该是在此处修改
-		onSetTimeout(() => {
-			const touchInfo = resolveTouchInfo(e);
-			emit("onTouchstart", new ICTouchstartEvent(touchInfo));
-			moving.value = true;
-			originTouchInfo.value = touchInfo;
-		}, PRESS_TIMEOUT);
-	}
-};
-
-function calculateZoomTypeAndCenter(p1: Point, p2: Point, zp1: Point, zp2: Point) {
-	// 计算初始距离和缩放后的距离
-	const initialDistance = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2));
-	const zoomedDistance = Math.sqrt(Math.pow(zp2[0] - zp1[0], 2) + Math.pow(zp2[1] - zp1[1], 2));
-	if (initialDistance === zoomedDistance) return undefined;
-	// 比较距离确定缩放类型
-	const sign = zoomedDistance > initialDistance ? -1 : 1;
-
-	// 计算中心点坐标
-	const cx = (p1[0] + p2[0] + zp1[0] + zp2[0]) / 4;
-	const cy = (p1[1] + p2[1] + zp1[1] + zp2[1]) / 4;
-
-	return { sign, cx, cy };
-}
-
-const onTouchmove = (e: UniTouchEvent) => {
-	e.preventDefault();
-	if (multiPointerPressing.value && e.touches.length === 2) {
-		const [p1, p2] = resolveMultiTouchInfo(e).map(e => [e.x, e.y]) as [Point, Point];
-		const newPointerDistance = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2));
-		const scale = newPointerDistance / pointerDistance.value;
-		pointerDistance.value = newPointerDistance;
-
-		const [cx, cy] = calMidpoint([p1, p2]);
-		const touchInfo: TouchInfo = { x: cx, y: cy, pageX: cx, pageY: cx, screenX: cx, screenY: cx };
-
-		if (scale > 1) {
-			emit("onZoomin", new ICZoominEvent(touchInfo));
-		} else {
-			emit("onZoomout", new ICZoomoutEvent(touchInfo));
-		}
-	} else if (pressing.value && !moving.value) {
-		onClearTimeout();
-		const touchInfo = resolveTouchInfo(e);
-		emit("onTouchstart", new ICTouchstartEvent(touchInfo));
-		moving.value = true;
-		originTouchInfo.value = touchInfo;
-	} else if (moving.value) {
-		const uniTouch = resolveTouchInfo(e);
-		// const [deltaX, deltaY] = [uniTouch.x - originTouchInfo.value!.x, uniTouch.y - originTouchInfo.value!.y];
-
-		emit("onTouchmove", new ICTouchmoveEvent(uniTouch));
-		eventState.value = e;
-	}
-};
-
-const onTouchend = (e: UniTouchEvent) => {
-	e.preventDefault();
-
-	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT && !moving.value) {
-		const uniTouch = resolveTouchInfo(eventState.value ?? e);
-		emit("onTap", new ICTapEvent(uniTouch));
-		onClearTimeout();
-	} else if (pressing.value && moving.value) {
-		const uniTouch = resolveTouchInfo(eventState.value ?? e);
-		emit("onTouchend", new ICTouchendEvent(uniTouch));
-	}
-
-	pressing.value = false;
-	multiPointerPressing.value = false;
-	moving.value = false;
-	eventState.value = undefined;
-	originTouchInfo.value = undefined;
-};
-
-const onTouchcancel = (e: UniTouchEvent) => {
-	e.preventDefault();
-	const uniTouch = resolveTouchInfo(eventState.value ?? e);
-	emit("onTouchcancel", new ICTouchcancelEvent(uniTouch));
-	multiPointerPressing.value = false;
-	pressing.value = false;
-	moving.value = false;
-};
-
-const onWheel = (e: WheelEvent) => {
-	const sign = Math.sign(e.deltaY);
-	if (sign === 0) return;
-	const uniTouch = resolveTouchInfo(e);
-	if (sign < 0) {
-		emit("onZoomin", new ICZoominEvent(uniTouch));
-	} else {
-		emit("onZoomout", new ICZoomoutEvent(uniTouch));
-	}
-};
-
-// web -> 只有单击与双击会触发 tap 事件
-// const onTapTT = e => {
-// 	console.log("onTapTT", e.touches);
-// };
 </script>
 
-<!-- 	
-
-	
-		@tap="onTapTT"
-
-		@mousedown="onTouchstart"
-		@mousemove="onTouchmove"
-		@mouseup="onTouchend"
-		@wheel="onWheel"
-
-		@touchstart="onTouchstart"
-		@touchmove="onTouchmove"
-		@touchend="onTouchend"
-		@touchcancel="onTouchcancel" 
-		-->
-
 <template>
-	<!-- @vue-expect-error -->
-	<canvas
-		:id="props.id"
-		@mousedown="onTouchstart"
-		@mousemove="onTouchmove"
-		@mouseup="onTouchend"
-		@wheel="onWheel"
-		@touchstart="onTouchstart"
-		@touchmove="onTouchmove"
-		@touchend="onTouchend"
-		@touchcancel="onTouchcancel"
-	/>
+	<finger
+		@onTap="props.onTap"
+		@onTouchstart="props.onTouchstart"
+		@onTouchmove="props.onTouchmove"
+		@onTouchend="props.onTouchend"
+		@onTouchcancel="props.onTouchcancel"
+		@onZoomin="props.onZoomin"
+		@onZoomout="props.onZoomout"
+	>
+		<canvas :id="props.id" class="interactive-canvas" />
+	</finger>
 </template>
+
+<style>
+.interactive-canvas {
+	width: 100%;
+	height: 100%;
+}
+</style>

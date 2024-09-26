@@ -13,7 +13,7 @@ export interface TouchInfo {
 	screenY: number;
 }
 
-export enum ICEventType {
+export enum FEventType {
 	"tap" = "tap",
 	"touchstart" = "touchstart",
 	"touchmove" = "touchmove",
@@ -29,9 +29,9 @@ export interface Delta {
 	deltaY: number;
 }
 
-export class ICTouchEvent implements TouchInfo {
+export class FTouchEvent implements TouchInfo {
 	/** 事件类型 */
-	public readonly type: ICEventType;
+	public readonly type: FEventType;
 	/** 相对于页面可显示区域左边的距离 */
 	public readonly x: number;
 	/** 相对于页面可显示区域顶部的距离 */
@@ -45,7 +45,7 @@ export class ICTouchEvent implements TouchInfo {
 	/** 相对于屏幕顶部的距离，不包括滚动距离 */
 	public readonly screenY: number;
 
-	constructor(type: ICEventType, touchInfo: TouchInfo) {
+	constructor(type: FEventType, touchInfo: TouchInfo) {
 		this.type = type;
 
 		this.x = touchInfo.x;
@@ -61,45 +61,45 @@ export class ICTouchEvent implements TouchInfo {
 	}
 }
 
-export class ICTapEvent extends ICTouchEvent {
+export class FTapEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.tap, touchInfo);
+		super(FEventType.tap, touchInfo);
 	}
 }
 
-export class ICTouchstartEvent extends ICTouchEvent {
+export class FTouchstartEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.touchstart, touchInfo);
+		super(FEventType.touchstart, touchInfo);
 	}
 }
 
-export class ICTouchmoveEvent extends ICTouchEvent {
+export class FTouchmoveEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.touchmove, touchInfo);
+		super(FEventType.touchmove, touchInfo);
 	}
 }
 
-export class ICTouchendEvent extends ICTouchEvent {
+export class FTouchendEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.touchcancel, touchInfo);
+		super(FEventType.touchcancel, touchInfo);
 	}
 }
 
-export class ICTouchcancelEvent extends ICTouchEvent {
+export class FTouchcancelEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.touchcancel, touchInfo);
+		super(FEventType.touchcancel, touchInfo);
 	}
 }
 
-export class ICZoominEvent extends ICTouchEvent {
+export class FZoominEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.zoomin, touchInfo);
+		super(FEventType.zoomin, touchInfo);
 	}
 }
 
-export class ICZoomoutEvent extends ICTouchEvent {
+export class FZoomoutEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
-		super(ICEventType.zoomout, touchInfo);
+		super(FEventType.zoomout, touchInfo);
 	}
 }
 
