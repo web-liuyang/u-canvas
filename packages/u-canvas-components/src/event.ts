@@ -15,6 +15,8 @@ export interface TouchInfo {
 
 export enum FEventType {
 	"tap" = "tap",
+	"touchUp" = "touchUp",
+	"touchDown" = "touchDown",
 	"touchstart" = "touchstart",
 	"touchmove" = "touchmove",
 	"touchend" = "touchend",
@@ -64,6 +66,18 @@ export class FTouchEvent implements TouchInfo {
 export class FTapEvent extends FTouchEvent {
 	constructor(touchInfo: TouchInfo) {
 		super(FEventType.tap, touchInfo);
+	}
+}
+
+export class FTouchUpEvent extends FTouchEvent {
+	constructor(touchInfo: TouchInfo) {
+		super(FEventType.touchUp, touchInfo);
+	}
+}
+
+export class FTouchDownEvent extends FTouchEvent {
+	constructor(touchInfo: TouchInfo) {
+		super(FEventType.touchDown, touchInfo);
 	}
 }
 

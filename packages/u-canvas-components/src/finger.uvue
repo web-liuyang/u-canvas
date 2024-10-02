@@ -4,6 +4,8 @@ import type { Point } from "@u-canvas";
 import { calMidpoint } from "@u-canvas";
 import {
 	FTapEvent,
+	FTouchUpEvent,
+	FTouchDownEvent,
 	FTouchcancelEvent,
 	FTouchendEvent,
 	FTouchmoveEvent,
@@ -17,6 +19,8 @@ import {
 
 const emit = defineEmits<{
 	(e: "onTap", event: FTapEvent): void;
+	(e: "onTouchUp", event: FTouchUpEvent): void;
+	(e: "onTouchDown", event: FTouchDownEvent): void;
 	(e: "onTouchstart", event: FTouchstartEvent): void;
 	(e: "onTouchmove", event: FTouchmoveEvent): void;
 	(e: "onTouchend", event: FTouchendEvent): void;
@@ -55,7 +59,6 @@ const originTouchInfo = ref<TouchInfo>();
 const pointerDistance = ref<number>(0);
 
 const onTouchstart = (e: UniTouchEvent | MouseEvent) => {
-	console.log("onTouchstart");
 	e.preventDefault();
 	pressing.value = true;
 
@@ -71,6 +74,8 @@ const onTouchstart = (e: UniTouchEvent | MouseEvent) => {
 	eventState.value = e;
 
 	onClearTimeout();
+
+	emit("onTouchDown", new FTouchDownEvent(resolveTouchInfo(e)));
 
 	if (multiPointerPressing.value) {
 		const [p1, p2] = resolveMultiTouchInfo(eventState.value as UniTouchEvent)
@@ -129,14 +134,16 @@ const onTouchmove = (e: UniTouchEvent) => {
 
 const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
+	const uniTouch = resolveTouchInfo(eventState.value!);
+
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT && !moving.value) {
-		const uniTouch = resolveTouchInfo(eventState.value!);
 		emit("onTap", new FTapEvent(uniTouch));
 		onClearTimeout();
 	} else if (pressing.value && moving.value) {
-		const uniTouch = resolveTouchInfo(eventState.value!);
 		emit("onTouchend", new FTouchendEvent(uniTouch));
 	}
+
+	emit("onTouchUp", new FTouchUpEvent(uniTouch));
 
 	pressing.value = false;
 	multiPointerPressing.value = false;
@@ -149,6 +156,9 @@ const onTouchcancel = (e: UniTouchEvent) => {
 	e.preventDefault();
 	const uniTouch = resolveTouchInfo(eventState.value ?? e);
 	emit("onTouchcancel", new FTouchcancelEvent(uniTouch));
+
+	emit("onTouchUp", new FTouchUpEvent(uniTouch));
+
 	multiPointerPressing.value = false;
 	pressing.value = false;
 	moving.value = false;
@@ -189,7 +199,6 @@ const onWheel = (e: WheelEvent) => {
 		-->
 
 <template>
-	<!-- @vue-expect-error -->
 	<view
 		class="finger"
 		@mousedown="onTouchstart"
