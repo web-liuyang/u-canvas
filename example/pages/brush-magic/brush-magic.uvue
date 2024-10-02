@@ -19,7 +19,9 @@ import {
 import { onMounted, nextTick, ref, getCurrentInstance } from "vue";
 
 import interactiveCanvas from "@/u-canvas-components/src/interactive-canvas.uvue";
-import toolbar from "./toolbar.uvue";
+import finger from "@/u-canvas-components/src/finger.uvue";
+import globalEventTarget from "./global-evnet-target.uvue";
+import toolbar, { type ToolButton } from "./toolbar.uvue";
 import {
 	FTapEvent,
 	FTouchcancelEvent,
@@ -30,7 +32,8 @@ import {
 	FZoomoutEvent,
 	TouchInfo,
 } from "@/u-canvas-components/src/event";
-import { brushMagicEvent } from "./brush-magic-event";
+import t from "../t.uvue";
+import { BaseStateMachine, BrushStateMachine, SelectionStateMachine } from "./state-machine/index";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
@@ -155,56 +158,118 @@ onReady(() => {
 const originMatrix = ref<Matrix>();
 const originTouchInfo = ref<TouchInfo>();
 
+const stateMachine = ref<BaseStateMachine>(new SelectionStateMachine(uCanvas));
+
 const onTap = (e: FTapEvent) => {
-	// console.log("tap", e);
-	console.log(uCanvas.toGlobal([e.x, e.y]));
+	stateMachine.value.onTap(e);
+	// console.log("canvas tap");
+	// console.log(uCanvas.toGlobal([e.x, e.y]));
 };
 
 const onTouchstart = (e: FTouchstartEvent) => {
-	console.log("A");
-	originMatrix.value = uCanvas.matrix;
-	originTouchInfo.value = e.touchInfo;
+	stateMachine.value.onTouchstart(e);
+	// originMatrix.value = uCanvas.matrix;
+	// originTouchInfo.value = e.touchInfo;
 };
 
 const onTouchmove = (e: FTouchmoveEvent) => {
-	const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
+	stateMachine.value.onTouchmove(e);
+	// const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
 
-	const tx = originMatrix.value!.e + deltaX * uCanvas.dpr;
-	const ty = originMatrix.value!.f + deltaY * uCanvas.dpr;
+	// const tx = originMatrix.value!.e + deltaX * uCanvas.dpr;
+	// const ty = originMatrix.value!.f + deltaY * uCanvas.dpr;
 
-	const matrix = uCanvas.matrix.setTranslate(tx, ty);
+	// const matrix = uCanvas.matrix.setTranslate(tx, ty);
 
-	uCanvas.matrix = matrix;
+	// uCanvas.matrix = matrix;
 };
 
 const onTouchend = (e: FTouchendEvent) => {
-	originMatrix.value = undefined;
-	originTouchInfo.value = undefined;
+	stateMachine.value.onTouchend(e);
+	// originMatrix.value = undefined;
+	// originTouchInfo.value = undefined;
 };
 
 const onTouchcancel = (e: FTouchcancelEvent) => {
-	originMatrix.value = undefined;
-	originTouchInfo.value = undefined;
+	stateMachine.value.onTouchcancel(e);
+	// originMatrix.value = undefined;
+	// originTouchInfo.value = undefined;
 };
 
 const onZoomin = (e: FZoominEvent) => {
-	const [x, y] = uCanvas.toGlobal([e.x, e.y]);
-	const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
-	uCanvas.matrix = matrix;
+	stateMachine.value.onZoomin(e);
+	// const [x, y] = uCanvas.toGlobal([e.x, e.y]);
+	// const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
+	// uCanvas.matrix = matrix;
 };
 
 const onZoomout = (e: FZoomoutEvent) => {
-	const [x, y] = uCanvas.toGlobal([e.x, e.y]);
-	const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
-	uCanvas.matrix = matrix;
+	stateMachine.value.onZoomout(e);
+	// const [x, y] = uCanvas.toGlobal([e.x, e.y]);
+	// const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
+	// uCanvas.matrix = matrix;
 };
+
+const currentToolIndex = ref(0);
+
+const onChangeCurrentTool = (index: number) => {
+	currentToolIndex.value = index;
+};
+
+const toolButtons: ToolButton[] = [
+	{
+		icon: "鼠",
+		text: "Selection",
+		onTap: () => {
+			currentToolIndex.value = 0;
+			stateMachine.value = new SelectionStateMachine(uCanvas);
+		},
+	},
+	{
+		icon: "笔",
+		text: "Brush",
+		onTap: () => {
+			currentToolIndex.value = 1;
+			stateMachine.value = new BrushStateMachine(uCanvas);
+		},
+	},
+	{
+		icon: "橡",
+		text: "Eraser",
+		onTap: () => {
+			currentToolIndex.value = 2;
+		},
+	},
+	{
+		icon: "文",
+		text: "Text",
+		onTap: () => {
+			currentToolIndex.value = 3;
+		},
+	},
+	{
+		icon: "形",
+		text: "Shape",
+		onTap: () => {
+			currentToolIndex.value = 4;
+		},
+	},
+	{
+		icon: "图",
+		text: "Image",
+		onTap: () => {
+			currentToolIndex.value = 5;
+		},
+	},
+];
 </script>
 
 <template>
 	<view class="brush-magic">
-		<evnet-target :event-target="brushMagicEvent">
-			<toolbar />
-			<interactive-canvas
+		<global-event-target>
+			<view>
+				<toolbar :currentIndex="currentToolIndex" :buttons="toolButtons" @onChange="onChangeCurrentTool" />
+				<!-- 	<interactive-canvas
 				id="ucanvas"
 				class="ucanvas"
 				@onTap="onTap"
@@ -214,8 +279,24 @@ const onZoomout = (e: FZoomoutEvent) => {
 				@onTouchcancel="onTouchcancel"
 				@onZoomin="onZoomin"
 				@onZoomout="onZoomout"
-			/>
-		</evnet-target>
+			/> -->
+				<!-- 没问题，但是单独成立组件有问题，会触发两次 -->
+				<view>
+					<finger
+						class="ucanvas"
+						@onTap="onTap"
+						@onTouchstart="onTouchstart"
+						@onTouchmove="onTouchmove"
+						@onTouchend="onTouchend"
+						@onTouchcancel="onTouchcancel"
+						@onZoomin="onZoomin"
+						@onZoomout="onZoomout"
+					>
+						<canvas id="ucanvas" class="interactive-canvas" />
+					</finger>
+				</view>
+			</view>
+		</global-event-target>
 	</view>
 </template>
 
@@ -234,5 +315,10 @@ body {
 	height: 100%;
 
 	border: 1px solid red;
+}
+
+.c {
+	width: 100%;
+	height: 100%;
 }
 </style>

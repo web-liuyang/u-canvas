@@ -30,6 +30,23 @@ import {
 	TouchInfo,
 } from "@/u-canvas-components/src/event";
 import finger from "@/u-canvas-components/src/finger.uvue";
+import { globalEventTarget } from "./global-event-target";
+
+export interface ToolButton {
+	icon: any;
+	text: string;
+	onTap: () => void;
+}
+
+const props = defineProps<{
+	buttons: ToolButton[];
+	current?: ToolButton;
+	currentIndex: number;
+}>();
+
+const emit = defineEmits<{
+	(e: "onChange", index: number): void;
+}>();
 
 const px = (value: number) => `${value}px`;
 
@@ -46,6 +63,29 @@ const onTapCurrentToolButton = (e: FTapEvent) => {
 const onTouchstartCurrentToolButton = (e: FTouchstartEvent) => {
 	originTouchInfo.value = e.touchInfo;
 	originPosition.value = position.value;
+	function off() {
+		globalEventTarget.off("touchmove", touchmove);
+		globalEventTarget.off("touchend", touchend);
+		globalEventTarget.off("touchcancel", touchcancel);
+	}
+
+	function touchmove(e: FTouchendEvent) {
+		onTouchmoveCurrentToolButton(e);
+	}
+
+	function touchend(e: FTouchendEvent) {
+		onTouchendCurrentToolButton(e);
+		off();
+	}
+
+	function touchcancel(e: FTouchcancelEvent) {
+		onTouchcancelCurrentToolButton(e);
+		off();
+	}
+
+	globalEventTarget.on("touchmove", touchmove);
+	globalEventTarget.on("touchend", touchend);
+	globalEventTarget.on("touchcancel", touchcancel);
 };
 
 const onTouchmoveCurrentToolButton = (e: FTouchmoveEvent) => {
@@ -65,8 +105,6 @@ const onTouchcancelCurrentToolButton = (e: FTouchcancelEvent) => {
 	originTouchInfo.value = undefined;
 };
 
-const currentToolIndex = ref(0);
-
 const position = ref<{ top: number; left: number }>({
 	top: 100,
 	left: 40,
@@ -74,46 +112,40 @@ const position = ref<{ top: number; left: number }>({
 
 const expanded = ref(false);
 
-interface ToolButton {
-	icon: any;
-	text: string;
-	onTap: () => void;
-}
-
 const TOOL_BUTTON_SIZE = 40;
 
-const toolButtons: ToolButton[] = [
-	{
-		icon: "鼠",
-		text: "Selection",
-		onTap: () => {},
-	},
-	{
-		icon: "笔",
-		text: "Brush",
-		onTap: () => {},
-	},
-	{
-		icon: "橡",
-		text: "Eraser",
-		onTap: () => {},
-	},
-	{
-		icon: "文",
-		text: "Text",
-		onTap: () => {},
-	},
-	{
-		icon: "形",
-		text: "Shape",
-		onTap: () => {},
-	},
-	{
-		icon: "图",
-		text: "Image",
-		onTap: () => {},
-	},
-];
+// const toolButtons: ToolButton[] = [
+// 	{
+// 		icon: "鼠",
+// 		text: "Selection",
+// 		onTap: () => {},
+// 	},
+// 	{
+// 		icon: "笔",
+// 		text: "Brush",
+// 		onTap: () => {},
+// 	},
+// 	{
+// 		icon: "橡",
+// 		text: "Eraser",
+// 		onTap: () => {},
+// 	},
+// 	{
+// 		icon: "文",
+// 		text: "Text",
+// 		onTap: () => {},
+// 	},
+// 	{
+// 		icon: "形",
+// 		text: "Shape",
+// 		onTap: () => {},
+// 	},
+// 	{
+// 		icon: "图",
+// 		text: "Image",
+// 		onTap: () => {},
+// 	},
+// ];
 </script>
 
 <template>
@@ -122,23 +154,20 @@ const toolButtons: ToolButton[] = [
 		:style="{
 			top: px(position.top),
 			left: px(position.left),
-			width: expanded ? px((toolButtons.length + 1) * TOOL_BUTTON_SIZE) : px(TOOL_BUTTON_SIZE),
+			width: expanded ? px((props.buttons.length + 1) * TOOL_BUTTON_SIZE) : px(TOOL_BUTTON_SIZE),
 		}"
 	>
 		<finger
 			class="toolbar__item current"
-			:title="toolButtons[currentToolIndex].text"
+			:title="props.buttons[props.currentIndex].text"
 			:style="{ width: px(TOOL_BUTTON_SIZE), height: px(TOOL_BUTTON_SIZE) }"
 			@onTap="onTapCurrentToolButton"
 			@onTouchstart="onTouchstartCurrentToolButton"
-			@onTouchmove="onTouchmoveCurrentToolButton"
-			@onTouchend="onTouchendCurrentToolButton"
-			@onTouchcancel="onTouchcancelCurrentToolButton"
 		>
-			{{ toolButtons[currentToolIndex].icon }}
+			{{ props.buttons[props.currentIndex].icon }}
 		</finger>
 		<view
-			v-for="item in toolButtons"
+			v-for="item in props.buttons"
 			class="toolbar__item"
 			:style="{ width: px(TOOL_BUTTON_SIZE), height: px(TOOL_BUTTON_SIZE) }"
 			:title="item.text"
@@ -153,7 +182,7 @@ const toolButtons: ToolButton[] = [
 .toolbar {
 	/* 使用 fixed 在客户端会包含导航栏高度，导致与 web 中表现不一致 */
 	position: absolute;
-	z-index: 1;
+	z-index: 99;
 
 	display: flex;
 	align-items: center;

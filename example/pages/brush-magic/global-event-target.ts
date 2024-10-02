@@ -10,17 +10,17 @@ import {
 
 export interface EventType {
 	tap: FTapEvent;
-	touchstart: FTouchcancelEvent;
-	touchmove: FTouchendEvent;
-	touchend: FTouchmoveEvent;
-	touchcancel: FTouchstartEvent;
+	touchstart: FTouchstartEvent;
+	touchmove: FTouchmoveEvent;
+	touchend: FTouchendEvent;
+	touchcancel: FTouchcancelEvent;
 	zoomin: FZoominEvent;
 	zoomout: FZoomoutEvent;
 }
 
 export type Listener<K extends keyof EventType> = (ev: EventType[K]) => Promise<void> | void;
 
-export class EventTarget {
+class GlobalEventTarget {
 	private listeners: Map<keyof EventType, Listener<any>[]> = new Map([
 		["tap", []],
 		["touchstart", []],
@@ -58,3 +58,5 @@ export class EventTarget {
 		}
 	}
 }
+
+export const globalEventTarget = new GlobalEventTarget();

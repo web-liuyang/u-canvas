@@ -55,6 +55,7 @@ const originTouchInfo = ref<TouchInfo>();
 const pointerDistance = ref<number>(0);
 
 const onTouchstart = (e: UniTouchEvent | MouseEvent) => {
+	console.log("onTouchstart");
 	e.preventDefault();
 	pressing.value = true;
 
@@ -129,11 +130,11 @@ const onTouchmove = (e: UniTouchEvent) => {
 const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT && !moving.value) {
-		const uniTouch = resolveTouchInfo(eventState.value ?? e);
+		const uniTouch = resolveTouchInfo(eventState.value!);
 		emit("onTap", new FTapEvent(uniTouch));
 		onClearTimeout();
 	} else if (pressing.value && moving.value) {
-		const uniTouch = resolveTouchInfo(eventState.value ?? e);
+		const uniTouch = resolveTouchInfo(eventState.value!);
 		emit("onTouchend", new FTouchendEvent(uniTouch));
 	}
 
@@ -154,6 +155,7 @@ const onTouchcancel = (e: UniTouchEvent) => {
 };
 
 const onWheel = (e: WheelEvent) => {
+	e.preventDefault();
 	const sign = Math.sign(e.deltaY);
 	if (sign === 0) return;
 	const uniTouch = resolveTouchInfo(e);

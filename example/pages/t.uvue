@@ -1,0 +1,32 @@
+<script lang="ts" setup>
+import { ref } from "vue";
+import finger from "@/u-canvas-components/src/finger.uvue";
+
+const count = ref<number>(0);
+
+const touchend = () => {
+	console.log("touchend");
+};
+</script>
+
+<template>
+	<view class="t">
+		<view>{{ count }}</view>
+		<view @tap="count++">increase</view>
+		<view @tap="count--">decrease</view>
+		<finger class="finger" @onTouchend="touchend">
+			<slot />
+		</finger>
+	</view>
+</template>
+
+<style>
+.finger {
+	width: 100%;
+	height: 100%;
+}
+.t {
+	width: 100%;
+	height: 100%;
+}
+</style>

@@ -9,44 +9,40 @@ import {
 	FZoomoutEvent,
 } from "@/u-canvas-components/src/event";
 import finger from "@/u-canvas-components/src/finger.uvue";
-import { EventTarget } from "./event-target";
-
-const props = defineProps<{
-	eventTarget: EventTarget;
-}>();
+import { globalEventTarget } from "./global-event-target";
 
 const onTap = (e: FTapEvent) => {
-	props.eventTarget.emit("tap", e);
+	globalEventTarget.emit("tap", e);
 };
 
 const onTouchstart = (e: FTouchstartEvent) => {
-	props.eventTarget.emit("touchstart", e);
+	globalEventTarget.emit("touchstart", e);
 };
 
 const onTouchmove = (e: FTouchmoveEvent) => {
-	props.eventTarget.emit("touchmove", e);
+	globalEventTarget.emit("touchmove", e);
 };
 
 const onTouchend = (e: FTouchendEvent) => {
-	props.eventTarget.emit("touchend", e);
+	globalEventTarget.emit("touchend", e);
 };
 
 const onTouchcancel = (e: FTouchcancelEvent) => {
-	props.eventTarget.emit("touchcancel", e);
+	globalEventTarget.emit("touchcancel", e);
 };
 
 const onZoomin = (e: FZoominEvent) => {
-	props.eventTarget.emit("zoomin", e);
+	globalEventTarget.emit("zoomin", e);
 };
 
 const onZoomout = (e: FZoomoutEvent) => {
-	props.eventTarget.emit("zoomout", e);
+	globalEventTarget.emit("zoomout", e);
 };
 </script>
 
 <template>
 	<finger
-		class="evnet-target"
+		class="global-evnet-target"
 		@onTap="onTap"
 		@onTouchstart="onTouchstart"
 		@onTouchmove="onTouchmove"
@@ -60,7 +56,7 @@ const onZoomout = (e: FZoomoutEvent) => {
 </template>
 
 <style>
-.evnet-target {
+.global-evnet-target {
 	width: 100%;
 	height: 100%;
 }
