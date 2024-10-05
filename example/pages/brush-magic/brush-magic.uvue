@@ -166,6 +166,14 @@ const onTap = (e: FTapEvent) => {
 	// console.log(uCanvas.toGlobal([e.x, e.y]));
 };
 
+const onTouchdown = (e: FTouchdownEvent) => {
+	stateMachine.value.onTouchdown(e);
+};
+
+const onTouchup = (e: FTouchupEvent) => {
+	stateMachine.value.onTouchup(e);
+};
+
 const onTouchstart = (e: FTouchstartEvent) => {
 	stateMachine.value.onTouchstart(e);
 	// originMatrix.value = uCanvas.matrix;
@@ -229,6 +237,7 @@ const toolButtons: ToolButton[] = [
 		icon: "笔",
 		text: "Brush",
 		onTap: () => {
+			console.log("A");
 			currentToolIndex.value = 1;
 			stateMachine.value = new BrushStateMachine(uCanvas);
 		},
@@ -285,6 +294,8 @@ const toolButtons: ToolButton[] = [
 					<finger
 						class="ucanvas"
 						@onTap="onTap"
+						@onTouchdown="onTouchdown"
+						@onTouchup="onTouchup"
 						@onTouchstart="onTouchstart"
 						@onTouchmove="onTouchmove"
 						@onTouchend="onTouchend"
@@ -292,7 +303,7 @@ const toolButtons: ToolButton[] = [
 						@onZoomin="onZoomin"
 						@onZoomout="onZoomout"
 					>
-						<canvas id="ucanvas" class="interactive-canvas" />
+						<view><canvas id="ucanvas" class="interactive-canvas" /></view>
 					</finger>
 				</view>
 			</view>

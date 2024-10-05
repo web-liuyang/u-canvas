@@ -1,5 +1,7 @@
 import type {
 	FTapEvent,
+	FTouchdownEvent,
+	FTouchupEvent,
 	FTouchstartEvent,
 	FTouchmoveEvent,
 	FTouchendEvent,
@@ -13,6 +15,8 @@ export abstract class BaseStateMachine {
 	constructor(protected canvas: UCanvas) {}
 
 	public onTap(e: FTapEvent): void {}
+	public onTouchdown(e: FTouchdownEvent): void {}
+	public onTouchup(e: FTouchupEvent): void {}
 	public onTouchstart(e: FTouchstartEvent): void {}
 	public onTouchmove(e: FTouchmoveEvent): void {}
 	public onTouchend(e: FTouchendEvent): void {}

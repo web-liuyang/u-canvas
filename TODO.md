@@ -4,6 +4,7 @@
 [√] Matrix
 [√] 重构属性为可写
 [ ] Graphic Event
+[ ] Finger Event Stop
 
 ### Bug
 

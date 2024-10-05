@@ -4,8 +4,8 @@ import type { Point } from "@u-canvas";
 import { calMidpoint } from "@u-canvas";
 import {
 	FTapEvent,
-	FTouchUpEvent,
-	FTouchDownEvent,
+	FTouchupEvent,
+	FTouchdownEvent,
 	FTouchcancelEvent,
 	FTouchendEvent,
 	FTouchmoveEvent,
@@ -19,8 +19,8 @@ import {
 
 const emit = defineEmits<{
 	(e: "onTap", event: FTapEvent): void;
-	(e: "onTouchUp", event: FTouchUpEvent): void;
-	(e: "onTouchDown", event: FTouchDownEvent): void;
+	(e: "onTouchup", event: FTouchupEvent): void;
+	(e: "onTouchdown", event: FTouchdownEvent): void;
 	(e: "onTouchstart", event: FTouchstartEvent): void;
 	(e: "onTouchmove", event: FTouchmoveEvent): void;
 	(e: "onTouchend", event: FTouchendEvent): void;
@@ -75,7 +75,7 @@ const onTouchstart = (e: UniTouchEvent | MouseEvent) => {
 
 	onClearTimeout();
 
-	emit("onTouchDown", new FTouchDownEvent(resolveTouchInfo(e)));
+	emit("onTouchdown", new FTouchdownEvent(resolveTouchInfo(e)));
 
 	if (multiPointerPressing.value) {
 		const [p1, p2] = resolveMultiTouchInfo(eventState.value as UniTouchEvent)
@@ -143,7 +143,7 @@ const onTouchend = (e: UniTouchEvent) => {
 		emit("onTouchend", new FTouchendEvent(uniTouch));
 	}
 
-	emit("onTouchUp", new FTouchUpEvent(uniTouch));
+	emit("onTouchup", new FTouchupEvent(uniTouch));
 
 	pressing.value = false;
 	multiPointerPressing.value = false;
@@ -157,7 +157,7 @@ const onTouchcancel = (e: UniTouchEvent) => {
 	const uniTouch = resolveTouchInfo(eventState.value ?? e);
 	emit("onTouchcancel", new FTouchcancelEvent(uniTouch));
 
-	emit("onTouchUp", new FTouchUpEvent(uniTouch));
+	emit("onTouchup", new FTouchupEvent(uniTouch));
 
 	multiPointerPressing.value = false;
 	pressing.value = false;

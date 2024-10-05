@@ -166,15 +166,15 @@ const TOOL_BUTTON_SIZE = 40;
 		>
 			{{ props.buttons[props.currentIndex].icon }}
 		</finger>
-		<view
+		<finger
 			v-for="item in props.buttons"
 			class="toolbar__item"
 			:style="{ width: px(TOOL_BUTTON_SIZE), height: px(TOOL_BUTTON_SIZE) }"
 			:title="item.text"
-			@tap="item.onTap"
+			@onTap="item.onTap"
 		>
 			{{ item.icon }}
-		</view>
+		</finger>
 	</view>
 </template>
 

@@ -1,9 +1,11 @@
 import {
 	FTapEvent,
 	FTouchcancelEvent,
+	FTouchdownEvent,
 	FTouchendEvent,
 	FTouchmoveEvent,
 	FTouchstartEvent,
+	FTouchupEvent,
 	FZoominEvent,
 	FZoomoutEvent,
 	TouchInfo,
@@ -16,11 +18,21 @@ export class BrushStateMachine extends BaseStateMachine {
 	private originTouchInfo?: TouchInfo;
 
 	public onTap(e: FTapEvent) {
-		console.log("canvas tap1");
-		console.log(this.canvas.toGlobal([e.x, e.y]));
+		console.log("111");
+		// console.log(this.canvas.toGlobal([e.x, e.y]));
 	}
 
+	public onTouchdown(e: FTouchdownEvent) {
+		console.log("down");
+	}
+
+	public onTouchup(e: FTouchupEvent) {
+		console.log("up");
+	}
+	
+
 	public onTouchstart(e: FTouchstartEvent) {
+		console.log("222");
 		this.originMatrix = this.canvas.matrix;
 		this.originTouchInfo = e.touchInfo;
 	}
