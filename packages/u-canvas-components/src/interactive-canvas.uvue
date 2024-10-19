@@ -22,16 +22,12 @@ const props = defineProps<{
 	onZoomout?: (event: FZoomoutEvent) => void;
 }>();
 
-const onTap = (event: FTouchendEvent) => {
-	console.log("interactive-canvas onTap");
-	props.onTap?.(event);
-};
 </script>
 
 <template>
 	<!-- <canvas :id="props.id" class="interactive-canvas" /> -->
 	<finger
-		@onTap="onTap"
+		@onTap="props.onTap"
 		@onTouchstart="props.onTouchstart"
 		@onTouchmove="props.onTouchmove"
 		@onTouchend="props.onTouchend"
