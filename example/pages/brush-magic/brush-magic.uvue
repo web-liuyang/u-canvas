@@ -43,88 +43,108 @@ const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 onReady(() => {
 	nextTick(async () => {
 		await uCanvas.ensureInitialize();
-		// uCanvas.ctx.strokeRect(0, 0, 100, 100);
-
-		const container = new Container({
-			x: 10,
-			y: 10,
-			children: [
-				new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
-				//
-				new Text({ x: 10, y: 120, text: "Rectangle" }),
-			],
-		});
-
-		uCanvas.add(container);
-
-		// uCanvas.add(
-		// 	new Rectangle({ x: 100, y: 100, w: 100, h: 100, style: new Style({ fill: new Fill({ color: "red" }) }) })
-		// );
-
-		// const r = new Rectangle({
-		// 	x: 200,
-		// 	y: 100,
-		// 	w: 100,
-		// 	h: 100,
-		// 	style: new Style({ fill: new Fill({ color: "blue" }) }),
-		// });
-
-		// uCanvas.add(r);
-		// uCanvas.add(new Text({ x: 20, y: 130, text: "Rectangle" }));
 
 		uCanvas.add(
-			new Polyline({
-				points: [
-					[140, 110],
-					[240, 60],
-					[140, 10],
+			new Container({
+				x: 10,
+				y: 10,
+				children: [
+					new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
+					//
+					new Text({ x: 0, y: 120, text: "Rectangle" }),
 				],
 			})
 		);
-		uCanvas.add(new Text({ x: 160, y: 130, text: "Polyline" }));
 
 		uCanvas.add(
-			new Polygon({
-				points: [
-					[270, 110],
-					[360, 60],
-					[270, 10],
+			new Container({
+				x: 140,
+				y: 10,
+				children: [
+					new Polyline({
+						points: [
+							[0, 0],
+							[100, 0],
+							[0, 100],
+							[100, 100],
+						],
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Polyline" }),
 				],
 			})
 		);
-		uCanvas.add(new Text({ x: 280, y: 130, text: "Polygon" }));
 
 		uCanvas.add(
-			new Pie({
-				cx: 60,
-				cy: 220,
-				radius: 50,
-				startAngle: 0,
-				endAngle: Math.PI + Math.PI / 3,
+			new Container({
+				x: 270,
+				y: 10,
+				children: [
+					new Polygon({
+						points: [
+							[0, 0],
+							[100, 0],
+							[0, 100],
+						],
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Polygon" }),
+				],
 			})
 		);
-		uCanvas.add(new Text({ x: 50, y: 290, text: "Pie" }));
 
 		uCanvas.add(
-			new Circle({
-				cx: 190,
-				cy: 220,
-				radius: 50,
+			new Container({
+				x: 10,
+				y: 160,
+				children: [
+					new Pie({
+						cx: 50,
+						cy: 50,
+						radius: 50,
+						startAngle: 0,
+						endAngle: Math.PI + Math.PI / 3,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Pie" }),
+				],
 			})
 		);
-		uCanvas.add(new Text({ x: 170, y: 290, text: "Circle" }));
 
 		uCanvas.add(
-			new Ring({
-				cx: 320,
-				cy: 220,
-				innerRadius: 30,
-				outerRadius: 50,
-				startAngle: 0,
-				endAngle: Math.PI + Math.PI / 1.5,
+			new Container({
+				x: 140,
+				y: 160,
+				children: [
+					new Circle({
+						cx: 50,
+						cy: 50,
+						radius: 50,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Circle" }),
+				],
 			})
 		);
-		uCanvas.add(new Text({ x: 300, y: 290, text: "Ring" }));
+
+		uCanvas.add(
+			new Container({
+				x: 270,
+				y: 160,
+				children: [
+					new Ring({
+						cx: 50,
+						cy: 50,
+						innerRadius: 30,
+						outerRadius: 50,
+						startAngle: 0,
+						endAngle: Math.PI + Math.PI / 1.5,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Ring" }),
+				],
+			})
+		);
 
 		const data = new Uint8ClampedArray([
 			parseInt("10000000", 2),
@@ -138,49 +158,48 @@ onReady(() => {
 		]);
 
 		uCanvas.add(
-			new ImagePixel({
-				imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+			new Container({
 				x: 10,
-				y: 440,
+				y: 300,
+				children: [
+					new ImagePixel({
+						imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+						x: 0,
+						y: 0,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "ImagePixel" }),
+				],
 			})
 		);
 
 		const image = new window.Image();
-		image.src = "https://avatars.githubusercontent.com/u/52391595?v=4";
+		image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
 
 		uCanvas.add(
-			new Image({
-				image: image,
-				sx: 10,
-				sy: 440,
+			new Container({
+				x: 160,
+				y: 300,
+				children: [
+					new Image({
+						image: image,
+						sx: 0,
+						sy: 0,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Image" }),
+				],
 			})
 		);
-
-		// uCanvas.add(new Text({ x: 36, y: 440, text: "Image" }));
-		// uCanvas.add(
-		// 	new ImagePixel({
-		// 		imageData: createImageData({ data, bytesPerScanline: 8, array: [1, 1] }),
-		// 		x: 145,
-		// 		y: 330,
-		// 		w: 90,
-		// 		// h: 90,
-		// 	})
-		// );
-		uCanvas.add(new Text({ x: 135, y: 440, text: "Image With Size" }));
 
 		uCanvas.render();
 	});
 });
 
-const originMatrix = ref<Matrix>();
-const originTouchInfo = ref<TouchInfo>();
-
 const stateMachine = ref<BaseStateMachine>(new SelectionStateMachine(uCanvas));
 
 const onTap = (e: FTapEvent) => {
 	stateMachine.value.onTap(e);
-	// console.log("canvas tap");
-	// console.log(uCanvas.toGlobal([e.x, e.y]));
 };
 
 const onTouchdown = (e: FTouchdownEvent) => {

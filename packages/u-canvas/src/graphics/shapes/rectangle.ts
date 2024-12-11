@@ -98,11 +98,4 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	public override equals(other: Rectangle): boolean {
 		return super.equals(other) && this.x === other.x && this.y === other.y && this.w === other.w && this.h === other.h;
 	}
-
-	public on(type: string, fn: () => void) {
-		{
-			// x,y 自己当前相对父级坐标
-			// clientX,Y 相对于页面可显示区域左/顶边的距离
-		}
-	}
 }

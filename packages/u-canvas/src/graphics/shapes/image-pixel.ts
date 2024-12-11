@@ -60,7 +60,7 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
 			const { imageData, dx, dy, dw, dh } = this;
-			const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+			const [x, y] = this.worldMatrix.applyVector([this.x + offset.dx, this.y + offset.dy]);
 			const path = new Path2D();
 
 			if (dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined) {
