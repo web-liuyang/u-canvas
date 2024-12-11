@@ -9,10 +9,9 @@
 			}
 		},
 		{
-			"path": "pages/paint/paint",
+			"path": "pages/bug",
 			"style": {
-				"navigationBarTitleText": "paint",
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "bug page"
 			}
 		},
 
@@ -20,6 +19,14 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "uni-app x"
+			}
+		},
+
+		{
+			"path": "pages/paint/paint",
+			"style": {
+				"navigationBarTitleText": "paint",
+				"navigationStyle": "custom"
 			}
 		}
 	],

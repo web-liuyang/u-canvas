@@ -7,3 +7,4 @@ export { Polyline } from "./polyline";
 export { Polygon } from "./polygon";
 export { Text } from "./text";
 export { Image } from "./image";
+export { ImagePixel } from "./image-pixel";

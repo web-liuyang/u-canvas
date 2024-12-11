@@ -1,56 +1,101 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
+import { Offset } from "../..";
 
-export interface ImageOptions extends GraphicOptions {
-	image: { src: string } | ImageData;
-	x: number;
-	y: number;
-	w?: number;
-	h?: number;
+export interface ImagePureOptions extends GraphicOptions {
+	image: { src: string };
+	sx: number;
+	sy: number;
 }
+
+export interface ImageWithSizeOptions extends ImagePureOptions {
+	sw: number;
+	sh: number;
+}
+
+export interface ImageWithDirtyOptions extends ImageWithSizeOptions {
+	dx: number;
+	dy: number;
+	dw: number;
+	dh: number;
+}
+
+export type ImageOptions = ImagePureOptions & Partial<ImageWithSizeOptions> & Partial<ImageWithDirtyOptions>;
 
 export class Image extends Graphic<ImageOptions> {
 	public override readonly type = "Image";
 
 	public image: ImageOptions["image"];
 
-	public x: ImageOptions["x"];
+	public sx: ImageOptions["sx"];
 
-	public y: ImageOptions["y"];
+	public sy: ImageOptions["sy"];
 
-	public w?: ImageOptions["w"];
+	public sw: ImageOptions["sw"];
 
-	public h?: ImageOptions["h"];
+	public sh: ImageOptions["sh"];
 
+	public dx: ImageOptions["dx"];
+
+	public dy: ImageOptions["dy"];
+
+	public dw: ImageOptions["dw"];
+
+	public dh: ImageOptions["dh"];
+
+	constructor(options: ImagePureOptions);
+	constructor(options: ImageWithSizeOptions);
+	constructor(options: ImageWithDirtyOptions);
 	constructor(options: ImageOptions) {
 		super(options);
 		this.image = options.image;
-		this.x = options.x;
-		this.y = options.y;
-		this.w = options.w;
-		this.h = options.h;
+		this.sx = options.sx;
+		this.sy = options.sy;
+
+		const { sw, sh, dx, dy, dw, dh } = options;
+		if (
+			sw !== undefined &&
+			sh !== undefined &&
+			dx !== undefined &&
+			dy !== undefined &&
+			dw !== undefined &&
+			dh !== undefined
+		) {
+			this.sw = sw;
+			this.sh = sh;
+			this.dx = dx;
+			this.dy = dy;
+			this.dw = dw;
+			this.dh = dh;
+		} else if (sw !== undefined && sh !== undefined) {
+			this.sw = sw;
+			this.sh = sh;
+		}
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
-			const { image, x, y, w, h } = this;
+			const { image, sw, sh, dx, dy, dw, dh } = this;
+			const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
 			const path = new Path2D();
 
-			if (image instanceof ImageData) {
-				if (w !== undefined && h !== undefined) {
-					ctx.putImageData(image, x, y);
-				} else {
-					ctx.putImageData(image, x, y);
-				}
+			if (
+				sw !== undefined &&
+				sh !== undefined &&
+				dx !== undefined &&
+				dy !== undefined &&
+				dw !== undefined &&
+				dh !== undefined
+			) {
+				// @ts-expect-error uniapp-x api
+				ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+			} else if (sw !== undefined && sh !== undefined) {
+				// @ts-expect-error uniapp-x api
+				ctx.drawImage(image, sx, sy, sw, sh);
 			} else {
-				if (w !== undefined && h !== undefined) {
-					// @ts-expect-error uniapp-x api
-					ctx.drawImage(image, x, y, w, h);
-				} else {
-					// @ts-expect-error uniapp-x api
-					ctx.drawImage(image, x, y);
-				}
+				// @ts-expect-error uniapp-x api
+				ctx.drawImage(image, sx, sy);
 			}
 
 			ctx.stroke(path);
@@ -59,32 +104,63 @@ export class Image extends Graphic<ImageOptions> {
 	}
 
 	public override copyWith(options: CopyWithParameter<ImageOptions>): Image {
-		return new Image({
-			id: this.id,
-			image: options.image ?? this.image,
-			x: options.x ?? this.x,
-			y: options.y ?? this.y,
-			w: options.w ?? this.w,
-			h: options.h ?? this.h,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			style: options.style ?? this.style,
-		});
+		const id = this.id;
+		const {
+			image = this.image,
+			sx = this.sx,
+			sy = this.sy,
+			sw = this.sw,
+			sh = this.sh,
+			dx = this.dx,
+			dy = this.dy,
+			dw = this.dw,
+			dh = this.dh,
+			style = this.style,
+		} = options;
+
+		if (
+			sw !== undefined &&
+			sh !== undefined &&
+			dx !== undefined &&
+			dy !== undefined &&
+			dw !== undefined &&
+			dh !== undefined
+		) {
+			return new Image({
+				id: id,
+				image: image,
+				sx: sx,
+				sy: sy,
+				sw: sw,
+				sh: sh,
+				dx: dx,
+				dy: dy,
+				dw: dw,
+				dh: dh,
+				style: style,
+			});
+		} else if (sw !== undefined && sh !== undefined) {
+			return new Image({
+				id: id,
+				image: image,
+				sx: sx,
+				sy: sy,
+				sw: sw,
+				sh: sh,
+				style: style,
+			});
+		} else {
+			return new Image({
+				id: id,
+				image: image,
+				sx: sx,
+				sy: sy,
+				style: style,
+			});
+		}
 	}
 
 	public override hitTest(point: Point): boolean {
-		const { image, x, y, w, h } = this;
-
-		// const rect = new Rectangle({
-		// 	id: "hit",
-		// 	x,
-		// 	y,
-		// 	w: w,
-		// 	h: h,
-		// });
-
-		// if (rect.hit(point)) return true;
-
 		return false;
 	}
 
@@ -92,10 +168,14 @@ export class Image extends Graphic<ImageOptions> {
 		return (
 			super.equals(other) &&
 			this.image === other.image &&
-			this.x === other.x &&
-			this.y === other.y &&
-			this.w === other.w &&
-			this.h === other.h
+			this.sx === other.sx &&
+			this.sy === other.sy &&
+			this.sw === other.sw &&
+			this.sh === other.sh &&
+			this.dx === other.dx &&
+			this.dy === other.dy &&
+			this.dw === other.dw &&
+			this.dh === other.dh
 		);
 	}
 }

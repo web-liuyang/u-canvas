@@ -158,7 +158,7 @@ const onTap = (e: FTapEvent) => {
 };
 
 const onTouchstart = (e: FTouchstartEvent) => {
-	originMatrix.value = uCanvas.matrix;
+	originMatrix.value = uCanvas.matrix.clone();
 	originTouchInfo.value = e.touchInfo;
 };
 
@@ -168,9 +168,8 @@ const onTouchmove = (e: FTouchmoveEvent) => {
 	const tx = originMatrix.value!.e + deltaX * uCanvas.dpr;
 	const ty = originMatrix.value!.f + deltaY * uCanvas.dpr;
 
-	const matrix = uCanvas.matrix.setTranslate(tx, ty);
-
-	uCanvas.matrix = matrix;
+	uCanvas.matrix.setTranslate(tx, ty);
+	uCanvas.render();
 };
 
 const onTouchend = (e: FTouchendEvent) => {

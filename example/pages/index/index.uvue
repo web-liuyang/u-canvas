@@ -1,35 +1,48 @@
+<script lang="ts" setup>
+	const touchstart1 = () => {
+		console.log("touchstart1")
+	}
+
+	const touchstart2 = () => {
+		console.log("touchstart2")
+	}
+
+	const touchstart3 = () => {
+		console.log("touchstart3")
+	}
+
+	const touchend1 = () => {
+		console.log("touchend1")
+	}
+
+	const touchend2 = () => {
+		console.log("touchend2")
+	}
+
+	const touchend3 = () => {
+		console.log("touchend3")
+	}
+</script>
+
 <template>
 	<view>
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{ title }}</text>
+		<view @touchstart="touchstart1">
+
+			<view :style="{width: '100px', height: '100px', border: '1px solid red'}"> 正确1
+			</view>
+
+			<view @touchstart="touchstart2">
+				<view :style="{width: '100px', height: '100px', border: '1px solid red'}"> 不正确2
+				</view>
+			</view>
+
+			<view @touchstart="touchstart2">
+				<view @touchstart="touchstart3">
+					<view @touchstart='()=>{}' :style="{width: '100px', height: '100px', border: '1px solid red'}">
+						不正确3
+					</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
-
-<script lang="uts">
-
-	export default {
-		data() {
-			return {
-				title: "Hello",
-			};
-		},
-		onLoad() {},
-		methods: {},
-	};
-</script>
-
-<style>
-	.logo {
-		height: 100px;
-		width: 100px;
-		margin: 100px auto 25px auto;
-	}
-
-	.title {
-		font-size: 18px;
-		color: #8f8f94;
-		text-align: center;
-	}
-</style>

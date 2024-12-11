@@ -134,6 +134,7 @@ const onTouchmove = (e: UniTouchEvent) => {
 
 const onTouchend = (e: UniTouchEvent) => {
 	e.preventDefault();
+	// if (!eventState.value) return;
 	const uniTouch = resolveTouchInfo(eventState.value!);
 
 	if (Date.now() - onTapTimestamp.value < PRESS_TIMEOUT && !moving.value) {

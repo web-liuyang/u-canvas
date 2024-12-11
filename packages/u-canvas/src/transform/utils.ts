@@ -50,3 +50,43 @@ export function multiply(mA: Matrix, mB: Matrix): Matrix {
 
 	return new Matrix(matrixArray);
 }
+
+export function translate(m: Matrix, tx: number, ty: number): Matrix {
+	const translationMatrix = new Matrix([1, 0, 0, 1, tx, ty]);
+	const matrix = multiply(translationMatrix, m);
+	return matrix;
+}
+
+export function setTranslate(m: Matrix, tx: number, ty: number): Matrix {
+	const matrix = new Matrix([m.a, m.b, m.c, m.d, tx, ty]);
+	return matrix;
+}
+
+export function rotate(m: Matrix, xTheta: number, yTheta: number): Matrix {
+	const cos = Math.cos(xTheta);
+	const sin = Math.sin(yTheta);
+	const rotationMatrix = new Matrix([cos, -sin, sin, cos, 0, 0]);
+	const matrix = multiply(rotationMatrix, m);
+	return matrix;
+}
+
+// export function rotateDegree(m: Matrix, xDegree: number, yDegree: number): Matrix {
+// 	const xTheta = (xDegree * Math.PI) / 180;
+// 	const yTheta = (yDegree * Math.PI) / 180;
+// 	return rotate(m, xTheta, yTheta);
+// }
+
+export function scale(m: Matrix, a: number, d: number, point?: Point): Matrix {
+	let matrix: Matrix = m;
+
+	if (point) {
+		const [x, y] = point;
+		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, x, y]));
+		matrix = multiply(matrix, new Matrix([a, 0, 0, d, 0, 0]));
+		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, -x, -y]));
+	} else {
+		matrix = multiply(new Matrix([a, 0, 0, d, 0, 0]), m);
+	}
+
+	return matrix;
+}

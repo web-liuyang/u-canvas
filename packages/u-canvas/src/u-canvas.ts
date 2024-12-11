@@ -47,7 +47,7 @@ export class UCanvas {
 	}
 
 	private async getCanvasContext(options: UCanvasOptions): Promise<CanvasContext> {
-		return new Promise((res: (context: CanvasContext) => void, rej) => {
+		return new Promise<CanvasContext>((res, rej) => {
 			const { canvasId, componentInstance } = options;
 			uni.createCanvasContextAsync({
 				id: canvasId,

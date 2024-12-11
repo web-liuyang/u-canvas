@@ -59,19 +59,12 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.h = options.h;
 	}
 
-	public get parentMatrix(): Matrix {
-		return this.parent?.matrix ?? new Matrix();
-	}
-
-	public get currentMatrix() {
-		return this.parentMatrix.multiply(this.matrix);
-	}
-
 	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
 			const path = new Path2D();
-			const [x, y] = [this.x, this.y] || this.calLocationWithScope([this.x, this.y], offset);
+			const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 			const [w, h] = [this.w, this.h];
+
 			path.rect(x, y, w, h);
 			ctx.stroke(path);
 			ctx.fill(path);

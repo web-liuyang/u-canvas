@@ -1,5 +1,5 @@
 import { Point } from "../types";
-import { multiply } from "./utils";
+import { multiply, rotate, scale, setTranslate, translate } from "./utils";
 
 /**
  * Matrix Array Type
@@ -45,13 +45,16 @@ export class Matrix {
 	/**
 	 * Matrix multiplication matrix
 	 */
-	public multiply(other: Matrix, direction: MultiplicativeDirection = MultiplicativeDirection.Right): Matrix {
-		switch (direction) {
-			case MultiplicativeDirection.Left:
-				return multiply(this, other);
-			case MultiplicativeDirection.Right:
-				return multiply(other, this);
-		}
+	// public multiply(other: Matrix, direction: MultiplicativeDirection = MultiplicativeDirection.Right): Matrix {
+	public multiply(other: Matrix): Matrix {
+		return this.replace(multiply(other, this));
+
+		// switch (direction) {
+		// 	case MultiplicativeDirection.Left:
+		// 		return multiply(this, other);
+		// 	case MultiplicativeDirection.Right:
+		// 		return multiply(other, this);
+		// }
 	}
 
 	/**
@@ -67,22 +70,15 @@ export class Matrix {
 	}
 
 	public translate(tx: number, ty: number): Matrix {
-		const translationMatrix = new Matrix([1, 0, 0, 1, tx, ty]);
-		const matrix = this.multiply(translationMatrix);
-		return matrix;
+		return this.replace(translate(this, tx, ty));
 	}
 
 	public rotate(theta: number): Matrix {
-		const cos = Math.cos(theta);
-		const sin = Math.sin(theta);
-		const rotationMatrix = new Matrix([cos, -sin, sin, cos, 0, 0]);
-		const matrix = this.multiply(rotationMatrix);
-		return matrix;
+		return this.replace(rotate(this, theta, theta));
 	}
 
 	public setTranslate(tx: number, ty: number): Matrix {
-		const matrix = new Matrix([this.a, this.b, this.c, this.d, tx, ty]);
-		return matrix;
+		return this.replace(setTranslate(this, tx, ty));
 	}
 
 	/**
@@ -91,20 +87,21 @@ export class Matrix {
 	 * At locate [point] scale, if the [point] exist.
 	 */
 	public scale(a: number, d: number, point?: Point): Matrix {
-		let matrix: Matrix;
-		if (point) {
-			const [x, y] = point;
-			matrix = this.multiply(new Matrix([1, 0, 0, 1, x, y]), MultiplicativeDirection.Left)
-				.multiply(new Matrix([a, 0, 0, d, 0, 0]), MultiplicativeDirection.Left)
-				.multiply(new Matrix([1, 0, 0, 1, -x, -y]), MultiplicativeDirection.Left);
-		} else {
-			matrix = this.multiply(new Matrix([a, 0, 0, d, 0, 0]));
-		}
-
-		return matrix;
+		return this.replace(scale(this, a, d, point));
 	}
 
 	public clone(): Matrix {
 		return new Matrix(this.matrixArray);
+	}
+
+	public replace(matrix: Matrix): Matrix {
+		this.a = matrix.a;
+		this.b = matrix.b;
+		this.c = matrix.c;
+		this.d = matrix.d;
+		this.e = matrix.e;
+		this.f = matrix.f;
+
+		return this;
 	}
 }

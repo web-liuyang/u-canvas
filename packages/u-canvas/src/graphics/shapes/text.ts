@@ -33,11 +33,21 @@ export class Text extends Graphic<TextOptions> {
 	}
 
 	protected override draw(ctx: CanvasRenderingContext2D, fn: () => void): void {
+		ctx.save();
+		ctx.setTransform(
+			this.worldMatrix.a,
+			this.worldMatrix.b,
+			this.worldMatrix.c,
+			this.worldMatrix.d,
+			this.worldMatrix.e,
+			this.worldMatrix.f
+		);
 		const style = getTextStyle(ctx);
-
 		this.applyStyle(ctx, this.style);
 		fn();
 		this.applyStyle(ctx, style);
+
+		ctx.restore();
 	}
 
 	protected override applyStyle(ctx: CanvasRenderingContext2D, style: TextStyle): void {
@@ -54,7 +64,7 @@ export class Text extends Graphic<TextOptions> {
 
 	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
-			const [x, y] = [this.x, this.y] || this.calLocationWithScope([this.x, this.y], offset);
+			const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 			const { text } = this;
 			ctx.fillText(text, x, y);
 			ctx.strokeText(text, x, y);

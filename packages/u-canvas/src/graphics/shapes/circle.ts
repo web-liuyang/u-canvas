@@ -1,6 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
+import { Offset } from "../..";
 
 export interface CircleOptions extends GraphicOptions {
 	cx: number;
@@ -24,9 +25,10 @@ export class Circle extends Graphic<CircleOptions> {
 		this.radius = options.radius;
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D): void {
+	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
 		this.draw(ctx, () => {
-			const { cx, cy, radius } = this;
+			const { radius } = this;
+			const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
 			const path = new Path2D();
 			path.arc(cx, cy, radius, 0, 2 * Math.PI);
 			ctx.stroke(path);

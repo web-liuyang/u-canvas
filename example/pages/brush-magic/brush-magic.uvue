@@ -11,6 +11,7 @@ import {
 	Circle,
 	Polygon,
 	Image,
+	ImagePixel,
 	Style,
 	Fill,
 	Matrix,
@@ -43,7 +44,8 @@ onReady(() => {
 	nextTick(async () => {
 		await uCanvas.ensureInitialize();
 		// uCanvas.ctx.strokeRect(0, 0, 100, 100);
-		const rect = new Container({
+
+		const container = new Container({
 			x: 10,
 			y: 10,
 			children: [
@@ -53,7 +55,8 @@ onReady(() => {
 			],
 		});
 
-		// uCanvas.add(rect);
+		uCanvas.add(container);
+
 		// uCanvas.add(
 		// 	new Rectangle({ x: 100, y: 100, w: 100, h: 100, style: new Style({ fill: new Fill({ color: "red" }) }) })
 		// );
@@ -69,89 +72,101 @@ onReady(() => {
 		// uCanvas.add(r);
 		// uCanvas.add(new Text({ x: 20, y: 130, text: "Rectangle" }));
 
-		// uCanvas.add(
-		// 	new Polyline({
-		// 		points: [
-		// 			[140, 110],
-		// 			[240, 60],
-		// 			[140, 10],
-		// 		],
-		// 	})
-		// );
-		// uCanvas.add(new Text({ x: 160, y: 130, text: "Polyline" }));
+		uCanvas.add(
+			new Polyline({
+				points: [
+					[140, 110],
+					[240, 60],
+					[140, 10],
+				],
+			})
+		);
+		uCanvas.add(new Text({ x: 160, y: 130, text: "Polyline" }));
 
-		// uCanvas.add(
-		// 	new Polygon({
-		// 		points: [
-		// 			[270, 110],
-		// 			[360, 60],
-		// 			[270, 10],
-		// 		],
-		// 	})
-		// );
-		// uCanvas.add(new Text({ x: 280, y: 130, text: "Polygon" }));
+		uCanvas.add(
+			new Polygon({
+				points: [
+					[270, 110],
+					[360, 60],
+					[270, 10],
+				],
+			})
+		);
+		uCanvas.add(new Text({ x: 280, y: 130, text: "Polygon" }));
 
-		// uCanvas.add(
-		// 	new Pie({
-		// 		cx: 60,
-		// 		cy: 220,
-		// 		radius: 50,
-		// 		startAngle: 0,
-		// 		endAngle: Math.PI + Math.PI / 3,
-		// 	})
-		// );
-		// uCanvas.add(new Text({ x: 50, y: 290, text: "Pie" }));
+		uCanvas.add(
+			new Pie({
+				cx: 60,
+				cy: 220,
+				radius: 50,
+				startAngle: 0,
+				endAngle: Math.PI + Math.PI / 3,
+			})
+		);
+		uCanvas.add(new Text({ x: 50, y: 290, text: "Pie" }));
 
-		// uCanvas.add(
-		// 	new Circle({
-		// 		cx: 190,
-		// 		cy: 220,
-		// 		radius: 50,
-		// 	})
-		// );
-		// uCanvas.add(new Text({ x: 170, y: 290, text: "Circle" }));
+		uCanvas.add(
+			new Circle({
+				cx: 190,
+				cy: 220,
+				radius: 50,
+			})
+		);
+		uCanvas.add(new Text({ x: 170, y: 290, text: "Circle" }));
 
-		// uCanvas.add(
-		// 	new Ring({
-		// 		center: [320, 220],
-		// 		innerRadius: 30,
-		// 		outerRadius: 50,
-		// 		startAngle: 0,
-		// 		endAngle: Math.PI + Math.PI / 1.5,
-		// 	})
-		// );
-		// uCanvas.add(new Text({ x: 300, y: 290, text: "Ring" }));
+		uCanvas.add(
+			new Ring({
+				cx: 320,
+				cy: 220,
+				innerRadius: 30,
+				outerRadius: 50,
+				startAngle: 0,
+				endAngle: Math.PI + Math.PI / 1.5,
+			})
+		);
+		uCanvas.add(new Text({ x: 300, y: 290, text: "Ring" }));
 
-		// const data = new Uint8ClampedArray([
-		// 	parseInt("10000000", 2),
-		// 	parseInt("01000000", 2),
-		// 	parseInt("00100000", 2),
-		// 	parseInt("00010000", 2),
-		// 	parseInt("00001000", 2),
-		// 	parseInt("00000100", 2),
-		// 	parseInt("00000010", 2),
-		// 	parseInt("00000001", 2),
-		// ]);
+		const data = new Uint8ClampedArray([
+			parseInt("10000000", 2),
+			parseInt("01000000", 2),
+			parseInt("00100000", 2),
+			parseInt("00010000", 2),
+			parseInt("00001000", 2),
+			parseInt("00000100", 2),
+			parseInt("00000010", 2),
+			parseInt("00000001", 2),
+		]);
 
-		// uCanvas.add(
-		// 	new Image({
-		// 		image: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
-		// 		x: 10,
-		// 		y: 330,
-		// 	})
-		// );
+		uCanvas.add(
+			new ImagePixel({
+				imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+				x: 10,
+				y: 440,
+			})
+		);
+
+		const image = new window.Image();
+		image.src = "https://avatars.githubusercontent.com/u/52391595?v=4";
+
+		uCanvas.add(
+			new Image({
+				image: image,
+				sx: 10,
+				sy: 440,
+			})
+		);
+
 		// uCanvas.add(new Text({ x: 36, y: 440, text: "Image" }));
-
 		// uCanvas.add(
-		// 	new Image({
-		// 		image: createImageData({ data, bytesPerScanline: 8, array: [1, 1] }),
+		// 	new ImagePixel({
+		// 		imageData: createImageData({ data, bytesPerScanline: 8, array: [1, 1] }),
 		// 		x: 145,
 		// 		y: 330,
 		// 		w: 90,
-		// 		h: 90,
+		// 		// h: 90,
 		// 	})
 		// );
-		// uCanvas.add(new Text({ x: 135, y: 440, text: "Image With Size" }));
+		uCanvas.add(new Text({ x: 135, y: 440, text: "Image With Size" }));
 
 		uCanvas.render();
 	});
@@ -178,46 +193,26 @@ const onTouchup = (e: FTouchupEvent) => {
 
 const onTouchstart = (e: FTouchstartEvent) => {
 	stateMachine.value.onTouchstart(e);
-	// originMatrix.value = uCanvas.matrix;
-	// originTouchInfo.value = e.touchInfo;
 };
 
 const onTouchmove = (e: FTouchmoveEvent) => {
 	stateMachine.value.onTouchmove(e);
-	// const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
-
-	// const tx = originMatrix.value!.e + deltaX * uCanvas.dpr;
-	// const ty = originMatrix.value!.f + deltaY * uCanvas.dpr;
-
-	// const matrix = uCanvas.matrix.setTranslate(tx, ty);
-
-	// uCanvas.matrix = matrix;
 };
 
 const onTouchend = (e: FTouchendEvent) => {
 	stateMachine.value.onTouchend(e);
-	// originMatrix.value = undefined;
-	// originTouchInfo.value = undefined;
 };
 
 const onTouchcancel = (e: FTouchcancelEvent) => {
 	stateMachine.value.onTouchcancel(e);
-	// originMatrix.value = undefined;
-	// originTouchInfo.value = undefined;
 };
 
 const onZoomin = (e: FZoominEvent) => {
 	stateMachine.value.onZoomin(e);
-	// const [x, y] = uCanvas.toGlobal([e.x, e.y]);
-	// const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
-	// uCanvas.matrix = matrix;
 };
 
 const onZoomout = (e: FZoomoutEvent) => {
 	stateMachine.value.onZoomout(e);
-	// const [x, y] = uCanvas.toGlobal([e.x, e.y]);
-	// const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
-	// uCanvas.matrix = matrix;
 };
 
 const currentToolIndex = ref(0);

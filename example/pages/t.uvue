@@ -1,32 +1,48 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import finger from "@/u-canvas-components/src/finger.uvue";
+	const touchstart1 = () => {
+		console.log("touchstart1")
+	}
 
-const count = ref<number>(0);
-
-const touchend = () => {
-	console.log("touchend");
-};
+	const touchstart2 = () => {
+		console.log("touchstart2")
+	}
+	
+	const touchstart3 = () => {
+		console.log("touchstart3")
+	}
+	
+	const touchend1 = () => {
+		console.log("touchend1")
+	}
+	
+	const touchend2 = () => {
+		console.log("touchend2")
+	}
+	
+	const touchend3 = () => {
+		console.log("touchend3")
+	}
+	
 </script>
 
 <template>
-	<view class="t">
-		<view>{{ count }}</view>
-		<view @tap="count++">increase</view>
-		<view @tap="count--">decrease</view>
-		<finger class="finger" @onTouchend="touchend">
-			<slot />
-		</finger>
+	<view>
+		<view @touchstart="touchstart1" @touchend="touchend1">
+			
+			<view :style="{width: '100px', height: '100px', border: '1px solid red'}"> 正确1
+			</view>
+
+			<view @touchstart="touchstart2">
+				<view :style="{width: '100px', height: '100px', border: '1px solid red'}"> 不正确2
+				</view>
+			</view>
+
+			<view @touchstart="touchstart2" @touchend="touchend2">
+				<view @touchstart="touchstart3" >
+					<view :style="{width: '100px', height: '100px', border: '1px solid red'}"> 不正确
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
-
-<style>
-.finger {
-	width: 100%;
-	height: 100%;
-}
-.t {
-	width: 100%;
-	height: 100%;
-}
-</style>

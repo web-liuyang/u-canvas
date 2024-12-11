@@ -1,9 +1,11 @@
 import {
 	FTapEvent,
 	FTouchcancelEvent,
+	FTouchdownEvent,
 	FTouchendEvent,
 	FTouchmoveEvent,
 	FTouchstartEvent,
+	FTouchupEvent,
 	FZoominEvent,
 	FZoomoutEvent,
 	TouchInfo,
@@ -15,13 +17,16 @@ export class SelectionStateMachine extends BaseStateMachine {
 	private originMatrix?: Matrix;
 	private originTouchInfo?: TouchInfo;
 
-	public onTap(e: FTapEvent) {
-		console.log("canvas tap1");
-		console.log(this.canvas.toGlobal([e.x, e.y]));
+	public onTouchdown(e: FTouchdownEvent): void {
+		// console.log("A");
+	}
+
+	public onTouchup(e: FTouchupEvent): void {
+		// console.log("B");
 	}
 
 	public onTouchstart(e: FTouchstartEvent) {
-		this.originMatrix = this.canvas.matrix;
+		this.originMatrix = this.canvas.matrix.clone();
 		this.originTouchInfo = e.touchInfo;
 	}
 
@@ -31,9 +36,8 @@ export class SelectionStateMachine extends BaseStateMachine {
 		const tx = this.originMatrix!.e + deltaX * this.canvas.dpr;
 		const ty = this.originMatrix!.f + deltaY * this.canvas.dpr;
 
-		const matrix = this.canvas.matrix.setTranslate(tx, ty);
-
-		this.canvas.matrix = matrix;
+		this.canvas.matrix.setTranslate(tx, ty);
+		this.canvas.render();
 	}
 
 	public onTouchend(e: FTouchendEvent) {
