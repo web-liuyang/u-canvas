@@ -1,7 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
-import { Offset } from "../..";
+import { Offset, Paint } from "../..";
 
 export interface RingOptions extends GraphicOptions {
 	cx: number;
@@ -37,19 +37,17 @@ export class Ring extends Graphic<RingOptions> {
 		this.endAngle = options.endAngle;
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
-		this.draw(ctx, () => {
-			const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
-			const { innerRadius, outerRadius, startAngle, endAngle } = this;
-			const path = new Path2D();
+	public override paint(paint: Paint, offset: Offset): void {
+		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
+		const { innerRadius, outerRadius, startAngle, endAngle } = this;
+		const path = new Path2D();
 
-			path.arc(cx, cy, outerRadius, startAngle, endAngle);
-			path.arc(cx, cy, innerRadius, endAngle, startAngle, true);
-			path.closePath(); // 封闭路径
+		path.arc(cx, cy, outerRadius, startAngle, endAngle);
+		path.arc(cx, cy, innerRadius, endAngle, startAngle, true);
+		path.closePath(); // 封闭路径
 
-			ctx.fill(path);
-			ctx.stroke(path);
-		});
+		paint.fill(path);
+		paint.stroke(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<RingOptions>): Ring {

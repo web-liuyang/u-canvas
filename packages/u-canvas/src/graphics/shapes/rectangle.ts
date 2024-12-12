@@ -1,8 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
-import { Offset } from "../../offset";
-import { Matrix } from "../../transform";
+import { Offset, Paint } from "../..";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
@@ -59,16 +58,15 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.h = options.h;
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
-		this.draw(ctx, () => {
-			const path = new Path2D();
-			const [x, y] = [this.x + offset.dx, this.y + offset.dy];
-			const [w, h] = [this.w, this.h];
+	public override paint(paint: Paint, offset: Offset): void {
+		// const path = new Path2D();
+		const { style } = this;
+		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+		const [w, h] = [this.w, this.h];
+		paint.rect(x, y, w, h, style);
 
-			path.rect(x, y, w, h);
-			ctx.stroke(path);
-			ctx.fill(path);
-		});
+		// paint.stroke(path);
+		// paint.fill(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {

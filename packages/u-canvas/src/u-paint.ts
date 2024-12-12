@@ -1,16 +1,4 @@
-type PaintMethods<T> =
-	| {
-			type: "arc";
-			data: T;
-	  }
-	| {
-			type: "arcTo";
-			data: T;
-	  };
-
 export class Paint {
-	paths: [];
-
 	/**
 	 * 绘制一段弧线
 	 * @param x 圆弧中心（圆心）的 x 轴坐标
@@ -20,16 +8,14 @@ export class Paint {
 	 * @param endAngle 圆弧的终点，单位为弧度
 	 * @param anticlockwise 圆弧绘制方向，true：逆时针绘制，false：顺时针绘制。默认为 true
 	 */
-	arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean = true): void {
-		const a = {};
-
-		// {
-		// 	type: "arc",
-		// 	data: {
-
-		// 	}
-		// }
-	}
+	arc(
+		x: number,
+		y: number,
+		radius: number,
+		startAngle: number,
+		endAngle: number,
+		anticlockwise: boolean = true
+	): void {}
 
 	/**
 	 * 根据控制点和半径绘制圆弧路径，使用当前的描点 (前一个 moveTo 或 lineTo 等函数的止点)。
@@ -46,7 +32,7 @@ export class Paint {
 	/**
 	 * 开始创建一个路径。需要调用 fill 或者 stroke 才会使用路径进行填充或描边
 	 */
-	beginPath(): void {}
+	// beginPath(): void {}
 
 	/**
 	 * 绘制三次贝赛尔曲线路径
@@ -71,29 +57,29 @@ export class Paint {
 	/**
 	 * 将当前创建的路径设置为当前剪切路径
 	 */
-	clip(): void;
+	// clip(): void;
 	/**
 	 * 将当前创建的路径设置为当前剪切路径
 	 * @param path Path2D用来声明路径，用来在canvas中根据需要创建可以保留并重用的路径, 此路径会被CanvasRenderingContext2D对象使用
 	 */
-	clip(path: Path2D): void;
+	// clip(path: Path2D): void;
 	/**
 	 * 将当前创建的路径设置为当前剪切路径
 	 * @param fillRule 规则
 	 */
-	clip(fillRule: string): void;
+	// clip(fillRule: string): void;
 	/**
 	 * 将当前创建的路径设置为当前剪切路径
 	 * @param path Path2D用来声明路径，用来在canvas中根据需要创建可以保留并重用的路径, 此路径会被CanvasRenderingContext2D对象使用
 	 * @param fillRule 规则
 	 */
-	clip(path: Path2D, fillRule: string): void;
-	clip(path?: Path2D | string, fillRule?: string): void {}
+	// clip(path: Path2D, fillRule: string): void;
+	// clip(path?: Path2D | string, fillRule?: string): void {}
 
 	/**
 	 * 关闭一个路径
 	 */
-	closePath(): void {}
+	// closePath(): void {}
 
 	/**
 	 * 创建一个新的、空白的、指定大小的 ImageData 对象。所有的像素在新对象中都是透明的黑色
@@ -145,7 +131,7 @@ export class Paint {
 	 *
 	 * 该操作为可选非web标准，canvas组件会自动选择合适时机进行绘制
 	 */
-	draw(): void {}
+	// draw(): void {}
 
 	/**
 	 * 绘制图像到画布
@@ -607,4 +593,10 @@ export class Paint {
 	 * @param height 矩形路径的高度
 	 */
 	rect(x: number, y: number, width: number, height: number): void {}
+
+	// 自己添加
+	public paints: Paint[] = [];
+	addPaint(paint: Paint): void {
+		this.paints.push(paint);
+	}
 }

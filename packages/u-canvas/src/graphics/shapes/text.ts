@@ -1,9 +1,9 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Point } from "../../types";
-import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
 import { TextStyle } from "../styles";
 import { getTextStyle } from "../utils";
+import { Offset, Paint } from "../..";
 
 export interface TextOptions extends GraphicOptions {
 	x: number;
@@ -62,13 +62,19 @@ export class Text extends Graphic<TextOptions> {
 		ctx.textRendering = style.textRendering;
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
-		this.draw(ctx, () => {
-			const [x, y] = [this.x + offset.dx, this.y + offset.dy];
-			const { text } = this;
-			ctx.fillText(text, x, y);
-			ctx.strokeText(text, x, y);
-		});
+	public override paint(paint: Paint, offset: Offset): void {
+		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+		const { text } = this;
+
+		paint.fillText(text, x, y);
+		paint.strokeText(text, x, y);
+
+		// this.draw(ctx, () => {
+		// 	const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+		// 	const { text } = this;
+		// 	ctx.fillText(text, x, y);
+		// 	ctx.strokeText(text, x, y);
+		// });
 	}
 	public override copyWith(options: CopyWithParameter<TextOptions>): Text {
 		return new Text({

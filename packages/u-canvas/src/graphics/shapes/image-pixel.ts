@@ -1,7 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
-import { Offset } from "../..";
+import { Offset, Paint } from "../..";
 
 export interface ImagePixelPureOptions extends GraphicOptions {
 	imageData: ImageData;
@@ -57,21 +57,19 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 		}
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
-		this.draw(ctx, () => {
-			const { imageData, dx, dy, dw, dh } = this;
-			const [x, y] = this.worldMatrix.applyVector([this.x + offset.dx, this.y + offset.dy]);
-			const path = new Path2D();
+	public override paint(paint: Paint, offset: Offset): void {
+		const { imageData, dx, dy, dw, dh } = this;
+		const [x, y] = this.worldMatrix.applyVector([this.x + offset.dx, this.y + offset.dy]);
+		const path = new Path2D();
 
-			if (dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined) {
-				ctx.putImageData(imageData, x, y, dx, dy, dw, dh);
-			} else {
-				ctx.putImageData(imageData, x, y);
-			}
+		if (dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined) {
+			paint.putImageData(imageData, x, y, dx, dy, dw, dh);
+		} else {
+			paint.putImageData(imageData, x, y);
+		}
 
-			ctx.stroke(path);
-			ctx.fill(path);
-		});
+		paint.stroke(path);
+		paint.fill(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<ImagePixelOptions>): ImagePixel {

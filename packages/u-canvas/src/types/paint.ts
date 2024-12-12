@@ -1,5 +1,6 @@
 import { Container } from "../container";
 import { Offset } from "../offset";
+import { Paint } from "../u-paint";
 
 export enum CoordinateScope {
 	global,
@@ -17,7 +18,7 @@ export type Point = [number, number];
 export type Line = [Point, Point];
 
 export interface Paintable {
-	paint(ctx: CanvasRenderingContext2D, Offset: Offset): void;
+	paint(paint: Paint, Offset: Offset): void;
 }
 
 export interface Cloneable<T> {

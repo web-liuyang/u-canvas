@@ -4,6 +4,7 @@ import { Style } from "./styles";
 import { generateUUID, getStyle } from "./utils";
 import { Transform } from "../transform";
 import { Container } from "../container";
+import { Paint } from "../u-paint";
 
 export type GraphicId = string;
 
@@ -32,7 +33,7 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 		this.style = options.style ?? new Style();
 	}
 
-	public abstract paint(ctx: CanvasRenderingContext2D, offset: Offset): void;
+	public abstract paint(paint: Paint, offset: Offset): void;
 
 	public abstract copyWith(options: CopyWithParameter<T>): Graphic<T>;
 

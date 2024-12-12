@@ -1,7 +1,7 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
-import { Offset } from "../..";
+import { Offset, Paint } from "../..";
 
 export interface ImagePureOptions extends GraphicOptions {
 	image: { src: string };
@@ -74,33 +74,31 @@ export class Image extends Graphic<ImageOptions> {
 		}
 	}
 
-	public override paint(ctx: CanvasRenderingContext2D, offset: Offset): void {
-		this.draw(ctx, () => {
-			const { image, sw, sh, dx, dy, dw, dh } = this;
-			const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
-			const path = new Path2D();
+	public override paint(paint: Paint, offset: Offset): void {
+		const { image, sw, sh, dx, dy, dw, dh } = this;
+		const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
+		const path = new Path2D();
 
-			if (
-				sw !== undefined &&
-				sh !== undefined &&
-				dx !== undefined &&
-				dy !== undefined &&
-				dw !== undefined &&
-				dh !== undefined
-			) {
-				// @ts-expect-error uniapp-x api
-				ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
-			} else if (sw !== undefined && sh !== undefined) {
-				// @ts-expect-error uniapp-x api
-				ctx.drawImage(image, sx, sy, sw, sh);
-			} else {
-				// @ts-expect-error uniapp-x api
-				ctx.drawImage(image, sx, sy);
-			}
+		if (
+			sw !== undefined &&
+			sh !== undefined &&
+			dx !== undefined &&
+			dy !== undefined &&
+			dw !== undefined &&
+			dh !== undefined
+		) {
+			// @ts-expect-error uniapp-x api
+			ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+		} else if (sw !== undefined && sh !== undefined) {
+			// @ts-expect-error uniapp-x api
+			ctx.drawImage(image, sx, sy, sw, sh);
+		} else {
+			// @ts-expect-error uniapp-x api
+			ctx.drawImage(image, sx, sy);
+		}
 
-			ctx.stroke(path);
-			ctx.fill(path);
-		});
+		paint.stroke(path);
+		paint.fill(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<ImageOptions>): Image {
