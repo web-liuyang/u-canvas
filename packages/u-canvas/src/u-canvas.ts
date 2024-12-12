@@ -1,5 +1,5 @@
 import { Container } from "./container";
-import { Offset } from "./offset";
+import { Renderer } from "./renderer";
 import { Matrix } from "./transform";
 import { Child, Point } from "./types";
 
@@ -11,9 +11,11 @@ export interface UCanvasOptions {
 type Viewbox = [number, number, number, number];
 
 export class UCanvas {
-	protected element!: UniCanvasElement;
+	public renderer: Renderer = new Renderer(this);
 
-	protected canvasContext!: CanvasContext;
+	public element!: UniCanvasElement;
+
+	public canvasContext!: CanvasContext;
 
 	public readonly dpr: number = uni.getDeviceInfo().devicePixelRatio || 1;
 
@@ -38,9 +40,9 @@ export class UCanvas {
 		this.render();
 	}
 
-	protected root!: Container;
+	public root!: Container;
 
-	private options: UCanvasOptions;
+	public options: UCanvasOptions;
 
 	constructor(options: UCanvasOptions) {
 		this.options = options;
@@ -119,7 +121,6 @@ export class UCanvas {
 
 	public render() {
 		this.clear();
-
-		this.root.paint(this.ctx, new Offset(0, 0));
+		this.renderer.render(this.root);
 	}
 }

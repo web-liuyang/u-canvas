@@ -5,6 +5,8 @@
 [√] 重构属性为可写
 [ ] Graphic Event
 [ ] Finger Event Stop
+[ ] 整合 Paint
+[ ] UCanvas 应该有个 Renderer
 
 ### Bug
 
@@ -19,3 +21,5 @@
 [ ] clearRect 在矩形区域比较大时，有卡顿性能不好
 [ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下
 [ ] h5 无法触发 tap事件
+
+roundRect/strokeText 文档错误
