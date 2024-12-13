@@ -8,6 +8,7 @@ export interface RectangleOptions extends GraphicOptions {
 	y: number;
 	w: number;
 	h: number;
+	radii: number;
 }
 
 export interface RectangleFromCenterOptions extends GraphicOptions {
@@ -15,6 +16,7 @@ export interface RectangleFromCenterOptions extends GraphicOptions {
 	y: number;
 	w: number;
 	h: number;
+	radii: number;
 }
 
 export class Rectangle extends Graphic<RectangleOptions> {
@@ -28,6 +30,8 @@ export class Rectangle extends Graphic<RectangleOptions> {
 
 	public h: number;
 
+	public radii: number;
+
 	public get cx(): number {
 		return this.x + this.w / 2;
 	}
@@ -37,16 +41,15 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	}
 
 	public static fromCenter(options: RectangleFromCenterOptions): Rectangle {
-		const { x, y, w, h } = options;
+		const { x, y, w, h, radii, style } = options;
 		return new Rectangle({
 			id: options.id,
 			x: x - w / 2,
 			y: y - h / 2,
 			w: w,
 			h: h,
-			// selected: options.selected,
-			// editing: options.editing,
-			style: options.style,
+			radii: radii,
+			style: style,
 		});
 	}
 
@@ -56,14 +59,15 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.y = options.y;
 		this.w = options.w;
 		this.h = options.h;
+		this.radii = options.radii;
 	}
 
 	public override paint(paint: Paint, offset: Offset): void {
 		// const path = new Path2D();
-		const { style } = this;
+		const { style, radii } = this;
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 		const [w, h] = [this.w, this.h];
-		paint.rect(x, y, w, h, style);
+		paint.rect(x, y, w, h, radii, style);
 
 		// paint.stroke(path);
 		// paint.fill(path);
@@ -76,13 +80,13 @@ export class Rectangle extends Graphic<RectangleOptions> {
 			y: options.y ?? this.y,
 			w: options.w ?? this.w,
 			h: options.h ?? this.h,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
+			radii: options.radii ?? this.radii,
 			style: options.style ?? this.style,
 		});
 	}
 
 	public override hitTest(point: Point): boolean {
+		// TODO 没有判断圆角
 		const [x, y] = point;
 		const { x: leftTopX, y: leftTopY, w, h } = this;
 		const rightBottomX = leftTopX + w;
@@ -94,6 +98,13 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	}
 
 	public override equals(other: Rectangle): boolean {
-		return super.equals(other) && this.x === other.x && this.y === other.y && this.w === other.w && this.h === other.h;
+		return (
+			super.equals(other) &&
+			this.x === other.x &&
+			this.y === other.y &&
+			this.w === other.w &&
+			this.h === other.h &&
+			this.radii === other.radii
+		);
 	}
 }

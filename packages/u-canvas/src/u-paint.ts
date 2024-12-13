@@ -1,3 +1,5 @@
+import { Style } from "./graphics";
+
 export class Paint {
 	/**
 	 * 绘制一段弧线
@@ -9,6 +11,7 @@ export class Paint {
 	 * @param anticlockwise 圆弧绘制方向，true：逆时针绘制，false：顺时针绘制。默认为 true
 	 */
 	arc(
+		//
 		x: number,
 		y: number,
 		radius: number,
@@ -230,7 +233,7 @@ export class Paint {
 	 * @param width 矩形的宽度
 	 * @param height 矩形的高度
 	 */
-	fillRect(x: number, y: number, width: number, height: number): void {}
+	// fillRect(x: number, y: number, width: number, height: number): void {}
 
 	/**
 	 * 在画布上绘制文本
@@ -371,7 +374,18 @@ export class Paint {
 	 * @param width 矩形路径的宽度
 	 * @param height 矩形路径的高度
 	 */
-	rect(x: number, y: number, width: number, height: number): void {}
+	rect(x: number, y: number, width: number, height: number, radii: number, style: Style): void {
+		(ctx: CanvasRenderingContext2D) => {
+			if (radii) {
+				ctx.roundRect(x, y, width, height, radii);
+			} else {
+				ctx.rect(x, y, width, height);
+			}
+
+			ctx.stroke();
+			ctx.fill();
+		};
+	}
 
 	/**
 	 * 使用单位矩阵重新设置当前变换
@@ -397,7 +411,7 @@ export class Paint {
 	 * @param height 矩形的高度。正值向下，负值向上
 	 * @param radii ?
 	 */
-	roundRect(x: number, y: number, width: number, height: number, radii: any): boolean {}
+	// roundRect(x: number, y: number, width: number, height: number, radii: any): boolean {}
 
 	/**
 	 * 保存绘图上下文
@@ -453,7 +467,7 @@ export class Paint {
 	 * @param width 矩形的宽度
 	 * @param height 矩形的高度
 	 */
-	strokeRect(x: number, y: number, width: number, height: number): void {}
+	// strokeRect(x: number, y: number, width: number, height: number): void {}
 
 	/**
 	 * 文本描边
@@ -592,9 +606,12 @@ export class Paint {
 	 * @param width 矩形路径的宽度
 	 * @param height 矩形路径的高度
 	 */
-	rect(x: number, y: number, width: number, height: number): void {}
+	// rect(x: number, y: number, width: number, height: number): void {}
 
 	// 自己添加
+
+	public acts = [];
+
 	public paints: Paint[] = [];
 	addPaint(paint: Paint): void {
 		this.paints.push(paint);
