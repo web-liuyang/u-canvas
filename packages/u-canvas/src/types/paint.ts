@@ -1,5 +1,7 @@
 import { Container } from "../container";
+import { DrawingBoard } from "../drawing-board";
 import { Offset } from "../offset";
+import { Transform } from "../transform";
 import { Paint } from "../u-paint";
 
 export enum CoordinateScope {
@@ -13,12 +15,17 @@ export enum CoordinateScope {
 export type Point = [number, number];
 
 /**
+ * [w, h]
+ */
+export type Size = [number, number];
+
+/**
  * [sp, ep]
  */
 export type Line = [Point, Point];
 
 export interface Paintable {
-	paint(paint: Paint, Offset: Offset): void;
+	paint(board: DrawingBoard, Offset: Offset): void;
 }
 
 export interface Cloneable<T> {
@@ -40,4 +47,4 @@ export interface Parent {
 /**
  * P is parent type
  */
-export type Child = Paintable & Hittable & Equatable<unknown> & Parent;
+export type Child = Paintable & Hittable & Equatable<unknown> & Parent & Transform;

@@ -3,40 +3,42 @@ import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
 import { Point } from "../../types";
 import { Offset, Paint } from "../..";
+import { DrawingBoard } from "../../drawing-board";
 
-export interface LineOptions extends GraphicOptions {
+export interface PolygonOptions extends GraphicOptions {
 	points: Point[];
+	close?: boolean;
 }
 
-export class Polygon extends Graphic<LineOptions> {
+export class Polygon extends Graphic<PolygonOptions> {
 	public override readonly type = "Polygon";
 
-	public points: LineOptions["points"];
+	public points: PolygonOptions["points"];
 
-	constructor(options: LineOptions) {
+	public close: PolygonOptions["close"];
+
+	constructor(options: PolygonOptions) {
 		super(options);
 		if (options.points.length < 2) throw new Error("Polygon must have at least two points");
 		this.points = options.points;
+		this.close = options.close;
 	}
 
-	public override paint(paint: Paint, offset: Offset): void {
-		const path = new Path2D();
-		for (const vertex of this.points) {
-			const [x, y] = [vertex[0] + offset.dx, vertex[1] + offset.dy];
-			path.lineTo(x, y);
-		}
-		path.closePath();
+	public override paint(board: DrawingBoard, offset: Offset): void {
+		const { close = false, style } = this;
+		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
+		if (close) points.unshift(points[0]);
 
-		paint.stroke(path);
-		paint.fill(path);
+		board.drawPolygon(points, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<LineOptions>): Polygon {
+	public override copyWith(options: CopyWithParameter<PolygonOptions>): Polygon {
 		return new Polygon({
 			id: this.id,
 			points: options.points ?? this.points,
 			// selected: options.selected ?? this.selected,
 			// editing: options.editing ?? this.editing,
+			close: options.close ?? this.close,
 			style: options.style ?? this.style,
 		});
 	}
@@ -55,6 +57,7 @@ export class Polygon extends Graphic<LineOptions> {
 	public override equals(other: Polygon): boolean {
 		return (
 			super.equals(other) &&
+			this.close === other.close &&
 			this.points.length === other.points.length &&
 			this.points.every((point, index) => point[0] === other.points[index][0] && point[1] === other.points[index][1])
 		);

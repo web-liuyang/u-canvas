@@ -121,6 +121,6 @@ export class UCanvas {
 
 	public render() {
 		this.clear();
-		this.renderer.render(this.root);
+		this.renderer.renderRoot();
 	}
 }

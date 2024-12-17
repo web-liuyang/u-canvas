@@ -3,6 +3,7 @@ import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
 import { Point } from "../../types";
 import { Offset, Paint } from "../..";
+import { DrawingBoard } from "../../drawing-board";
 
 export interface PolylineOptions extends GraphicOptions {
 	points: Point[];
@@ -19,16 +20,10 @@ export class Polyline extends Graphic<PolylineOptions> {
 		this.points = options.points;
 	}
 
-	public override paint(paint: Paint, offset: Offset): void {
-		const path = new Path2D();
-
-		for (const vertex of this.points) {
-			const [x, y] = [vertex[0] + offset.dx, vertex[1] + offset.dy];
-			path.lineTo(x, y);
-		}
-
-		paint.stroke(path);
-		paint.fill(path);
+	public override paint(board: DrawingBoard, offset: Offset): void {
+		const { style } = this;
+		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
+		board.drawPolyline(points, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<PolylineOptions>): Polyline {

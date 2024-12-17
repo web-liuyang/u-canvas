@@ -2,6 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
 import { Offset, Paint } from "../..";
+import { DrawingBoard } from "../../drawing-board";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;
@@ -33,7 +34,7 @@ export class Pie extends Graphic<PieOptions> {
 		this.endAngle = options.endAngle;
 	}
 
-	public override paint(paint: Paint, offset: Offset): void {
+	public override paint(board: DrawingBoard, offset: Offset): void {
 		const { radius, startAngle, endAngle } = this;
 		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
 		const path = new Path2D();
@@ -41,8 +42,8 @@ export class Pie extends Graphic<PieOptions> {
 		path.arc(cx, cy, radius, startAngle, endAngle);
 		path.closePath();
 
-		paint.fill(path);
-		paint.stroke(path);
+		// paint.fill(path);
+		// paint.stroke(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<PieOptions>): Pie {

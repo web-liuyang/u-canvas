@@ -2,6 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { Point } from "../../types";
 import { Offset, Paint } from "../..";
+import { DrawingBoard } from "../../drawing-board";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
@@ -62,15 +63,11 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.radii = options.radii;
 	}
 
-	public override paint(paint: Paint, offset: Offset): void {
-		// const path = new Path2D();
+	public override paint(board: DrawingBoard, offset: Offset): void {
 		const { style, radii } = this;
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 		const [w, h] = [this.w, this.h];
-		paint.rect(x, y, w, h, radii, style);
-
-		// paint.stroke(path);
-		// paint.fill(path);
+		board.drawRect(x, y, w, h, radii, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {

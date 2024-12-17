@@ -3,11 +3,13 @@ import { Graphic } from "../graphic";
 import { Rectangle } from "./rectangle";
 import { Point } from "../../types";
 import { Offset, Paint } from "../..";
+import { DrawingBoard } from "../../drawing-board";
 
 export interface AnyOptions extends GraphicOptions {
 	points: Point[];
 }
 
+// 换个名字？
 export class Any extends Graphic<AnyOptions> {
 	public override readonly type = "Any";
 
@@ -18,15 +20,11 @@ export class Any extends Graphic<AnyOptions> {
 		this.points = options.points;
 	}
 
-	public override paint(paint: Paint, offset: Offset): void {
-		const path = new Path2D();
+	public override paint(board: DrawingBoard, offset: Offset): void {
 		for (const vertex of this.points) {
 			const [x, y] = [vertex[0] + offset.dx, vertex[1] + offset.dy];
-			paint.lineTo(x, y);
+			// board.lineTo(x, y);
 		}
-
-		paint.stroke(path);
-		paint.fill(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<AnyOptions>): Any {
@@ -38,17 +36,17 @@ export class Any extends Graphic<AnyOptions> {
 	}
 
 	public override hitTest(point: Point): boolean {
-		for (const [x, y] of this.points) {
-			const rect = Rectangle.fromCenter({
-				id: "hit",
-				x,
-				y,
-				w: 10,
-				h: 10,
-			});
+		// for (const [x, y] of this.points) {
+		// 	const rect = Rectangle.fromCenter({
+		// 		id: "hit",
+		// 		x,
+		// 		y,
+		// 		w: 10,
+		// 		h: 10,
+		// 	});
 
-			if (rect.hitTest(point)) return true;
-		}
+		// 	if (rect.hitTest(point)) return true;
+		// }
 
 		return false;
 	}
