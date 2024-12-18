@@ -1,7 +1,7 @@
+import type { Child, Point } from "./types";
 import { Container } from "./container";
 import { Renderer } from "./renderer";
 import { Matrix } from "./transform";
-import { Child, Point } from "./types";
 
 export interface UCanvasOptions {
 	canvasId: string;

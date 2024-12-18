@@ -1,4 +1,4 @@
-import { Parent, Child, Equatable, Paintable, Hittable, Point } from "../types";
+import type { Parent, Child, Equatable, Paintable, Hittable, Point } from "../types";
 import { Transform } from "../transform";
 import { Offset } from "../offset";
 import { Paint } from "../u-paint";

@@ -1,4 +1,4 @@
-import { Point } from "../types";
+import type { Point } from "../types";
 import { multiply, rotate, scale, setTranslate, translate } from "./utils";
 
 /**

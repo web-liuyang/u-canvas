@@ -1,7 +1,7 @@
+import type { Point, Size, ValueFunction } from "./types";
 import { Style, TextStyle } from "./graphics";
 import { getStyle, getTextStyle } from "./graphics/utils";
 import { Matrix } from "./transform";
-import { Point, Size, ValueFunction } from "./types";
 
 // export class Path {
 // 	void moveTo(double x, double y);

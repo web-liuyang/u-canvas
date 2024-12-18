@@ -1,4 +1,4 @@
-import { Point } from "../types";
+import type { Point } from "../types";
 import type { MatrixArray } from "./matrix";
 import { Matrix } from "./matrix";
 

@@ -1,5 +1,5 @@
 // import { v4 as uuid } from "uuid";
-import { Line, Point } from "../types";
+import type { Line, Point } from "../types";
 import { Style, StrokeCap, StrokeJoin, Stroke, Fill, TextStyle } from "./styles";
 
 export function generateUUID(): string {

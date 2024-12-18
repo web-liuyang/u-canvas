@@ -1,6 +1,6 @@
 import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
-import { Point } from "../../types";
+import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
 import { DrawingBoard } from "../../drawing-board";
 

@@ -1,4 +1,4 @@
-import { Cloneable, Equatable, Hittable, Paintable, Point, CoordinateScope, Parent } from "../types";
+import type { Cloneable, Equatable, Hittable, Paintable, Point, CoordinateScope, Parent } from "../types";
 import { Offset } from "../offset";
 import { Style } from "./styles";
 import { generateUUID, getStyle } from "./utils";
