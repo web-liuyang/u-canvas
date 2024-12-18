@@ -2,7 +2,8 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
+import { Path } from "../../path";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;
@@ -10,6 +11,7 @@ export interface PieOptions extends GraphicOptions {
 	radius: number;
 	startAngle: number;
 	endAngle: number;
+	counterclockwise?: boolean;
 }
 
 export class Pie extends Graphic<PieOptions> {
@@ -25,6 +27,8 @@ export class Pie extends Graphic<PieOptions> {
 
 	public endAngle: number;
 
+	public counterclockwise: boolean;
+
 	constructor(options: PieOptions) {
 		super(options);
 		this.cx = options.cx;
@@ -32,18 +36,17 @@ export class Pie extends Graphic<PieOptions> {
 		this.radius = options.radius;
 		this.startAngle = options.startAngle;
 		this.endAngle = options.endAngle;
+		this.counterclockwise = options.counterclockwise ?? false;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
-		const { radius, startAngle, endAngle } = this;
+	public override paint(canvas: Canvas, offset: Offset): void {
+		const { radius, startAngle, endAngle, counterclockwise, style } = this;
 		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
-		const path = new Path2D();
+		const path = new Path();
 		path.moveTo(cx, cy);
-		path.arc(cx, cy, radius, startAngle, endAngle);
+		path.arc(cx, cy, radius, startAngle, endAngle, counterclockwise);
 		path.closePath();
-
-		// paint.fill(path);
-		// paint.stroke(path);
+		canvas.drawPath(path, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<PieOptions>): Pie {

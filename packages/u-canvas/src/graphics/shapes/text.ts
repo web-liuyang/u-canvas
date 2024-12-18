@@ -4,7 +4,7 @@ import { Graphic } from "../graphic";
 import { TextStyle } from "../styles";
 import { getTextStyle } from "../utils";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface TextOptions extends GraphicOptions {
 	x: number;
@@ -63,10 +63,10 @@ export class Text extends Graphic<TextOptions> {
 		ctx.textRendering = style.textRendering;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 		const { text, style } = this;
-		board.drawText(text, x, y, style);
+		canvas.drawText(text, x, y, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<TextOptions>): Text {

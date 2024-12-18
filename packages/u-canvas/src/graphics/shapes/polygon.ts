@@ -3,7 +3,7 @@ import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface PolygonOptions extends GraphicOptions {
 	points: Point[];
@@ -24,12 +24,12 @@ export class Polygon extends Graphic<PolygonOptions> {
 		this.close = options.close;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const { close = false, style } = this;
 		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
 		if (close) points.unshift(points[0]);
 
-		board.drawPolygon(points, style);
+		canvas.drawPolygon(points, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<PolygonOptions>): Polygon {

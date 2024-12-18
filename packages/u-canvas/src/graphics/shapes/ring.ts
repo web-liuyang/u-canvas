@@ -2,7 +2,8 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
+import { Path } from "../../path";
 
 export interface RingOptions extends GraphicOptions {
 	cx: number;
@@ -11,6 +12,7 @@ export interface RingOptions extends GraphicOptions {
 	outerRadius: number;
 	startAngle: number;
 	endAngle: number;
+	counterclockwise?: boolean;
 }
 
 export class Ring extends Graphic<RingOptions> {
@@ -28,6 +30,8 @@ export class Ring extends Graphic<RingOptions> {
 
 	public endAngle: number;
 
+	public counterclockwise: boolean;
+
 	constructor(options: RingOptions) {
 		super(options);
 		this.cx = options.cx;
@@ -36,17 +40,23 @@ export class Ring extends Graphic<RingOptions> {
 		this.outerRadius = options.outerRadius;
 		this.startAngle = options.startAngle;
 		this.endAngle = options.endAngle;
+		this.counterclockwise = options.counterclockwise ?? false;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
-		const { innerRadius, outerRadius, startAngle, endAngle } = this;
-		const path = new Path2D();
+		const { innerRadius, outerRadius, startAngle, endAngle, counterclockwise, style } = this;
+		const path = new Path();
 
+		path.arc(cx, cy, outerRadius, startAngle, endAngle, counterclockwise);
+		path.arc(cx, cy, innerRadius, endAngle, startAngle, !counterclockwise);
+		path.closePath(); // 封闭路径
 
-		// board.drawArc([cx, cy,] outerRadius, startAngle, endAngle);
-		// board.drawArc(cx, cy, innerRadius, endAngle, startAngle, true);
-		// board.drawArc(cx, cy, outerRadius, startAngle, endAngle);
+		// canvas.drawArc([cx, cy,] outerRadius, startAngle, endAngle);
+		// canvas.drawArc(cx, cy, innerRadius, endAngle, startAngle, true);
+		// canvas.drawArc(cx, cy, outerRadius, startAngle, endAngle);
+
+		canvas.drawPath(path, style);
 
 		// path.arc(cx, cy, outerRadius, startAngle, endAngle);
 		// path.arc(cx, cy, innerRadius, endAngle, startAngle, true);

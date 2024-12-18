@@ -2,14 +2,14 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
 	y: number;
 	w: number;
 	h: number;
-	radii: number;
+	radii?: number;
 }
 
 export interface RectangleFromCenterOptions extends GraphicOptions {
@@ -17,7 +17,7 @@ export interface RectangleFromCenterOptions extends GraphicOptions {
 	y: number;
 	w: number;
 	h: number;
-	radii: number;
+	radii?: number;
 }
 
 export class Rectangle extends Graphic<RectangleOptions> {
@@ -60,14 +60,14 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.y = options.y;
 		this.w = options.w;
 		this.h = options.h;
-		this.radii = options.radii;
+		this.radii = options.radii ?? 0;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const { style, radii } = this;
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 		const [w, h] = [this.w, this.h];
-		board.drawRect(x, y, w, h, radii, style);
+		canvas.drawRect(x, y, w, h, radii, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {

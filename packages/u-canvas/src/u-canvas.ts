@@ -115,11 +115,16 @@ export class UCanvas {
 	}
 
 	public clear() {
+		// console.log(...this._viewbox);
 		this.ctx.clearRect(...this._viewbox);
 		this.paintOrigin();
 	}
 
 	public render() {
+		const matrix = this.root.matrix;
+		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
+		this.setViewbox(matrix);
+
 		this.clear();
 		this.renderer.renderRoot();
 	}

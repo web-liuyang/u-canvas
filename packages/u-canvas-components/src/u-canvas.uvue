@@ -14,7 +14,7 @@ import {
 	Style,
 	Fill,
 	Matrix,
-} from "@u-canvas";
+} from "u-canvas";
 
 import { onMounted, nextTick, ref } from "vue";
 import interactiveCanvas from "./interactive-canvas.uvue";

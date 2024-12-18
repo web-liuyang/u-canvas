@@ -3,7 +3,7 @@ import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface PolylineOptions extends GraphicOptions {
 	points: Point[];
@@ -20,10 +20,10 @@ export class Polyline extends Graphic<PolylineOptions> {
 		this.points = options.points;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const { style } = this;
 		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
-		board.drawPolyline(points, style);
+		canvas.drawPolyline(points, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<PolylineOptions>): Polyline {

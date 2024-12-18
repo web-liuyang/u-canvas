@@ -2,7 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface CircleOptions extends GraphicOptions {
 	cx: number;
@@ -26,10 +26,10 @@ export class Circle extends Graphic<CircleOptions> {
 		this.radius = options.radius;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const { radius, style } = this;
 		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
-		board.drawCircle(cx, cy, radius, style);
+		canvas.drawCircle(cx, cy, radius, style);
 	}
 
 	public override copyWith(options: CopyWithParameter<CircleOptions>): Circle {

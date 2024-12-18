@@ -2,7 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface ImagePureOptions extends GraphicOptions {
 	image: { src: string };
@@ -75,11 +75,11 @@ export class Image extends Graphic<ImageOptions> {
 		}
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const { image, sw, sh, dx, dy, dw, dh, style } = this;
 		const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
 
-		board.drawImage(image, sx, sy, style);
+		canvas.drawImage(image, sx, sy, style);
 
 		// if (
 		// 	sw !== undefined &&
@@ -90,13 +90,13 @@ export class Image extends Graphic<ImageOptions> {
 		// 	dh !== undefined
 		// ) {
 		// 	// @ts-expect-error uniapp-x api
-		// 	board.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+		// 	canvas.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
 		// } else if (sw !== undefined && sh !== undefined) {
 		// 	// @ts-expect-error uniapp-x api
-		// 	board.drawImage(image, sx, sy, sw, sh);
+		// 	canvas.drawImage(image, sx, sy, sw, sh);
 		// } else {
 		// 	// @ts-expect-error uniapp-x api
-		// 	board.drawImage(image, sx, sy);
+		// 	canvas.drawImage(image, sx, sy);
 		// }
 	}
 

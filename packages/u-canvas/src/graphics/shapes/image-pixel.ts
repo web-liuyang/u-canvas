@@ -2,7 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface ImagePixelPureOptions extends GraphicOptions {
 	imageData: ImageData;
@@ -22,19 +22,19 @@ export type ImagePixelOptions = ImagePixelPureOptions & Partial<ImagePixelWithDi
 export class ImagePixel extends Graphic<ImagePixelOptions> {
 	public override readonly type = "ImagePixel";
 
-	public imageData: ImagePixelOptions["imageData"];
+	public imageData: ImageData;
 
-	public x: ImagePixelOptions["x"];
+	public x: number;
 
-	public y: ImagePixelOptions["y"];
+	public y: number;
 
-	public dx: ImagePixelOptions["dx"];
+	public dx: number;
 
-	public dy: ImagePixelOptions["dy"];
+	public dy: number;
 
-	public dw: ImagePixelOptions["dw"];
+	public dw: number;
 
-	public dh: ImagePixelOptions["dh"];
+	public dh: number;
 
 	constructor(options: ImagePixelWithDirtyOptions);
 	constructor(options: ImagePixelPureOptions);
@@ -42,35 +42,20 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 		super(options);
 
 		this.imageData = options.imageData;
+
 		this.x = options.x;
 		this.y = options.y;
-
-		if (
-			options?.dx !== undefined &&
-			options?.dy !== undefined &&
-			options?.dw !== undefined &&
-			options?.dh !== undefined
-		) {
-			this.dx = options?.dx;
-			this.dy = options?.dy;
-			this.dw = options?.dw;
-			this.dh = options?.dh;
-		}
+		this.dx = options?.dx ?? 0;
+		this.dy = options?.dy ?? 0;
+		this.dw = options?.dw ?? this.imageData.width;
+		this.dh = options?.dh ?? this.imageData.height;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		const { imageData, dx, dy, dw, dh } = this;
 		const [x, y] = this.worldMatrix.applyVector([this.x + offset.dx, this.y + offset.dy]);
-		const path = new Path2D();
 
-		// if (dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined) {
-		// 	board.putImageData(imageData, x, y, dx, dy, dw, dh);
-		// } else {
-		// 	board.putImageData(imageData, x, y);
-		// }
-
-		// board.stroke(path);
-		// board.fill(path);
+		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
 	}
 
 	public override copyWith(options: CopyWithParameter<ImagePixelOptions>): ImagePixel {

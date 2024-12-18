@@ -1,5 +1,5 @@
 import { Container } from "../container";
-import { DrawingBoard } from "../drawing-board";
+import { Canvas } from "../canvas";
 import { Offset } from "../offset";
 import { Transform } from "../transform";
 import { Paint } from "../u-paint";
@@ -25,7 +25,7 @@ export type Size = [number, number];
 export type Line = [Point, Point];
 
 export interface Paintable {
-	paint(board: DrawingBoard, Offset: Offset): void;
+	paint(canvas: Canvas, Offset: Offset): void;
 }
 
 export interface Cloneable<T> {

@@ -3,7 +3,7 @@ import { Graphic } from "../graphic";
 import { Rectangle } from "./rectangle";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { DrawingBoard } from "../../drawing-board";
+import { Canvas } from "../../canvas";
 
 export interface AnyOptions extends GraphicOptions {
 	points: Point[];
@@ -20,10 +20,10 @@ export class Any extends Graphic<AnyOptions> {
 		this.points = options.points;
 	}
 
-	public override paint(board: DrawingBoard, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
 		for (const vertex of this.points) {
 			const [x, y] = [vertex[0] + offset.dx, vertex[1] + offset.dy];
-			// board.lineTo(x, y);
+			// canvas.lineTo(x, y);
 		}
 	}
 

@@ -73,8 +73,8 @@ export class Matrix {
 		return this.replace(translate(this, tx, ty));
 	}
 
-	public rotate(theta: number): Matrix {
-		return this.replace(rotate(this, theta, theta));
+	public rotate(xt: number, yt: number): Matrix {
+		return this.replace(rotate(this, xt, yt));
 	}
 
 	public setTranslate(tx: number, ty: number): Matrix {
@@ -86,8 +86,8 @@ export class Matrix {
 	 *
 	 * At locate [point] scale, if the [point] exist.
 	 */
-	public scale(a: number, d: number, point?: Point): Matrix {
-		return this.replace(scale(this, a, d, point));
+	public scale(x: number, y: number, point?: Point): Matrix {
+		return this.replace(scale(this, x, y, point));
 	}
 
 	public clone(): Matrix {

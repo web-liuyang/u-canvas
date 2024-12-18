@@ -2,7 +2,7 @@ import type { Parent, Child, Equatable, Paintable, Hittable, Point } from "../ty
 import { Transform } from "../transform";
 import { Offset } from "../offset";
 import { Paint } from "../u-paint";
-import { DrawingBoard } from "../drawing-board";
+import { Canvas } from "../canvas";
 
 export interface ContainerOptions extends Parent {
 	x: number;
@@ -28,12 +28,12 @@ export class Container extends Transform implements Paintable, Hittable, Equatab
 		this.children.forEach(child => (child.parent = this));
 	}
 
-	public paint(board: DrawingBoard, offset: Offset): void {
+	public paint(canvas: Canvas, offset: Offset): void {
 		const offsetSelf = new Offset(this.x, this.y).add(offset);
 		this.children.forEach(child => {
-			const childDrawingBoard = new DrawingBoard({ matrix: child.worldMatrix });
-			child.paint(childDrawingBoard, offsetSelf);
-			board.addDrawingBoard(childDrawingBoard);
+			const childCanvas = new Canvas({ matrix: child.worldMatrix });
+			child.paint(childCanvas, offsetSelf);
+			canvas.addCanvas(childCanvas);
 		});
 	}
 

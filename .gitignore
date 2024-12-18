@@ -5,5 +5,5 @@ dist
 
 unpackage
 
-example/u-canvas/
-example/u-canvas-components/
+example/u-canvas
+example/u-canvas-components

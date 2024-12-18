@@ -7,6 +7,7 @@
 [ ] Finger Event Stop
 [ ] 整合 Paint
 [ ] UCanvas 应该有个 Renderer
+[ ] 全局事件代理
 
 ### Bug
 
@@ -21,5 +22,7 @@
 [ ] clearRect 在矩形区域比较大时，有卡顿性能不好
 [ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下
 [ ] h5 无法触发 tap事件
+[ ] @/u-canvas 可以访问类型与值，@u-canvas不可以访问类型，但可以访问值
+[ ] .uvue 后缀只能导出Type，导出Interface不可以用
 
 roundRect/strokeText 文档错误

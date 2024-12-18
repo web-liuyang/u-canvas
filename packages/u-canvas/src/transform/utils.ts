@@ -62,9 +62,9 @@ export function setTranslate(m: Matrix, tx: number, ty: number): Matrix {
 	return matrix;
 }
 
-export function rotate(m: Matrix, xTheta: number, yTheta: number): Matrix {
-	const cos = Math.cos(xTheta);
-	const sin = Math.sin(yTheta);
+export function rotate(m: Matrix, xt: number, yt: number): Matrix {
+	const cos = Math.cos(xt);
+	const sin = Math.sin(yt);
 	const rotationMatrix = new Matrix([cos, -sin, sin, cos, 0, 0]);
 	const matrix = multiply(rotationMatrix, m);
 	return matrix;
@@ -76,16 +76,16 @@ export function rotate(m: Matrix, xTheta: number, yTheta: number): Matrix {
 // 	return rotate(m, xTheta, yTheta);
 // }
 
-export function scale(m: Matrix, a: number, d: number, point?: Point): Matrix {
+export function scale(m: Matrix, x: number, y: number, point?: Point): Matrix {
 	let matrix: Matrix = m;
 
 	if (point) {
 		const [x, y] = point;
 		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, x, y]));
-		matrix = multiply(matrix, new Matrix([a, 0, 0, d, 0, 0]));
+		matrix = multiply(matrix, new Matrix([x, 0, 0, y, 0, 0]));
 		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, -x, -y]));
 	} else {
-		matrix = multiply(new Matrix([a, 0, 0, d, 0, 0]), m);
+		matrix = multiply(new Matrix([x, 0, 0, y, 0, 0]), m);
 	}
 
 	return matrix;

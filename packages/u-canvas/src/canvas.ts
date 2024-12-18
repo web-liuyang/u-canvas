@@ -2,27 +2,19 @@ import type { Point, Size, ValueFunction } from "./types";
 import { Style, TextStyle } from "./graphics";
 import { getStyle, getTextStyle } from "./graphics/utils";
 import { Matrix } from "./transform";
-
-// export class Path {
-// 	void moveTo(double x, double y);
-// 	void lineTo(double x, double y);
-// 	void addRect(Rect rect);
-// 	void addOval(Rect oval);
-// 	void addArc(Rect oval, double startAngle, double sweepAngle);
-// 	void addPolygon(List<Offset> points, bool close);
-// 	void addPath(Path path, Offset offset, {Float64List? matrix4});
-// 	void close();
-// }
+import { Path } from "./path";
 
 export enum EntityType {
 	matrix,
-	drawingBoard,
+	canvas,
 	rect,
 	polygon,
 	polyline,
 	arc,
 	image,
+	imagePixel,
 	text,
+	path,
 }
 
 export interface Entity {
@@ -34,9 +26,9 @@ export interface MatrixEntity extends Entity {
 	matrix: Matrix;
 }
 
-export interface DrawingBoardEntity extends Entity {
-	type: EntityType.drawingBoard;
-	drawingBoard: DrawingBoard;
+export interface CanvasEntity extends Entity {
+	type: EntityType.canvas;
+	canvas: Canvas;
 }
 
 export interface RectEntity extends Entity {
@@ -48,15 +40,6 @@ export interface RectEntity extends Entity {
 	radii: number;
 	style: Style;
 }
-
-// export interface LineEntity extends Entity {
-// 	type: EntityType.line;
-// 	x1: number;
-// 	y1: number;
-// 	x2: number;
-// 	y2: number;
-// 	style: Style;
-// }
 
 export interface PolygonEntity extends Entity {
 	type: EntityType.polygon;
@@ -83,10 +66,21 @@ export interface ArcEntity extends Entity {
 
 export interface ImageEntity extends Entity {
 	type: EntityType.image;
+	image: { src: string };
 	x: number;
 	y: number;
-	image: { src: string };
 	style: Style;
+}
+
+export interface ImagePixelEntity extends Entity {
+	type: EntityType.imagePixel;
+	imageData: ImageData;
+	x: number;
+	y: number;
+	dx: number;
+	dy: number;
+	dw: number;
+	dh: number;
 }
 
 export interface TextEntity extends Entity {
@@ -97,16 +91,23 @@ export interface TextEntity extends Entity {
 	style: TextStyle;
 }
 
+export interface PathEntity extends Entity {
+	type: EntityType.path;
+	path: Path;
+	style: Style;
+}
+
 export type AllEntity =
 	| MatrixEntity
-	| DrawingBoardEntity
+	| CanvasEntity
 	| RectEntity
-	// | LineEntity
 	| PolygonEntity
 	| PolylineEntity
 	| ArcEntity
 	| ImageEntity
-	| TextEntity;
+	| ImagePixelEntity
+	| TextEntity
+	| PathEntity;
 
 export class EntityFactory {
 	public static createMatrixEntity(matrix: Matrix): MatrixEntity {
@@ -128,23 +129,12 @@ export class EntityFactory {
 		};
 	}
 
-	public static createDrawingBoardEntity(drawingBoard: DrawingBoard): DrawingBoardEntity {
+	public static createCanvasEntity(canvas: Canvas): CanvasEntity {
 		return {
-			type: EntityType.drawingBoard,
-			drawingBoard,
+			type: EntityType.canvas,
+			canvas,
 		};
 	}
-
-	// public static createLineEntity(x1: number, y1: number, x2: number, y2: number, style: Style): LineEntity {
-	// 	return {
-	// 		type: EntityType.line,
-	// 		x1,
-	// 		y1,
-	// 		x2,
-	// 		y2,
-	// 		style,
-	// 	};
-	// }
 
 	public static createPolygonEntity(points: Point[], style: Style): PolygonEntity {
 		return {
@@ -193,6 +183,27 @@ export class EntityFactory {
 		};
 	}
 
+	public static createImagePixelEntity(
+		imageData: ImageData,
+		x: number,
+		y: number,
+		dx: number,
+		dy: number,
+		dw: number,
+		dh: number
+	): ImagePixelEntity {
+		return {
+			type: EntityType.imagePixel,
+			imageData,
+			x,
+			y,
+			dx,
+			dy,
+			dw,
+			dh,
+		};
+	}
+
 	public static createTextEntity(text: string, x: number, y: number, style: TextStyle): TextEntity {
 		return {
 			type: EntityType.text,
@@ -202,38 +213,52 @@ export class EntityFactory {
 			style,
 		};
 	}
+
+	public static createPathEntity(path: Path, style: Style): PathEntity {
+		return {
+			type: EntityType.path,
+			path,
+			style,
+		};
+	}
 }
 
-export interface Record {
-	draw: ValueFunction<CanvasRenderingContext2D>;
-	style: Style | TextStyle;
-}
-
-export interface DrawingBoardOptions {
+export interface CanvasOptions {
 	matrix?: Matrix;
 }
 
-export class DrawingBoard {
+export class Canvas {
 	public entities: AllEntity[] = [];
 
 	public matrix: Matrix;
+
 	private _currentMatrix: Matrix;
 
-	constructor(options?: DrawingBoardOptions) {
+	constructor(options?: CanvasOptions) {
 		this.matrix = options?.matrix?.clone() ?? new Matrix();
 		this._currentMatrix = this.matrix.clone();
 	}
 
-	addDrawingBoard(drawingBoard: DrawingBoard) {
-		this.entities.push(EntityFactory.createDrawingBoardEntity(drawingBoard));
+	public addCanvas(canvas: Canvas) {
+		this.entities.push(EntityFactory.createCanvasEntity(canvas));
 	}
 
-	translate(x: number, y: number) {
+	public translate(x: number, y: number) {
 		this._currentMatrix.translate(x, y);
 		this.entities.push(EntityFactory.createMatrixEntity(this._currentMatrix.clone()));
 	}
 
-	drawLine(x1: number, y1: number, x2: number, y2: number, style: Style) {
+	public rotate(xt: number, yt: number) {
+		this._currentMatrix.rotate(xt, yt);
+		this.entities.push(EntityFactory.createMatrixEntity(this._currentMatrix.clone()));
+	}
+
+	public scale(x: number, y: number) {
+		this._currentMatrix.scale(x, y);
+		this.entities.push(EntityFactory.createMatrixEntity(this._currentMatrix.clone()));
+	}
+
+	public drawLine(x1: number, y1: number, x2: number, y2: number, style: Style) {
 		const points: Point[] = [
 			[x1, y1],
 			[x2, y2],
@@ -242,7 +267,7 @@ export class DrawingBoard {
 		this.entities.push(EntityFactory.createPolylineEntity(points, style));
 	}
 
-	drawPolygon(points: Point[], style: Style) {
+	public drawPolygon(points: Point[], style: Style) {
 		if (points.length < 3) {
 			throw new Error("Polygon must have at least three points");
 		}
@@ -250,7 +275,7 @@ export class DrawingBoard {
 		this.entities.push(EntityFactory.createPolygonEntity(points, style));
 	}
 
-	drawPolyline(points: Point[], style: Style) {
+	public drawPolyline(points: Point[], style: Style) {
 		if (points.length < 2) {
 			throw new Error("Polyline must have at least two points");
 		}
@@ -260,17 +285,17 @@ export class DrawingBoard {
 		this.entities.push(EntityFactory.createPolylineEntity(points, style));
 	}
 
-	drawRect(x: number, y: number, w: number, h: number, radii: number, style: Style) {
+	public drawRect(x: number, y: number, w: number, h: number, radii: number, style: Style) {
 		radii = radii > 0 ? radii : 0;
 
 		this.entities.push(EntityFactory.createRectEntity(x, y, w, h, radii, style));
 	}
 
-	drawCircle(cx: number, cy: number, radius: number, style: Style) {
+	public drawCircle(cx: number, cy: number, radius: number, style: Style) {
 		this.entities.push(EntityFactory.createArcEntity(cx, cy, radius, 0, 2 * Math.PI, false, style));
 	}
 
-	drawArc(
+	public drawArc(
 		cx: number,
 		cy: number,
 		radius: number,
@@ -282,7 +307,6 @@ export class DrawingBoard {
 		this.entities.push(EntityFactory.createArcEntity(cx, cy, radius, startAngle, endAngle, counterclockwise, style));
 	}
 
-	// void drawPath(Path path, DrawingBoard paint);
 	// drawImage(image: { src: string }, p: Point, size: Size, offsetPoint: Size, offsetSize: Size, style: Style): void;
 	// drawImage(image: { src: string }, p: Point, size: Size, style: Style): void;
 	// drawImage(image: { src: string }, p: Point, style: Style): void;
@@ -294,14 +318,19 @@ export class DrawingBoard {
 	// 	offsetSize?: Size,
 	// 	style?: Style
 	// ): void {
-	drawImage(image: { src: string }, x: number, y: number, style: Style): void {
+	public drawImage(image: { src: string }, x: number, y: number, style: Style): void {
 		this.entities.push(EntityFactory.createImageEntity(image, x, y, style));
 	}
 
-	drawText(text: string, x: number, y: number, style: TextStyle) {
+	public drawImagePixel(imageData: ImageData, x: number, y: number, dx: number, dy: number, dw: number, dh: number) {
+		this.entities.push(EntityFactory.createImagePixelEntity(imageData, x, y, dx, dy, dw, dh));
+	}
+
+	public drawText(text: string, x: number, y: number, style: TextStyle) {
 		this.entities.push(EntityFactory.createTextEntity(text, x, y, style));
 	}
 
-	// void drawPoints(PointMode pointMode, List<Offset> points, DrawingBoard paint);
-	// void drawVertices(Vertices vertices, BlendMode blendMode, DrawingBoard paint);
+	public drawPath(path: Path, style: Style) {
+		this.entities.push(EntityFactory.createPathEntity(path, style));
+	}
 }
