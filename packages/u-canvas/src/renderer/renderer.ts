@@ -4,6 +4,7 @@ import { Paintable } from "../types";
 import { UCanvas } from "../u-canvas";
 import { Paint } from "../u-paint";
 import {
+	AllEntity,
 	ArcEntity,
 	DrawingBoard,
 	DrawingBoardEntity,
@@ -25,13 +26,6 @@ export class Renderer {
 	constructor(canvas: UCanvas) {
 		this.canvas = canvas;
 	}
-
-	// public render(graphic: Paintable, offset?: Offset): void {
-	// public _render(graphic: Paintable, offset?: Offset): void {
-	// offset = new Offset(0, 0);
-
-	// graphic.paint(this.canvas.ctx, offset);
-	// }
 
 	public renderRoot(): void {
 		const offset = new Offset(0, 0);
@@ -111,15 +105,16 @@ function renderDrawingBoard(entity: DrawingBoardEntity, ctx: CanvasRenderingCont
 		const oldStyle = getStyle(ctx);
 
 		const actions = {
-			[EntityType.arc]: (entity: ArcEntity) => renderArc(entity, ctx),
-			[EntityType.drawingBoard]: (entity: DrawingBoardEntity) => renderDrawingBoard(entity, ctx),
-			[EntityType.image]: (entity: ImageEntity) => renderImage(entity, ctx),
-			[EntityType.matrix]: (entity: MatrixEntity) => (matrix = entity.matrix),
-			[EntityType.polygon]: (entity: PolygonEntity) => renderPolygon(entity, ctx),
-			[EntityType.polyline]: (entity: PolylineEntity) => renderPolyline(entity, ctx),
-			[EntityType.rect]: (entity: RectEntity) => renderRect(entity, ctx),
-			[EntityType.text]: (entity: TextEntity) => renderText(entity, ctx),
+			[EntityType.arc]: (entity: AllEntity) => renderArc(entity as ArcEntity, ctx),
+			[EntityType.drawingBoard]: (entity: AllEntity) => renderDrawingBoard(entity as DrawingBoardEntity, ctx),
+			[EntityType.image]: (entity: AllEntity) => renderImage(entity as ImageEntity, ctx),
+			[EntityType.matrix]: (entity: AllEntity) => (() =>  {matrix = (entity as MatrixEntity).matrix})(),
+			[EntityType.polygon]: (entity: AllEntity) => renderPolygon(entity as PolygonEntity, ctx),
+			[EntityType.polyline]: (entity: AllEntity) => renderPolyline(entity as PolylineEntity, ctx),
+			[EntityType.rect]: (entity: AllEntity) => renderRect(entity as RectEntity, ctx),
+			[EntityType.text]: (entity: AllEntity) => renderText(entity as TextEntity, ctx),
 		};
+		actions[entity.type](entity);
 
 		applyStyle(ctx, oldStyle);
 		ctx.restore();
