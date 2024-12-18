@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import type { TouchInfo } from "@/components/event";
+
+export type ToolButton = { icon: any; text: string; onTap: () => void };
+
 import {
 	createImageData,
 	UCanvas,
@@ -14,9 +18,9 @@ import {
 	Style,
 	Fill,
 	Matrix,
-} from "@/u-canvas";
+} from "@u-canvas";
 
-import type { CSSProperties } from "vue";
+// import type { CSSProperties } from "vue";
 import { nextTick, ref } from "vue";
 
 import {
@@ -27,16 +31,10 @@ import {
 	FTouchstartEvent,
 	FZoominEvent,
 	FZoomoutEvent,
-	TouchInfo,
-} from "@/u-canvas-components/src/event";
-import finger from "@/u-canvas-components/src/finger.uvue";
-import { globalEventTarget } from "./global-event-target";
+} from "@/components/event";
 
-export interface ToolButton {
-	icon: any;
-	text: string;
-	onTap: () => void;
-}
+import finger from "@/components/finger.uvue";
+import { globalEventTarget } from "./global-event-target";
 
 const props = defineProps<{
 	buttons: ToolButton[];

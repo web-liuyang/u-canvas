@@ -8,10 +8,11 @@ import {
 	FTouchupEvent,
 	FZoominEvent,
 	FZoomoutEvent,
-	TouchInfo,
-} from "@/u-canvas-components/src/event";
+} from "@/components/event";
+import type { TouchInfo } from "@/components/event";
+
 import { BaseStateMachine } from "./base-state-machine";
-import { Matrix } from "@/u-canvas";
+import { Matrix } from "@u-canvas";
 
 export class SelectionStateMachine extends BaseStateMachine {
 	private originMatrix?: Matrix;

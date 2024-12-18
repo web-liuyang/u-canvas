@@ -1,6 +1,6 @@
-import { FTouchdownEvent, FTouchmoveEvent } from "@/u-canvas-components/src/event";
+import { FTouchdownEvent, FTouchmoveEvent } from "@/components/event";
 import { BaseStateMachine } from "./base-state-machine";
-import { Any } from "@/u-canvas";
+import { Any } from "@u-canvas";
 
 export class BrushStateMachine extends BaseStateMachine {
 	private any: Any | undefined;

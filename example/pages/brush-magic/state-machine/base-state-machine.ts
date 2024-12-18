@@ -8,8 +8,8 @@ import type {
 	FTouchcancelEvent,
 	FZoominEvent,
 	FZoomoutEvent,
-} from "@/u-canvas-components/src/event";
-import { UCanvas } from "@/u-canvas";
+} from "@/components/event";
+import { UCanvas } from "@u-canvas";
 
 export abstract class BaseStateMachine {
 	constructor(protected canvas: UCanvas) {}

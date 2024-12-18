@@ -7,8 +7,8 @@ import {
 	FTouchstartEvent,
 	FZoominEvent,
 	FZoomoutEvent,
-} from "@/u-canvas-components/src/event";
-import finger from "@/u-canvas-components/src/finger.uvue";
+} from "@/components/event";
+import finger from "@/components/finger.uvue";
 import { globalEventTarget } from "./global-event-target";
 
 const onTap = (e: FTapEvent) => {

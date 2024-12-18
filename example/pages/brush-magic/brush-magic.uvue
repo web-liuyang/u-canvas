@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { ToolButton } from "./toolbar.uvue";
+
 import {
 	createImageData,
 	UCanvas,
@@ -15,14 +17,15 @@ import {
 	Style,
 	Fill,
 	Matrix,
-} from "@/u-canvas";
+} from "@u-canvas";
 
 import { onMounted, nextTick, ref, getCurrentInstance } from "vue";
 
-import interactiveCanvas from "@/u-canvas-components/src/interactive-canvas.uvue";
-import finger from "@/u-canvas-components/src/finger.uvue";
+import interactiveCanvas from "@/components/interactive-canvas.uvue";
+import finger from "@/components/finger.uvue";
 import globalEventTarget from "./global-evnet-target.uvue";
-import toolbar, { type ToolButton } from "./toolbar.uvue";
+import toolbar from "./toolbar.uvue";
+
 import {
 	FTapEvent,
 	FTouchcancelEvent,
@@ -33,8 +36,7 @@ import {
 	FTouchupEvent,
 	FZoominEvent,
 	FZoomoutEvent,
-	TouchInfo,
-} from "@/u-canvas-components/src/event";
+} from "@/components/event";
 import t from "../t.uvue";
 import { BaseStateMachine, BrushStateMachine, SelectionStateMachine } from "./state-machine/index";
 

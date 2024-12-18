@@ -7,10 +7,10 @@ export default defineConfig({
 	plugins: [uni()],
 	optimizeDeps: {
 		// entries: [],
-		exclude: ["node_modules", "u-canvas", "u-canvas-components"],
+		// exclude: ["node_modules", "u-canvas", "u-canvas-components"],
 		// include: ["u-canvas"],
-		force: true,
-		holdUntilCrawlEnd: false,
+		// force: true,
+		// holdUntilCrawlEnd: false,
 	},
 	// build: {
 	// 	commonjsOptions: {
@@ -19,8 +19,11 @@ export default defineConfig({
 	// },
 	resolve: {
 		alias: {
+			// "@u-canvas": resolve(__dirname, "./u-canvas"),
 			"@u-canvas": resolve(__dirname, "./u-canvas"),
-			"@u-canvas-components": resolve(__dirname, "./u-canvas-components"),
+			// "@u-canvas-components": resolve(__dirname, "./u-canvas-components"),
+			// "@u-canvas-components": resolve(__dirname, "../packages/u-canvas-components"),
+			"@components": resolve(__dirname, "./components/"),
 		},
 	},
 });

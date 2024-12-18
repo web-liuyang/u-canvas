@@ -6,7 +6,7 @@ import {
 	FTouchstartEvent,
 	FZoominEvent,
 	FZoomoutEvent,
-} from "@/u-canvas-components/src/event";
+} from "@/components/event";
 
 export interface EventType {
 	tap: FTapEvent;
