@@ -12,7 +12,7 @@
 		"build:u-canvas-components": "cd packages/u-canvas-components && vite build",
 		"format": "prettier --write packages/**/*.ts",
 
-		"test": "vitest"
+		"test": "cd packages/u-canvas && vitest"
 	},
 	"keywords": [],
 	"author": "web-liuyang",

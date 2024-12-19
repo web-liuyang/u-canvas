@@ -2,7 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
+import { Offset } from "../..";
 import { Canvas } from "../../canvas";
 
 export interface PolygonOptions extends GraphicOptions {
@@ -13,15 +13,15 @@ export interface PolygonOptions extends GraphicOptions {
 export class Polygon extends Graphic<PolygonOptions> {
 	public override readonly type = "Polygon";
 
-	public points: PolygonOptions["points"];
+	public points: Point[];
 
-	public close: PolygonOptions["close"];
+	public close: boolean;
 
 	constructor(options: PolygonOptions) {
 		super(options);
 		if (options.points.length < 2) throw new Error("Polygon must have at least two points");
 		this.points = options.points;
-		this.close = options.close;
+		this.close = options.close ?? true;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {

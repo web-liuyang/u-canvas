@@ -1,4 +1,4 @@
-import { getStyle, scaleImageData } from "../graphics/utils";
+import { createImageData, getStyle, scaleImageData } from "../graphics/utils";
 import { Offset } from "../offset";
 import { Paintable } from "../types";
 import { UCanvas } from "../u-canvas";
@@ -156,17 +156,23 @@ function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D): void {
 }
 
 function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingContext2D): void {
+	// 应该会有一个参数给用户选择 用方法一还是二进行渲染
 	let { imageData, x, y, dx, dy, dw, dh } = entity;
-	const matrix = Matrix.fromDOMMatrix(ctx.getTransform());
-	const xs = matrix.a;
-	const ys = matrix.d;
-	imageData = scaleImageData(imageData, xs, ys);
-	dx *= xs;
-	dy *= ys;
-	dw *= xs;
-	dh *= ys;
-	console.log(imageData);
-	ctx.putImageData(imageData, x, y, dx, dy, dw, dh);
+	// 方法一：保证绘制的图片数据跟随 Matrix 不会模糊，但如果不是整数倍的缩放就会有一些像素失真。
+	// const matrix = Matrix.fromDOMMatrix(ctx.getTransform());
+	// const xs = matrix.a;
+	// const ys = matrix.d;
+	// imageData = scaleImageData(imageData, xs, ys);
+	// dx *= xs;
+	// dy *= ys;
+	// dw *= xs;
+	// dh *= ys;
+	// ctx.putImageData(imageData, x, y, dx, dy, dw, dh);
+
+	// 方法二：保证绘制的图片数据跟随 Matrix 会模糊，但不会像素失真。
+	createImageBitmap(imageData).then(res => {
+		ctx.drawImage(res, x, y);
+	});
 }
 
 function renderArc(entity: ArcEntity, ctx: CanvasRenderingContext2D): void {

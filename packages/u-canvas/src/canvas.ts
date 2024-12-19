@@ -3,6 +3,7 @@ import { Style, TextStyle } from "./graphics";
 import { getStyle, getTextStyle } from "./graphics/utils";
 import { Matrix } from "./transform";
 import { Path } from "./path";
+import { ImageResource } from "./graphics/shapes/image";
 
 export enum EntityType {
 	matrix,
@@ -66,7 +67,7 @@ export interface ArcEntity extends Entity {
 
 export interface ImageEntity extends Entity {
 	type: EntityType.image;
-	image: { src: string };
+	image: ImageResource;
 	x: number;
 	y: number;
 	style: Style;
@@ -173,7 +174,7 @@ export class EntityFactory {
 		};
 	}
 
-	public static createImageEntity(image: { src: string }, x: number, y: number, style: Style): ImageEntity {
+	public static createImageEntity(image: ImageResource, x: number, y: number, style: Style): ImageEntity {
 		return {
 			type: EntityType.image,
 			x,
@@ -307,18 +308,18 @@ export class Canvas {
 		this.entities.push(EntityFactory.createArcEntity(cx, cy, radius, startAngle, endAngle, counterclockwise, style));
 	}
 
-	// drawImage(image: { src: string }, p: Point, size: Size, offsetPoint: Size, offsetSize: Size, style: Style): void;
-	// drawImage(image: { src: string }, p: Point, size: Size, style: Style): void;
-	// drawImage(image: { src: string }, p: Point, style: Style): void;
+	// drawImage(image:ImageResource, p: Point, size: Size, offsetPoint: Size, offsetSize: Size, style: Style): void;
+	// drawImage(image:ImageResource, p: Point, size: Size, style: Style): void;
+	// drawImage(image:ImageResource, p: Point, style: Style): void;
 	// drawImage(
-	// 	image: { src: string },
+	// 	image:ImageResource,
 	// 	p: Point,
 	// 	sizeOrStyle: Size | Style,
 	// 	offsetPointOrStyle?: Size | Style,
 	// 	offsetSize?: Size,
 	// 	style?: Style
 	// ): void {
-	public drawImage(image: { src: string }, x: number, y: number, style: Style): void {
+	public drawImage(image: ImageResource, x: number, y: number, style: Style): void {
 		this.entities.push(EntityFactory.createImageEntity(image, x, y, style));
 	}
 

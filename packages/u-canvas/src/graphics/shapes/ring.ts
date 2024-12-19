@@ -50,20 +50,9 @@ export class Ring extends Graphic<RingOptions> {
 
 		path.arc(cx, cy, outerRadius, startAngle, endAngle, counterclockwise);
 		path.arc(cx, cy, innerRadius, endAngle, startAngle, !counterclockwise);
-		path.closePath(); // 封闭路径
-
-		// canvas.drawArc([cx, cy,] outerRadius, startAngle, endAngle);
-		// canvas.drawArc(cx, cy, innerRadius, endAngle, startAngle, true);
-		// canvas.drawArc(cx, cy, outerRadius, startAngle, endAngle);
+		path.closePath();
 
 		canvas.drawPath(path, style);
-
-		// path.arc(cx, cy, outerRadius, startAngle, endAngle);
-		// path.arc(cx, cy, innerRadius, endAngle, startAngle, true);
-		// path.closePath(); // 封闭路径
-
-		// paint.fill(path);
-		// paint.stroke(path);
 	}
 
 	public override copyWith(options: CopyWithParameter<RingOptions>): Ring {

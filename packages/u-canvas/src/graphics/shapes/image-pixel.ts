@@ -53,7 +53,7 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		const { imageData, dx, dy, dw, dh } = this;
-		const [x, y] = this.worldMatrix.applyVector([this.x + offset.dx, this.y + offset.dy]);
+		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 
 		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
 	}

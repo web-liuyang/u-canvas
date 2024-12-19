@@ -99,8 +99,7 @@ export interface CreateImageDataOptions {
 	// TODO
 	// color: any;
 	/**
-	 * Array [Row, Col]
-	 * @default [1, 1]
+	 * Array [Col, Row]. default [1, 1]
 	 */
 	array?: [number, number];
 }
@@ -108,7 +107,7 @@ export interface CreateImageDataOptions {
 export function createImageData(options: CreateImageDataOptions): ImageData {
 	const { data, bytesPerScanline, array = [1, 1] } = options;
 
-	const [row, col] = array;
+	const [col, row] = array;
 	const w = bytesPerScanline;
 	const h = data.length;
 	const pixels = new Uint8ClampedArray(col * w * h * 4);

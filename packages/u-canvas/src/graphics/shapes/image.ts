@@ -4,8 +4,13 @@ import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
 import { Canvas } from "../../canvas";
 
+export interface ImageResource {
+	src: string;
+	onload?: ((...args: any[]) => void) | null;
+}
+
 export interface ImagePureOptions extends GraphicOptions {
-	image: { src: string };
+	image: ImageResource;
 	sx: number;
 	sy: number;
 }
@@ -27,52 +32,54 @@ export type ImageOptions = ImagePureOptions & Partial<ImageWithSizeOptions> & Pa
 export class Image extends Graphic<ImageOptions> {
 	public override readonly type = "Image";
 
-	public image: ImageOptions["image"];
+	public image: ImageResource;
 
-	public sx: ImageOptions["sx"];
+	public sx: number;
 
-	public sy: ImageOptions["sy"];
+	public sy: number;
 
-	public sw: ImageOptions["sw"];
+	public sw?: number;
 
-	public sh: ImageOptions["sh"];
+	public sh?: number;
 
-	public dx: ImageOptions["dx"];
+	public dx?: number;
 
-	public dy: ImageOptions["dy"];
+	public dy?: number;
 
-	public dw: ImageOptions["dw"];
+	public dw?: number;
 
-	public dh: ImageOptions["dh"];
+	public dh?: number;
 
 	constructor(options: ImagePureOptions);
 	constructor(options: ImageWithSizeOptions);
 	constructor(options: ImageWithDirtyOptions);
 	constructor(options: ImageOptions) {
 		super(options);
+
 		this.image = options.image;
 		this.sx = options.sx;
 		this.sy = options.sy;
 
 		const { sw, sh, dx, dy, dw, dh } = options;
-		if (
-			sw !== undefined &&
-			sh !== undefined &&
-			dx !== undefined &&
-			dy !== undefined &&
-			dw !== undefined &&
-			dh !== undefined
-		) {
-			this.sw = sw;
-			this.sh = sh;
-			this.dx = dx;
-			this.dy = dy;
-			this.dw = dw;
-			this.dh = dh;
-		} else if (sw !== undefined && sh !== undefined) {
-			this.sw = sw;
-			this.sh = sh;
-		}
+
+		// if (
+		// 	sw !== undefined &&
+		// 	sh !== undefined &&
+		// 	dx !== undefined &&
+		// 	dy !== undefined &&
+		// 	dw !== undefined &&
+		// 	dh !== undefined
+		// ) {
+		// 	this.sw = sw;
+		// 	this.sh = sh;
+		// 	this.dx = dx;
+		// 	this.dy = dy;
+		// 	this.dw = dw;
+		// 	this.dh = dh;
+		// } else if (sw !== undefined && sh !== undefined) {
+		// 	this.sw = sw;
+		// 	this.sh = sh;
+		// }
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {

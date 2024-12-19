@@ -98,7 +98,7 @@ export class Paint {}
 // 	 * @param repetition 如何重复图像
 // 	 * @returns 一个不透明对象，描述了一个基于图像、画布或视频的模板，该模板通过 CanvasRenderingContext2D.createPattern() 方法创建
 // 	 */
-// 	// createPattern(image: { src: string }, repetition: string): CanvasPattern {}
+// 	// createPattern(image: ImageResource, repetition: string): CanvasPattern {}
 
 // 	/**
 // 	 * 创建一个线性的渐变颜色。
@@ -143,7 +143,7 @@ export class Paint {}
 // 	 * @param sx 需要绘制到画布中的，image的矩形（裁剪）选择框的左上角 x 坐标
 // 	 * @param sy 需要绘制到画布中的，image的矩形（裁剪）选择框的左上角 y 坐标
 // 	 */
-// 	drawImage(image: { src: string }, sx: number, sy: number): void;
+// 	drawImage(image: ImageResource, sx: number, sy: number): void;
 // 	/**
 // 	 * 绘制图像到画布
 // 	 * @param image 所要绘制的图片资源
@@ -152,7 +152,7 @@ export class Paint {}
 // 	 * @param sWidth 宽度
 // 	 * @param sHeight 高度
 // 	 */
-// 	drawImage(image: { src: string }, sx: number, sy: number, sWidth: number, sHeight: number): void;
+// 	drawImage(image: ImageResource, sx: number, sy: number, sWidth: number, sHeight: number): void;
 // 	/**
 // 	 * 绘制图像到画布
 // 	 * @param image 所要绘制的图片资源
@@ -166,7 +166,7 @@ export class Paint {}
 // 	 * @param dh 偏移量 h
 // 	 */
 // 	drawImage(
-// 		image: { src: string },
+// 		image: ImageResource,
 // 		sx: number,
 // 		sy: number,
 // 		sw: number,

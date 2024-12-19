@@ -1,20 +1,20 @@
 import { FTouchdownEvent, FTouchmoveEvent } from "@/components/event";
 import { BaseStateMachine } from "./base-state-machine";
-import { Any } from "@u-canvas";
+import { Polyline } from "@u-canvas";
 
 export class BrushStateMachine extends BaseStateMachine {
-	private any: Any | undefined;
+	private polyline: Polyline | undefined;
 
 	public onTouchdown(e: FTouchdownEvent) {
 		const p = this.canvas.toGlobal([e.x, e.y]);
-		this.any = new Any({ points: [p] });
-		this.canvas.add(this.any);
+		this.polyline = new Polyline({ points: [p, p] });
+		this.canvas.add(this.polyline);
 		this.canvas.render();
 	}
 
 	public onTouchmove(e: FTouchmoveEvent) {
 		const p = this.canvas.toGlobal([e.x, e.y]);
-		this.any!.points.push(p);
+		this.polyline!.points.push(p);
 		this.canvas.render();
 	}
 }
