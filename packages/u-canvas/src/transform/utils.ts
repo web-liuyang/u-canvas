@@ -76,16 +76,16 @@ export function rotate(m: Matrix, xt: number, yt: number): Matrix {
 // 	return rotate(m, xTheta, yTheta);
 // }
 
-export function scale(m: Matrix, x: number, y: number, point?: Point): Matrix {
+export function scale(m: Matrix, xs: number, ys: number, point?: Point): Matrix {
 	let matrix: Matrix = m;
 
 	if (point) {
 		const [x, y] = point;
 		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, x, y]));
-		matrix = multiply(matrix, new Matrix([x, 0, 0, y, 0, 0]));
+		matrix = multiply(matrix, new Matrix([xs, 0, 0, ys, 0, 0]));
 		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, -x, -y]));
 	} else {
-		matrix = multiply(new Matrix([x, 0, 0, y, 0, 0]), m);
+		matrix = multiply(new Matrix([xs, 0, 0, ys, 0, 0]), m);
 	}
 
 	return matrix;

@@ -10,7 +10,9 @@
 		"build": "pnpm build:u-canvas & pnpm build:u-canvas-components",
 		"build:u-canvas": "cd packages/u-canvas && vite build",
 		"build:u-canvas-components": "cd packages/u-canvas-components && vite build",
-		"format": "prettier --write packages/**/*.ts"
+		"format": "prettier --write packages/**/*.ts",
+
+		"test": "vitest"
 	},
 	"keywords": [],
 	"author": "web-liuyang",

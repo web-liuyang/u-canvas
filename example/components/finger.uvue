@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Point } from "@/u-canvas";
-import { calMidpoint } from "@u-canvas";
+import { calMidpoint } from "@/u-canvas";
 import { ref } from "vue";
 import {
 	FTapEvent,

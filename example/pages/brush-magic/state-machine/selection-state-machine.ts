@@ -53,13 +53,13 @@ export class SelectionStateMachine extends BaseStateMachine {
 
 	public onZoomin(e: FZoominEvent) {
 		const [x, y] = this.canvas.toGlobal([e.x, e.y]);
-		const matrix = this.canvas.matrix.scale(1.1, 1.1, [x, y]);
-		this.canvas.matrix = matrix;
+		this.canvas.matrix.scale(1.1, 1.1, [x, y]);
+		this.canvas.render();
 	}
 
 	public onZoomout(e: FZoomoutEvent) {
 		const [x, y] = this.canvas.toGlobal([e.x, e.y]);
-		const matrix = this.canvas.matrix.scale(0.9, 0.9, [x, y]);
-		this.canvas.matrix = matrix;
+		this.canvas.matrix.scale(0.9, 0.9, [x, y]);
+		this.canvas.render();
 	}
 }

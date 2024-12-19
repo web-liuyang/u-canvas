@@ -20,5 +20,4 @@ export default defineProject({
 		// so it will show an error
 		// reporters: ["json"],
 	},
-	
 });

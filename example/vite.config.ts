@@ -20,6 +20,7 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			// "@u-canvas": resolve(__dirname, "./u-canvas"),
+			"@": resolve(__dirname, "."),
 			"@u-canvas": resolve(__dirname, "./u-canvas"),
 			// "@u-canvas-components": resolve(__dirname, "./u-canvas-components"),
 			// "@u-canvas-components": resolve(__dirname, "../packages/u-canvas-components"),

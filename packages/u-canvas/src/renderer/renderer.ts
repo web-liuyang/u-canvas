@@ -1,4 +1,4 @@
-import { getStyle } from "../graphics/utils";
+import { getStyle, scaleImageData } from "../graphics/utils";
 import { Offset } from "../offset";
 import { Paintable } from "../types";
 import { UCanvas } from "../u-canvas";
@@ -156,8 +156,16 @@ function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D): void {
 }
 
 function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingContext2D): void {
-	const { imageData, x, y, dx, dy, dw, dh } = entity;
-
+	let { imageData, x, y, dx, dy, dw, dh } = entity;
+	const matrix = Matrix.fromDOMMatrix(ctx.getTransform());
+	const xs = matrix.a;
+	const ys = matrix.d;
+	imageData = scaleImageData(imageData, xs, ys);
+	dx *= xs;
+	dy *= ys;
+	dw *= xs;
+	dh *= ys;
+	console.log(imageData);
 	ctx.putImageData(imageData, x, y, dx, dy, dw, dh);
 }
 

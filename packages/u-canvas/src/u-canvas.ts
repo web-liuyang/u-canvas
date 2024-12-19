@@ -20,7 +20,10 @@ export class UCanvas {
 	public readonly dpr: number = uni.getDeviceInfo().devicePixelRatio || 1;
 
 	public get ctx(): CanvasRenderingContext2D {
-		return this.canvasContext.getContext("2d")!;
+		const ctx = this.canvasContext.getContext("2d")!;
+		// uniapp-x 并沒有提供 getTransform 方法，所以自己注入一个
+		ctx.getTransform = () => this.root.matrix.toDOMMatrix();
+		return ctx;
 	}
 
 	private _viewbox: Viewbox = [0, 0, 0, 0];

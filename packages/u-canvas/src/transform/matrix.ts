@@ -104,4 +104,8 @@ export class Matrix {
 
 		return this;
 	}
+
+	public toDOMMatrix(): DOMMatrix {
+		return DOMMatrix.fromMatrix(this);
+	}
 }

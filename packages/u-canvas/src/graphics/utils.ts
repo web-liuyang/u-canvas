@@ -68,6 +68,31 @@ export function repeatArray(array: Uint8ClampedArray, count: number): Uint8Clamp
 	return result;
 }
 
+export function scaleImageData(imageData: ImageData, xs: number, ys: number): ImageData {
+	const { width, height, data } = imageData;
+	const newWidth = Math.round(width * xs);
+	const newHeight = Math.round(height * ys);
+
+	if (newWidth <= 0 || newHeight <= 0) return imageData;
+
+	const scaledData = new Uint8ClampedArray(newWidth * newHeight * 4);
+
+	for (let y = 0; y < newHeight; y++) {
+		for (let x = 0; x < newWidth; x++) {
+			const originalX = Math.floor(x / xs);
+			const originalY = Math.floor(y / ys);
+			const originalIndex = (originalY * width + originalX) * 4;
+			const newIndex = (y * newWidth + x) * 4;
+
+			for (let i = 0; i < 4; i++) {
+				scaledData[newIndex + i] = data[originalIndex + i];
+			}
+		}
+	}
+
+	return new ImageData(scaledData, newWidth, newHeight);
+}
+
 export interface CreateImageDataOptions {
 	data: Uint8ClampedArray;
 	bytesPerScanline: number;
