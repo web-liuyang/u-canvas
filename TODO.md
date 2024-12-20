@@ -3,12 +3,11 @@
 [√] Interaction Canvas
 [√] Matrix
 [√] 重构属性为可写
+[√] Renderer
 [ ] Graphic Event
 [ ] Finger Event Stop
-[ ] 整合 Paint
-[ ] UCanvas 应该有个 Renderer
 [ ] 全局事件代理
-[ ] 图形结构调整
+[√] 图形结构调整
 [√] 统一Style与TextStyle样式处理
 [] 样式继承
 
@@ -21,9 +20,9 @@
 ### Issue
 
 [√] Path2D绘制时 基点在 ios 上与 web 不一致
-[ ] uni.createCanvasContextAsync 在 IOS 上报错
-[ ] clearRect 在矩形区域比较大时，有卡顿性能不好
-[ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下
+[ ] uni.createCanvasContextAsync 在 IOS 上报错 - 正在修复
+[ ] clearRect iOS在矩形区域比较大时，有卡顿性能不好
+[ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下 - 正在修复
 [ ] h5 无法触发 tap事件
 [ ] @/u-canvas 可以访问类型与值，@u-canvas不可以访问类型，但可以访问值
 [ ] .uvue 后缀只能导出Type，导出Interface不可以用
