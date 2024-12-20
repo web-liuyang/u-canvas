@@ -1,9 +1,9 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "../graphic";
+import type { Point } from "../../types";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
 import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
-import type { Point } from "../../types";
-import { Offset } from "../..";
-import { Canvas } from "../../renderer/canvas";
 
 export interface PolygonOptions extends GraphicOptions {
 	points: Point[];
@@ -32,16 +32,16 @@ export class Polygon extends Graphic<PolygonOptions> {
 		canvas.drawPolygon(points, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<PolygonOptions>): Polygon {
-		return new Polygon({
-			id: this.id,
-			points: options.points ?? this.points,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			close: options.close ?? this.close,
-			style: options.style ?? this.style,
-		});
-	}
+	// public override copyWith(options: CopyWithParameter<PolygonOptions>): Polygon {
+	// 	return new Polygon({
+	// 		id: this.id,
+	// 		points: options.points ?? this.points,
+	// 		// selected: options.selected ?? this.selected,
+	// 		// editing: options.editing ?? this.editing,
+	// 		close: options.close ?? this.close,
+	// 		style: options.style ?? this.style,
+	// 	});
+	// }
 
 	public override hitTest(point: Point): boolean {
 		let currentPoint = this.points[0];
@@ -54,12 +54,12 @@ export class Polygon extends Graphic<PolygonOptions> {
 		return false;
 	}
 
-	public override equals(other: Polygon): boolean {
-		return (
-			super.equals(other) &&
-			this.close === other.close &&
-			this.points.length === other.points.length &&
-			this.points.every((point, index) => point[0] === other.points[index][0] && point[1] === other.points[index][1])
-		);
-	}
+	// public override equals(other: Polygon): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.close === other.close &&
+	// 		this.points.length === other.points.length &&
+	// 		this.points.every((point, index) => point[0] === other.points[index][0] && point[1] === other.points[index][1])
+	// 	);
+	// }
 }

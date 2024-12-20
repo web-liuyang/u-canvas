@@ -1,8 +1,8 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
-import { Graphic } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
+import { Graphic } from "../graphic";
 
 export interface ImagePixelPureOptions extends GraphicOptions {
 	imageData: ImageData;
@@ -42,7 +42,6 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 		super(options);
 
 		this.imageData = options.imageData;
-
 		this.x = options.x;
 		this.y = options.y;
 		this.dx = options?.dx ?? 0;
@@ -58,49 +57,49 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
 	}
 
-	public override copyWith(options: CopyWithParameter<ImagePixelOptions>): ImagePixel {
-		const dx = options.dx ?? this.dx;
-		const dy = options.dy ?? this.dy;
-		const dw = options.dw ?? this.dw;
-		const dh = options.dh ?? this.dh;
+	// public override copyWith(options: CopyWithParameter<ImagePixelOptions>): ImagePixel {
+	// 	const dx = options.dx ?? this.dx;
+	// 	const dy = options.dy ?? this.dy;
+	// 	const dw = options.dw ?? this.dw;
+	// 	const dh = options.dh ?? this.dh;
 
-		if (dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined) {
-			return new ImagePixel({
-				id: this.id,
-				imageData: options.imageData ?? this.imageData,
-				x: options.x ?? this.x,
-				y: options.y ?? this.y,
-				dx,
-				dy,
-				dw,
-				dh,
-				style: options.style ?? this.style,
-			});
-		} else {
-			return new ImagePixel({
-				id: this.id,
-				imageData: options.imageData ?? this.imageData,
-				x: options.x ?? this.x,
-				y: options.y ?? this.y,
-				style: options.style ?? this.style,
-			});
-		}
-	}
+	// 	if (dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined) {
+	// 		return new ImagePixel({
+	// 			id: this.id,
+	// 			imageData: options.imageData ?? this.imageData,
+	// 			x: options.x ?? this.x,
+	// 			y: options.y ?? this.y,
+	// 			dx,
+	// 			dy,
+	// 			dw,
+	// 			dh,
+	// 			style: options.style ?? this.style,
+	// 		});
+	// 	} else {
+	// 		return new ImagePixel({
+	// 			id: this.id,
+	// 			imageData: options.imageData ?? this.imageData,
+	// 			x: options.x ?? this.x,
+	// 			y: options.y ?? this.y,
+	// 			style: options.style ?? this.style,
+	// 		});
+	// 	}
+	// }
 
 	public override hitTest(point: Point): boolean {
 		return false;
 	}
 
-	public override equals(other: ImagePixel): boolean {
-		return (
-			super.equals(other) &&
-			this.imageData === other.imageData &&
-			this.x === other.x &&
-			this.y === other.y &&
-			this.dx === other.dx &&
-			this.dy === other.dy &&
-			this.dw === other.dw &&
-			this.dh === other.dh
-		);
-	}
+	// public override equals(other: ImagePixel): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.imageData === other.imageData &&
+	// 		this.x === other.x &&
+	// 		this.y === other.y &&
+	// 		this.dx === other.dx &&
+	// 		this.dy === other.dy &&
+	// 		this.dw === other.dw &&
+	// 		this.dh === other.dh
+	// 	);
+	// }
 }

@@ -1,10 +1,8 @@
-import type { Cloneable, Equatable, Hittable, Paintable, Point, CoordinateScope, Parent } from "../types";
+import type { Hittable, Paintable, Point, CoordinateScope, Parent } from "../types";
 import { Offset } from "../offset";
 import { Style } from "./styles";
-import { generateUUID, getStyle } from "./utils";
+import { generateUUID } from "./utils";
 import { Transform } from "../transform";
-import { Container } from "../container";
-import { Paint } from "../u-paint";
 import { Canvas } from "../renderer/canvas";
 
 export type GraphicId = string;
@@ -12,60 +10,35 @@ export type GraphicId = string;
 export interface GraphicOptions {
 	id?: GraphicId;
 	style?: Style;
+	parent?: Graphic;
 }
-
-export type CopyWithParameter<T extends GraphicOptions> = Partial<Omit<T, "id">>;
 
 export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	extends Transform
-	implements Paintable, Cloneable<CopyWithParameter<T>>, Equatable<Graphic>, Hittable, Parent
+	implements Paintable, Hittable, Parent<Graphic>
 {
 	public abstract readonly type: string;
 
-	public readonly id: NonNullable<T["id"]>;
+	public readonly id: GraphicId;
 
-	public style: Style;
+	public style?: Style;
 
-	public parent?: Container;
+	public parent?: Graphic;
 
-	constructor(options: Partial<T>) {
+	constructor(options: T) {
 		super();
 		this.id = options.id ?? generateUUID();
-		this.style = options.style ?? new Style();
+		this.style = options.style;
+		this.parent = options?.parent;
 	}
 
 	public abstract paint(canvas: Canvas, offset: Offset): void;
 
-	public abstract copyWith(options: CopyWithParameter<T>): Graphic<T>;
-
 	public abstract hitTest(point: Point): boolean;
 
-	protected draw(ctx: CanvasRenderingContext2D, fn: () => void): void {
-		ctx.save();
-		ctx.setTransform(
-			this.worldMatrix.a,
-			this.worldMatrix.b,
-			this.worldMatrix.c,
-			this.worldMatrix.d,
-			this.worldMatrix.e,
-			this.worldMatrix.f
-		);
-		const style = getStyle(ctx);
-		this.applyStyle(ctx, this.style);
-		fn();
-		this.applyStyle(ctx, style);
-		ctx.restore();
-	}
+	// public abstract copyWith(options: CopyWithParameter<T>): Graphic<T>;
 
-	protected applyStyle(ctx: CanvasRenderingContext2D, style: Style): void {
-		ctx.strokeStyle = style.stroke.color;
-		ctx.lineWidth = style.stroke.width;
-		ctx.lineCap = style.stroke.cap;
-		ctx.lineJoin = style.stroke.join;
-		ctx.fillStyle = style.fill.color;
-	}
-
-	public equals(other: Graphic): boolean {
-		return this === other || (this.type === other.type && this.id === other.id && this.style.equals(other.style));
-	}
+	// public equals(other: Graphic): boolean {
+	// 	return this === other || (this.type === other.type && this.id === other.id && this.style.equals(other.style));
+	// }
 }

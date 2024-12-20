@@ -1,66 +1,29 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
 import { Graphic } from "../graphic";
-import { TextStyle } from "../styles";
-import { getTextStyle } from "../utils";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
 
 export interface TextOptions extends GraphicOptions {
+	text: string;
 	x: number;
 	y: number;
-	text: string;
-
-	style?: TextStyle;
 }
 
 export class Text extends Graphic<TextOptions> {
 	public override readonly type = "Text";
 
-	public text: TextOptions["text"];
+	public text: string;
 
-	public x: TextOptions["x"];
+	public x: number;
 
-	public y: TextOptions["y"];
-
-	public override style: NonNullable<TextOptions["style"]>;
+	public y: number;
 
 	constructor(options: TextOptions) {
 		super(options);
 		this.text = options.text;
 		this.x = options.x;
 		this.y = options.y;
-		this.style = options.style ?? new TextStyle();
-	}
-
-	protected override draw(ctx: CanvasRenderingContext2D, fn: () => void): void {
-		ctx.save();
-		ctx.setTransform(
-			this.worldMatrix.a,
-			this.worldMatrix.b,
-			this.worldMatrix.c,
-			this.worldMatrix.d,
-			this.worldMatrix.e,
-			this.worldMatrix.f
-		);
-		const style = getTextStyle(ctx);
-		this.applyStyle(ctx, this.style);
-		fn();
-		this.applyStyle(ctx, style);
-
-		ctx.restore();
-	}
-
-	protected override applyStyle(ctx: CanvasRenderingContext2D, style: TextStyle): void {
-		super.applyStyle(ctx, style);
-
-		ctx.font = `${style.fontSize}px ${style.fontFamily}`;
-		ctx.direction = style.direction;
-		ctx.letterSpacing = `${style.letterSpacing}px`;
-		ctx.wordSpacing = `${style.wordSpacing}px`;
-		ctx.textAlign = style.textAlign;
-		ctx.textBaseline = style.textBaseline;
-		ctx.textRendering = style.textRendering;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
@@ -69,23 +32,25 @@ export class Text extends Graphic<TextOptions> {
 		canvas.drawText(text, x, y, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<TextOptions>): Text {
-		return new Text({
-			id: this.id,
-			x: options.x ?? this.x,
-			y: options.y ?? this.y,
-			text: options.text ?? this.text,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			style: options.style ?? this.style,
-		});
-	}
+	// public override copyWith(options: CopyWithParameter<TextOptions>): Text {
+	// 	return new Text({
+	// 		id: this.id,
+	// 		x: options.x ?? this.x,
+	// 		y: options.y ?? this.y,
+	// 		text: options.text ?? this.text,
+	// 		// selected: options.selected ?? this.selected,
+	// 		// editing: options.editing ?? this.editing,
+	// 		style: options.style ?? this.style,
+	// 	});
+	// }
+
 	public override hitTest(point: Point): boolean {
 		// const [x, y] = point;
 		const { x, y, text } = this;
 		return false;
 	}
-	public override equals(other: Text): boolean {
-		return super.equals(other) && this.x === other.x && this.y === other.y && this.text === other.text;
-	}
+
+	// public override equals(other: Text): boolean {
+	// 	return super.equals(other) && this.x === other.x && this.y === other.y && this.text === other.text;
+	// }
 }

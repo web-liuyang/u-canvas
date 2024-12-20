@@ -1,26 +1,7 @@
 <script lang="ts" setup>
 import type { TouchInfo } from "@/components/event";
-
 export type ToolButton = { icon: any; text: string; onTap: () => void };
 
-import {
-	createImageData,
-	UCanvas,
-	Container,
-	Text,
-	Rectangle,
-	Polyline,
-	Ring,
-	Pie,
-	Circle,
-	Polygon,
-	Image,
-	Style,
-	Fill,
-	Matrix,
-} from "@u-canvas";
-
-// import type { CSSProperties } from "vue";
 import { nextTick, ref } from "vue";
 
 import {

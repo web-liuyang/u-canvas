@@ -1,5 +1,5 @@
 import { Canvas } from "./canvas";
-import { Style, TextStyle } from "../graphics";
+import { Style } from "../graphics";
 import { ImageResource } from "../graphics/shapes/image";
 import { Path } from "./path";
 import { Matrix } from "../transform";
@@ -20,6 +20,7 @@ export enum EntityType {
 
 export interface Entity {
 	type: EntityType;
+	style?: Style;
 }
 
 export interface MatrixEntity extends Entity {
@@ -39,19 +40,16 @@ export interface RectEntity extends Entity {
 	w: number;
 	h: number;
 	radii: number;
-	style: Style;
 }
 
 export interface PolygonEntity extends Entity {
 	type: EntityType.polygon;
 	points: Point[];
-	style: Style;
 }
 
 export interface PolylineEntity extends Entity {
 	type: EntityType.polyline;
 	points: Point[];
-	style: Style;
 }
 
 export interface ArcEntity extends Entity {
@@ -62,7 +60,6 @@ export interface ArcEntity extends Entity {
 	startAngle: number;
 	endAngle: number;
 	counterclockwise: boolean;
-	style: Style;
 }
 
 export interface ImageEntity extends Entity {
@@ -70,7 +67,6 @@ export interface ImageEntity extends Entity {
 	image: ImageResource;
 	x: number;
 	y: number;
-	style: Style;
 }
 
 export interface ImagePixelEntity extends Entity {
@@ -89,13 +85,11 @@ export interface TextEntity extends Entity {
 	x: number;
 	y: number;
 	text: string;
-	style: TextStyle;
 }
 
 export interface PathEntity extends Entity {
 	type: EntityType.path;
 	path: Path;
-	style: Style;
 }
 
 export type AllEntity =
@@ -118,7 +112,7 @@ export class EntityFactory {
 		};
 	}
 
-	public static createRectEntity(x: number, y: number, w: number, h: number, radii: number, style: Style): RectEntity {
+	public static createRectEntity(x: number, y: number, w: number, h: number, radii: number, style?: Style): RectEntity {
 		return {
 			type: EntityType.rect,
 			x,
@@ -130,14 +124,15 @@ export class EntityFactory {
 		};
 	}
 
-	public static createCanvasEntity(canvas: Canvas): CanvasEntity {
+	public static createCanvasEntity(canvas: Canvas, style?: Style): CanvasEntity {
 		return {
 			type: EntityType.canvas,
 			canvas,
+			style,
 		};
 	}
 
-	public static createPolygonEntity(points: Point[], style: Style): PolygonEntity {
+	public static createPolygonEntity(points: Point[], style?: Style): PolygonEntity {
 		return {
 			type: EntityType.polygon,
 			points,
@@ -145,7 +140,7 @@ export class EntityFactory {
 		};
 	}
 
-	public static createPolylineEntity(points: Point[], style: Style): PolylineEntity {
+	public static createPolylineEntity(points: Point[], style?: Style): PolylineEntity {
 		return {
 			type: EntityType.polyline,
 			points,
@@ -160,7 +155,7 @@ export class EntityFactory {
 		startAngle: number,
 		endAngle: number,
 		counterclockwise: boolean,
-		style: Style
+		style?: Style
 	): ArcEntity {
 		return {
 			type: EntityType.arc,
@@ -174,13 +169,12 @@ export class EntityFactory {
 		};
 	}
 
-	public static createImageEntity(image: ImageResource, x: number, y: number, style: Style): ImageEntity {
+	public static createImageEntity(image: ImageResource, x: number, y: number): ImageEntity {
 		return {
 			type: EntityType.image,
 			x,
 			y,
 			image,
-			style,
 		};
 	}
 
@@ -205,7 +199,7 @@ export class EntityFactory {
 		};
 	}
 
-	public static createTextEntity(text: string, x: number, y: number, style: TextStyle): TextEntity {
+	public static createTextEntity(text: string, x: number, y: number, style?: Style): TextEntity {
 		return {
 			type: EntityType.text,
 			x,
@@ -215,7 +209,7 @@ export class EntityFactory {
 		};
 	}
 
-	public static createPathEntity(path: Path, style: Style): PathEntity {
+	public static createPathEntity(path: Path, style?: Style): PathEntity {
 		return {
 			type: EntityType.path,
 			path,

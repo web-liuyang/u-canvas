@@ -1,9 +1,9 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "../graphic";
+import type { Point } from "../../types";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
 import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
-import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
 
 export interface PolylineOptions extends GraphicOptions {
 	points: Point[];
@@ -26,15 +26,15 @@ export class Polyline extends Graphic<PolylineOptions> {
 		canvas.drawPolyline(points, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<PolylineOptions>): Polyline {
-		return new Polyline({
-			id: this.id,
-			points: options.points ?? this.points,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			style: options.style ?? this.style,
-		});
-	}
+	// public override copyWith(options: CopyWithParameter<PolylineOptions>): Polyline {
+	// 	return new Polyline({
+	// 		id: this.id,
+	// 		points: options.points ?? this.points,
+	// 		// selected: options.selected ?? this.selected,
+	// 		// editing: options.editing ?? this.editing,
+	// 		style: options.style ?? this.style,
+	// 	});
+	// }
 
 	public override hitTest(point: Point): boolean {
 		let currentPoint = this.points[0];
@@ -47,11 +47,11 @@ export class Polyline extends Graphic<PolylineOptions> {
 		return false;
 	}
 
-	public override equals(other: Polyline): boolean {
-		return (
-			super.equals(other) &&
-			this.points.length === other.points.length &&
-			this.points.every((point, index) => point[0] === other.points[index][0] && point[1] === other.points[index][1])
-		);
-	}
+	// public override equals(other: Polyline): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.points.length === other.points.length &&
+	// 		this.points.every((point, index) => point[0] === other.points[index][0] && point[1] === other.points[index][1])
+	// 	);
+	// }
 }

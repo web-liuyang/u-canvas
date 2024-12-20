@@ -1,9 +1,9 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
-import { Graphic } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
-import { Path } from "../../renderer/path";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
+import { Graphic } from "../graphic";
+import { Path } from "../../renderer";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;
@@ -49,19 +49,19 @@ export class Pie extends Graphic<PieOptions> {
 		canvas.drawPath(path, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<PieOptions>): Pie {
-		return new Pie({
-			id: this.id,
-			cx: options.cx ?? this.cx,
-			cy: options.cy ?? this.cy,
-			radius: options.radius ?? this.radius,
-			startAngle: options.startAngle ?? this.startAngle,
-			endAngle: options.endAngle ?? this.endAngle,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			style: options.style ?? this.style,
-		});
-	}
+	// public override copyWith(options: CopyWithParameter<PieOptions>): Pie {
+	// 	return new Pie({
+	// 		id: this.id,
+	// 		cx: options.cx ?? this.cx,
+	// 		cy: options.cy ?? this.cy,
+	// 		radius: options.radius ?? this.radius,
+	// 		startAngle: options.startAngle ?? this.startAngle,
+	// 		endAngle: options.endAngle ?? this.endAngle,
+	// 		// selected: options.selected ?? this.selected,
+	// 		// editing: options.editing ?? this.editing,
+	// 		style: options.style ?? this.style,
+	// 	});
+	// }
 
 	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
@@ -79,14 +79,14 @@ export class Pie extends Graphic<PieOptions> {
 		return false;
 	}
 
-	public override equals(other: Pie): boolean {
-		return (
-			super.equals(other) &&
-			this.cx === other.cx &&
-			this.cy === other.cy &&
-			this.radius === other.radius &&
-			this.startAngle === other.startAngle &&
-			this.endAngle === other.endAngle
-		);
-	}
+	// public override equals(other: Pie): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.cx === other.cx &&
+	// 		this.cy === other.cy &&
+	// 		this.radius === other.radius &&
+	// 		this.startAngle === other.startAngle &&
+	// 		this.endAngle === other.endAngle
+	// 	);
+	// }
 }

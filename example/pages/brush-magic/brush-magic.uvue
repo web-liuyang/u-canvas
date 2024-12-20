@@ -4,7 +4,7 @@ import type { ToolButton } from "./toolbar.uvue";
 import {
 	createImageData,
 	UCanvas,
-	Container,
+	Composition,
 	Text,
 	Rectangle,
 	Polyline,
@@ -14,9 +14,6 @@ import {
 	Polygon,
 	Image,
 	ImagePixel,
-	Style,
-	Fill,
-	Matrix,
 } from "@u-canvas";
 
 import { onMounted, nextTick, ref, getCurrentInstance } from "vue";
@@ -37,7 +34,7 @@ import {
 	FZoominEvent,
 	FZoomoutEvent,
 } from "@/components/event";
-import t from "../t.uvue";
+// import t from "../t.uvue";
 import { BaseStateMachine, BrushStateMachine, SelectionStateMachine } from "./state-machine/index";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
@@ -47,7 +44,7 @@ onReady(() => {
 		await uCanvas.ensureInitialize();
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 10,
 				y: 10,
 				children: [
@@ -59,7 +56,7 @@ onReady(() => {
 		);
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 140,
 				y: 10,
 				children: [
@@ -78,7 +75,7 @@ onReady(() => {
 		);
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 270,
 				y: 10,
 				children: [
@@ -96,7 +93,7 @@ onReady(() => {
 		);
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 10,
 				y: 160,
 				children: [
@@ -114,7 +111,7 @@ onReady(() => {
 		);
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 140,
 				y: 160,
 				children: [
@@ -130,7 +127,7 @@ onReady(() => {
 		);
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 270,
 				y: 160,
 				children: [
@@ -160,7 +157,7 @@ onReady(() => {
 		]);
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 10,
 				y: 300,
 				children: [
@@ -179,7 +176,7 @@ onReady(() => {
 		image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
 
 		uCanvas.add(
-			new Container({
+			new Composition({
 				x: 160,
 				y: 300,
 				children: [

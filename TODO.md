@@ -8,6 +8,9 @@
 [ ] 整合 Paint
 [ ] UCanvas 应该有个 Renderer
 [ ] 全局事件代理
+[ ] 图形结构调整
+[√] 统一Style与TextStyle样式处理
+[] 样式继承
 
 ### Bug
 

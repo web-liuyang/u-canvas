@@ -1,11 +1,10 @@
-import { Style, TextStyle } from "../graphics";
-import { getStyle, scaleImageData } from "../graphics/utils";
+import type { Style } from "../graphics";
+import { extractStyle, scaleImageData } from "../graphics/utils";
 import { Matrix } from "../transform";
-import {
+import type {
 	AllEntity,
 	ArcEntity,
 	CanvasEntity,
-	EntityType,
 	ImageEntity,
 	ImagePixelEntity,
 	MatrixEntity,
@@ -15,24 +14,32 @@ import {
 	RectEntity,
 	TextEntity,
 } from "./entity";
+import { EntityType } from "./entity";
+
 import { RecordType } from "./recored";
 
-export function applyStyle(ctx: CanvasRenderingContext2D, style: Style | TextStyle): void {
-	ctx.strokeStyle = style.stroke.color;
-	ctx.lineWidth = style.stroke.width;
-	ctx.lineCap = style.stroke.cap;
-	ctx.lineJoin = style.stroke.join;
-	ctx.fillStyle = style.fill.color;
+export function applyStyle(ctx: CanvasRenderingContext2D, style?: Style): void {
+	ctx.strokeStyle = style?.stroke?.color ?? ctx.strokeStyle;
+	ctx.lineWidth = style?.stroke?.width ?? ctx.lineWidth;
+	ctx.lineCap = style?.stroke?.cap ?? ctx.lineCap;
+	ctx.lineJoin = style?.stroke?.join ?? ctx.lineJoin;
+	ctx.fillStyle = style?.fill?.color ?? ctx.fillStyle;
 
-	if (style instanceof TextStyle) {
-		ctx.font = `${style.fontSize}px ${style.fontFamily}`;
-		ctx.direction = style.direction;
-		ctx.letterSpacing = `${style.letterSpacing}px`;
-		ctx.wordSpacing = `${style.wordSpacing}px`;
-		ctx.textAlign = style.textAlign;
-		ctx.textBaseline = style.textBaseline;
-		ctx.textRendering = style.textRendering;
-	}
+	// Text
+	const font = ctx.font.split(" ");
+	const fontSize = style?.text?.fontSize ?? parseFloat(font[0]);
+	const fontFamily = style?.text?.fontFamily ?? font[1];
+	const fontWeight = style?.text?.fontWeight ?? font[2];
+	const letterSpacing = style?.text?.letterSpacing ?? parseFloat(ctx.letterSpacing);
+	const wordSpacing = style?.text?.wordSpacing ?? parseFloat(ctx.wordSpacing);
+
+	ctx.font = `${fontSize}px ${fontFamily} ${fontWeight}`;
+	ctx.direction = style?.text?.direction ?? ctx.direction;
+	ctx.letterSpacing = `${letterSpacing}px`;
+	ctx.wordSpacing = `${wordSpacing}px`;
+	ctx.textAlign = style?.text?.textAlign ?? ctx.textAlign;
+	ctx.textBaseline = style?.text?.textBaseline ?? ctx.textBaseline;
+	ctx.textRendering = style?.text?.textRendering ?? ctx.textRendering;
 }
 
 export function renderCanvas(entity: CanvasEntity, ctx: CanvasRenderingContext2D): void {
@@ -42,7 +49,7 @@ export function renderCanvas(entity: CanvasEntity, ctx: CanvasRenderingContext2D
 	for (const entity of entities) {
 		ctx.save();
 		ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
-		const oldStyle = getStyle(ctx);
+		const oldStyle = extractStyle(ctx);
 		ctx.beginPath();
 		const actions = {
 			[EntityType.arc]: (entity: AllEntity) => renderArc(entity as ArcEntity, ctx),

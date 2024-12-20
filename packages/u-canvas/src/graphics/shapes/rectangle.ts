@@ -1,8 +1,8 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
-import { Graphic } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
+import { Graphic } from "../graphic";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
@@ -70,17 +70,17 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		canvas.drawRect(x, y, w, h, radii, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {
-		return new Rectangle({
-			id: this.id,
-			x: options.x ?? this.x,
-			y: options.y ?? this.y,
-			w: options.w ?? this.w,
-			h: options.h ?? this.h,
-			radii: options.radii ?? this.radii,
-			style: options.style ?? this.style,
-		});
-	}
+	// public override copyWith(options: CopyWithParameter<RectangleOptions>): Rectangle {
+	// 	return new Rectangle({
+	// 		id: this.id,
+	// 		x: options.x ?? this.x,
+	// 		y: options.y ?? this.y,
+	// 		w: options.w ?? this.w,
+	// 		h: options.h ?? this.h,
+	// 		radii: options.radii ?? this.radii,
+	// 		style: options.style ?? this.style,
+	// 	});
+	// }
 
 	public override hitTest(point: Point): boolean {
 		// TODO 没有判断圆角
@@ -94,14 +94,14 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		return false;
 	}
 
-	public override equals(other: Rectangle): boolean {
-		return (
-			super.equals(other) &&
-			this.x === other.x &&
-			this.y === other.y &&
-			this.w === other.w &&
-			this.h === other.h &&
-			this.radii === other.radii
-		);
-	}
+	// public override equals(other: Rectangle): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.x === other.x &&
+	// 		this.y === other.y &&
+	// 		this.w === other.w &&
+	// 		this.h === other.h &&
+	// 		this.radii === other.radii
+	// 	);
+	// }
 }

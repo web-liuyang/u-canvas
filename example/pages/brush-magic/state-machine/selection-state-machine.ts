@@ -23,7 +23,9 @@ export class SelectionStateMachine extends BaseStateMachine {
 	}
 
 	public onTouchup(e: FTouchupEvent): void {
-		// console.log("B");
+		console.log(this.canvas.toCanvasPoint([e.x, e.y]));
+
+		// this.canvas.root.hitTest();
 	}
 
 	public onTouchstart(e: FTouchstartEvent) {
@@ -52,13 +54,13 @@ export class SelectionStateMachine extends BaseStateMachine {
 	}
 
 	public onZoomin(e: FZoominEvent) {
-		const [x, y] = this.canvas.toGlobal([e.x, e.y]);
+		const [x, y] = this.canvas.toCanvasPoint([e.x, e.y]);
 		this.canvas.matrix.scale(1.1, 1.1, [x, y]);
 		this.canvas.render();
 	}
 
 	public onZoomout(e: FZoomoutEvent) {
-		const [x, y] = this.canvas.toGlobal([e.x, e.y]);
+		const [x, y] = this.canvas.toCanvasPoint([e.x, e.y]);
 		this.canvas.matrix.scale(0.9, 0.9, [x, y]);
 		this.canvas.render();
 	}

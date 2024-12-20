@@ -1,8 +1,8 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
-import { Graphic } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
+import { Graphic } from "../graphic";
 
 export interface ImageResource {
 	src: string;
@@ -86,7 +86,7 @@ export class Image extends Graphic<ImageOptions> {
 		const { image, sw, sh, dx, dy, dw, dh, style } = this;
 		const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
 
-		canvas.drawImage(image, sx, sy, style);
+		canvas.drawImage(image, sx, sy);
 
 		// if (
 		// 	sw !== undefined &&
@@ -107,79 +107,79 @@ export class Image extends Graphic<ImageOptions> {
 		// }
 	}
 
-	public override copyWith(options: CopyWithParameter<ImageOptions>): Image {
-		const id = this.id;
-		const {
-			image = this.image,
-			sx = this.sx,
-			sy = this.sy,
-			sw = this.sw,
-			sh = this.sh,
-			dx = this.dx,
-			dy = this.dy,
-			dw = this.dw,
-			dh = this.dh,
-			style = this.style,
-		} = options;
+	// public override copyWith(options: CopyWithParameter<ImageOptions>): Image {
+	// 	const id = this.id;
+	// 	const {
+	// 		image = this.image,
+	// 		sx = this.sx,
+	// 		sy = this.sy,
+	// 		sw = this.sw,
+	// 		sh = this.sh,
+	// 		dx = this.dx,
+	// 		dy = this.dy,
+	// 		dw = this.dw,
+	// 		dh = this.dh,
+	// 		style = this.style,
+	// 	} = options;
 
-		if (
-			sw !== undefined &&
-			sh !== undefined &&
-			dx !== undefined &&
-			dy !== undefined &&
-			dw !== undefined &&
-			dh !== undefined
-		) {
-			return new Image({
-				id: id,
-				image: image,
-				sx: sx,
-				sy: sy,
-				sw: sw,
-				sh: sh,
-				dx: dx,
-				dy: dy,
-				dw: dw,
-				dh: dh,
-				style: style,
-			});
-		} else if (sw !== undefined && sh !== undefined) {
-			return new Image({
-				id: id,
-				image: image,
-				sx: sx,
-				sy: sy,
-				sw: sw,
-				sh: sh,
-				style: style,
-			});
-		} else {
-			return new Image({
-				id: id,
-				image: image,
-				sx: sx,
-				sy: sy,
-				style: style,
-			});
-		}
-	}
+	// 	if (
+	// 		sw !== undefined &&
+	// 		sh !== undefined &&
+	// 		dx !== undefined &&
+	// 		dy !== undefined &&
+	// 		dw !== undefined &&
+	// 		dh !== undefined
+	// 	) {
+	// 		return new Image({
+	// 			id: id,
+	// 			image: image,
+	// 			sx: sx,
+	// 			sy: sy,
+	// 			sw: sw,
+	// 			sh: sh,
+	// 			dx: dx,
+	// 			dy: dy,
+	// 			dw: dw,
+	// 			dh: dh,
+	// 			style: style,
+	// 		});
+	// 	} else if (sw !== undefined && sh !== undefined) {
+	// 		return new Image({
+	// 			id: id,
+	// 			image: image,
+	// 			sx: sx,
+	// 			sy: sy,
+	// 			sw: sw,
+	// 			sh: sh,
+	// 			style: style,
+	// 		});
+	// 	} else {
+	// 		return new Image({
+	// 			id: id,
+	// 			image: image,
+	// 			sx: sx,
+	// 			sy: sy,
+	// 			style: style,
+	// 		});
+	// 	}
+	// }
 
 	public override hitTest(point: Point): boolean {
 		return false;
 	}
 
-	public override equals(other: Image): boolean {
-		return (
-			super.equals(other) &&
-			this.image === other.image &&
-			this.sx === other.sx &&
-			this.sy === other.sy &&
-			this.sw === other.sw &&
-			this.sh === other.sh &&
-			this.dx === other.dx &&
-			this.dy === other.dy &&
-			this.dw === other.dw &&
-			this.dh === other.dh
-		);
-	}
+	// public override equals(other: Image): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.image === other.image &&
+	// 		this.sx === other.sx &&
+	// 		this.sy === other.sy &&
+	// 		this.sw === other.sw &&
+	// 		this.sh === other.sh &&
+	// 		this.dx === other.dx &&
+	// 		this.dy === other.dy &&
+	// 		this.dw === other.dw &&
+	// 		this.dh === other.dh
+	// 	);
+	// }
 }

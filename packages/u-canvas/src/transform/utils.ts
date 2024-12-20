@@ -70,12 +70,6 @@ export function rotate(m: Matrix, xt: number, yt: number): Matrix {
 	return matrix;
 }
 
-// export function rotateDegree(m: Matrix, xDegree: number, yDegree: number): Matrix {
-// 	const xTheta = (xDegree * Math.PI) / 180;
-// 	const yTheta = (yDegree * Math.PI) / 180;
-// 	return rotate(m, xTheta, yTheta);
-// }
-
 export function scale(m: Matrix, xs: number, ys: number, point?: Point): Matrix {
 	let matrix: Matrix = m;
 

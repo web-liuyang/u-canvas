@@ -1,8 +1,8 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
-import { Graphic } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
+import { Graphic } from "../graphic";
 
 export interface CircleOptions extends GraphicOptions {
 	cx: number;
@@ -32,18 +32,6 @@ export class Circle extends Graphic<CircleOptions> {
 		canvas.drawCircle(cx, cy, radius, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<CircleOptions>): Circle {
-		return new Circle({
-			id: this.id,
-			cx: options.cx ?? this.cx,
-			cy: options.cy ?? this.cy,
-			radius: options.radius ?? this.radius,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			style: options.style ?? this.style,
-		});
-	}
-
 	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
 		const { cx, cy, radius } = this;
@@ -51,58 +39,5 @@ export class Circle extends Graphic<CircleOptions> {
 		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return true;
 
 		return false;
-	}
-
-	// public towingPointPaint(ctx: CanvasRenderingContext2D): void {
-	//   const size = 10;
-	//   const {
-	//     center: [x, y],
-	//     radius,
-	//   } = this;
-
-	//   const leftTop = Rectangle.fromCenter({
-	//     id: "leftTop",
-	//     x: x - radius,
-	//     y: y - radius,
-	//     width: size,
-	//     height: size,
-	//     selected: false,
-	//   });
-
-	//   const leftBottom = Rectangle.fromCenter({
-	//     id: "leftBottom",
-	//     x: x - radius,
-	//     y: y + radius,
-	//     width: size,
-	//     height: size,
-	//     selected: false,
-	//   });
-
-	//   const rightTop = Rectangle.fromCenter({
-	//     id: "rightTop",
-	//     x: x + radius,
-	//     y: y - radius,
-	//     width: size,
-	//     height: size,
-	//     selected: false,
-	//   });
-
-	//   const rightBottom = Rectangle.fromCenter({
-	//     id: "rightBottom",
-	//     x: x + radius,
-	//     y: y + radius,
-	//     width: size,
-	//     height: size,
-	//     selected: false,
-	//   });
-
-	//   leftTop.paint(ctx);
-	//   leftBottom.paint(ctx);
-	//   rightTop.paint(ctx);
-	//   rightBottom.paint(ctx);
-	// }
-
-	public override equals(other: Circle): boolean {
-		return super.equals(other) && this.cx === other.cx && this.cy === other.cy && this.radius === other.radius;
 	}
 }

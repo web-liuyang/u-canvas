@@ -1,29 +1,28 @@
-import type { Parent, Child, Equatable, Paintable, Hittable, Point } from "../types";
-import { Transform } from "../transform";
-import { Offset } from "../offset";
-import { Paint } from "../u-paint";
-import { Canvas } from "../renderer/canvas";
+import type { GraphicOptions } from "../graphic";
+import type { Point } from "../../types";
+import { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
+import { Graphic } from "../graphic";
 
-export interface ContainerOptions extends Parent {
+export interface CompositionOptions extends GraphicOptions {
 	x: number;
 	y: number;
-	children?: Child[];
+	children?: Graphic[];
 }
 
-export class Container extends Transform implements Paintable, Hittable, Equatable<Container>, Parent {
+export class Composition extends Graphic<CompositionOptions> {
+	public override readonly type = "Composition";
+
 	public x: number;
 
 	public y: number;
 
-	public parent?: Container;
+	public children: Graphic[];
 
-	public children: Child[];
-
-	constructor(options: ContainerOptions) {
-		super();
+	constructor(options: CompositionOptions) {
+		super(options);
 		this.x = options.x;
 		this.y = options.y;
-		this.parent = options.parent;
 		this.children = options.children ?? [];
 		this.children.forEach(child => (child.parent = this));
 	}
@@ -41,12 +40,12 @@ export class Container extends Transform implements Paintable, Hittable, Equatab
 		return this.children.some(child => child.hitTest(point));
 	}
 
-	public addChild(child: Child): void {
+	public addChild(child: Graphic): void {
 		child.parent = this;
 		this.children.push(child);
 	}
 
-	public removeChild(child: Child): void {
+	public removeChild(child: Graphic): void {
 		const index = this.children.indexOf(child);
 		if (index !== -1) {
 			child.parent = undefined;
@@ -54,12 +53,12 @@ export class Container extends Transform implements Paintable, Hittable, Equatab
 		}
 	}
 
-	public clear(): void {
+	public clearChildren(): void {
 		this.children.forEach(child => (child.parent = undefined));
 		this.children.length = 0;
 	}
 
-	public equals(other: Container): boolean {
-		return this === other || this.children.every(child => child.equals(other));
-	}
+	// public equals(other: Container): boolean {
+	// 	return this === other || this.children.every(child => child.equals(other));
+	// }
 }

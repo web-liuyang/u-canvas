@@ -7,11 +7,6 @@ import { multiply, rotate, scale, setTranslate, translate } from "./utils";
  */
 export type MatrixArray = [number, number, number, number, number, number];
 
-export enum MultiplicativeDirection {
-	Right,
-	Left,
-}
-
 export class Matrix {
 	public a: number;
 
@@ -45,16 +40,8 @@ export class Matrix {
 	/**
 	 * Matrix multiplication matrix
 	 */
-	// public multiply(other: Matrix, direction: MultiplicativeDirection = MultiplicativeDirection.Right): Matrix {
 	public multiply(other: Matrix): Matrix {
 		return this.replace(multiply(other, this));
-
-		// switch (direction) {
-		// 	case MultiplicativeDirection.Left:
-		// 		return multiply(this, other);
-		// 	case MultiplicativeDirection.Right:
-		// 		return multiply(other, this);
-		// }
 	}
 
 	/**

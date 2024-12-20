@@ -1,4 +1,5 @@
-import { AllRecord, RecordFactory } from "./recored";
+import type { AllRecord } from "./recored";
+import { RecordFactory } from "./recored";
 
 export class Path {
 	public records: AllRecord[] = [];

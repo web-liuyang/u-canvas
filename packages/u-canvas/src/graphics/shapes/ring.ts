@@ -1,9 +1,9 @@
-import type { CopyWithParameter, GraphicOptions } from "../graphic";
-import { Graphic } from "../graphic";
+import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import { Offset, Paint } from "../..";
-import { Canvas } from "../../renderer/canvas";
-import { Path } from "../../renderer/path";
+import type { Offset } from "../../offset";
+import type { Canvas } from "../../renderer";
+import { Graphic } from "../graphic";
+import { Path } from "../../renderer";
 
 export interface RingOptions extends GraphicOptions {
 	cx: number;
@@ -55,20 +55,20 @@ export class Ring extends Graphic<RingOptions> {
 		canvas.drawPath(path, style);
 	}
 
-	public override copyWith(options: CopyWithParameter<RingOptions>): Ring {
-		return new Ring({
-			id: this.id,
-			cx: options.cx ?? this.cx,
-			cy: options.cy ?? this.cy,
-			innerRadius: options.innerRadius ?? this.innerRadius,
-			outerRadius: options.outerRadius ?? this.outerRadius,
-			startAngle: options.startAngle ?? this.startAngle,
-			endAngle: options.endAngle ?? this.endAngle,
-			// selected: options.selected ?? this.selected,
-			// editing: options.editing ?? this.editing,
-			style: options.style ?? this.style,
-		});
-	}
+	// public override copyWith(options: CopyWithParameter<RingOptions>): Ring {
+	// 	return new Ring({
+	// 		id: this.id,
+	// 		cx: options.cx ?? this.cx,
+	// 		cy: options.cy ?? this.cy,
+	// 		innerRadius: options.innerRadius ?? this.innerRadius,
+	// 		outerRadius: options.outerRadius ?? this.outerRadius,
+	// 		startAngle: options.startAngle ?? this.startAngle,
+	// 		endAngle: options.endAngle ?? this.endAngle,
+	// 		// selected: options.selected ?? this.selected,
+	// 		// editing: options.editing ?? this.editing,
+	// 		style: options.style ?? this.style,
+	// 	});
+	// }
 
 	public override hitTest(point: Point): boolean {
 		const [x, y] = point;
@@ -87,15 +87,15 @@ export class Ring extends Graphic<RingOptions> {
 		return false;
 	}
 
-	public override equals(other: Ring): boolean {
-		return (
-			super.equals(other) &&
-			this.cx === other.cx &&
-			this.cy === other.cy &&
-			this.innerRadius === other.innerRadius &&
-			this.outerRadius === other.outerRadius &&
-			this.startAngle === other.startAngle &&
-			this.endAngle === other.endAngle
-		);
-	}
+	// public override equals(other: Ring): boolean {
+	// 	return (
+	// 		super.equals(other) &&
+	// 		this.cx === other.cx &&
+	// 		this.cy === other.cy &&
+	// 		this.innerRadius === other.innerRadius &&
+	// 		this.outerRadius === other.outerRadius &&
+	// 		this.startAngle === other.startAngle &&
+	// 		this.endAngle === other.endAngle
+	// 	);
+	// }
 }

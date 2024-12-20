@@ -1,6 +1,5 @@
 import { Offset } from "../offset";
 import { UCanvas } from "../u-canvas";
-import { Paint } from "../u-paint";
 import { Canvas } from "./canvas";
 import { renderCanvas } from "./entity-renderer";
 import { EntityFactory } from "./entity";
@@ -14,7 +13,6 @@ export class Renderer {
 
 	public renderRoot(): void {
 		const offset = new Offset(0, 0);
-		const paint = new Paint();
 		const canvas = new Canvas({
 			matrix: this.canvas.root.worldMatrix,
 		});

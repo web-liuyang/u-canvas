@@ -1,5 +1,5 @@
-import type { Child, Point } from "./types";
-import { Container } from "./container";
+import type { Point } from "./types";
+import { Composition, Graphic } from "./graphics";
 import { Renderer } from "./renderer";
 import { Matrix } from "./transform";
 
@@ -8,7 +8,7 @@ export interface UCanvasOptions {
 	componentInstance?: any;
 }
 
-type Viewbox = [number, number, number, number];
+export type Viewbox = [number, number, number, number];
 
 export class UCanvas {
 	public renderer: Renderer = new Renderer(this);
@@ -43,7 +43,7 @@ export class UCanvas {
 		this.render();
 	}
 
-	public root!: Container;
+	public root!: Composition;
 
 	public options: UCanvasOptions;
 
@@ -85,7 +85,7 @@ export class UCanvas {
 		this.element = element;
 		const window = uni.getWindowInfo();
 		this.hidpi(element, window.windowWidth, window.windowHeight, this.dpr);
-		this.root = new Container({ x: 0, y: 0 });
+		this.root = new Composition({ x: 0, y: 0 });
 		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
 		this.setViewbox(this.root.matrix);
 	}
@@ -95,7 +95,12 @@ export class UCanvas {
 		this._viewbox = [-matrix.e / matrix.a, -matrix.f / matrix.d, width / matrix.a, height / matrix.d];
 	}
 
-	public toGlobal(point: Point): Point {
+	/**
+	 * 窗口坐标转成 Canvas 中的坐标
+	 * @param point 窗口坐标
+	 * @returns Canvas 中的坐标
+	 */
+	public toCanvasPoint(point: Point): Point {
 		const [startX, startY] = this.viewbox;
 		const { a, d } = this.matrix;
 		const [x, y] = point;
@@ -103,7 +108,7 @@ export class UCanvas {
 		return [startX + (x * this.dpr) / a, startY + (y * this.dpr) / d];
 	}
 
-	public add(p: Child) {
+	public add(p: Graphic) {
 		this.root.addChild(p);
 	}
 

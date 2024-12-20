@@ -1,6 +1,7 @@
 // import { v4 as uuid } from "uuid";
 import type { Line, Point } from "../types";
-import { Style, StrokeCap, StrokeJoin, Stroke, Fill, TextStyle } from "./styles";
+import type { Style } from "./styles";
+import { StrokeCap, StrokeJoin, FontWeight } from "./styles";
 
 export function generateUUID(): string {
 	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -10,38 +11,29 @@ export function generateUUID(): string {
 	});
 }
 
-export type GetStyleOptions = CanvasRenderingContext2D;
+export function extractStyle(options: CanvasRenderingContext2D): Style {
+	const [fontSize, fontFamily, fontWeight] = options.font.split(" ");
 
-export type GetTextStyleOptions = CanvasRenderingContext2D;
-
-export function getStyle(options: GetStyleOptions): Style {
-	return new Style({
-		stroke: new Stroke({
+	return {
+		stroke: {
 			color: options.strokeStyle as string,
 			width: options.lineWidth,
 			cap: options.lineCap as StrokeCap,
 			join: options.lineJoin as StrokeJoin,
-		}),
-		fill: new Fill({ color: options.fillStyle as string }),
-	});
-}
-
-export function getTextStyle(options: GetTextStyleOptions): TextStyle {
-	const [fontSize, fontFamily] = options.font.split(" ");
-	const style = getStyle(options);
-
-	return new TextStyle({
-		fontSize: parseFloat(fontSize),
-		fontFamily: fontFamily,
-		direction: options.direction,
-		letterSpacing: parseFloat(options.letterSpacing),
-		wordSpacing: parseFloat(options.wordSpacing),
-		textAlign: options.textAlign,
-		textBaseline: options.textBaseline,
-		textRendering: options.textRendering,
-		stroke: style.stroke,
-		fill: style.fill,
-	});
+		},
+		fill: { color: options.fillStyle as string },
+		text: {
+			fontSize: parseFloat(fontSize),
+			fontFamily: fontFamily,
+			fontWeight: fontWeight as unknown as FontWeight,
+			direction: options.direction,
+			letterSpacing: parseFloat(options.letterSpacing),
+			wordSpacing: parseFloat(options.wordSpacing),
+			textAlign: options.textAlign,
+			textBaseline: options.textBaseline,
+			textRendering: options.textRendering,
+		},
+	};
 }
 
 export function isPointOnLineSegment(point: Point, line: Line): boolean {
