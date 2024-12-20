@@ -2,7 +2,7 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { Canvas } from "../../canvas";
+import { Canvas } from "../../renderer/canvas";
 
 export interface ImageResource {
 	src: string;

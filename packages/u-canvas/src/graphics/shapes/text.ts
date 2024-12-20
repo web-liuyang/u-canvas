@@ -4,7 +4,7 @@ import { Graphic } from "../graphic";
 import { TextStyle } from "../styles";
 import { getTextStyle } from "../utils";
 import { Offset, Paint } from "../..";
-import { Canvas } from "../../canvas";
+import { Canvas } from "../../renderer/canvas";
 
 export interface TextOptions extends GraphicOptions {
 	x: number;

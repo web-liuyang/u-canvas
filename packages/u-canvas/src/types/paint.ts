@@ -1,5 +1,5 @@
 import { Container } from "../container";
-import { Canvas } from "../canvas";
+import { Canvas } from "../renderer/canvas";
 import { Offset } from "../offset";
 import { Transform } from "../transform";
 import { Paint } from "../u-paint";

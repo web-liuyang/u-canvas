@@ -60,9 +60,7 @@ export class Matrix {
 	/**
 	 * Matrix multiplication vector
 	 */
-	public applyVector(vector: Point): Point {
-		const [x, y] = vector;
-
+	public applyVector(x: number, y: number): Point {
 		const x1 = this.a * x + this.c * y + this.e;
 		const y1 = this.b * x + this.d * y + this.f;
 

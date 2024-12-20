@@ -2,7 +2,7 @@ import type { Parent, Child, Equatable, Paintable, Hittable, Point } from "../ty
 import { Transform } from "../transform";
 import { Offset } from "../offset";
 import { Paint } from "../u-paint";
-import { Canvas } from "../canvas";
+import { Canvas } from "../renderer/canvas";
 
 export interface ContainerOptions extends Parent {
 	x: number;

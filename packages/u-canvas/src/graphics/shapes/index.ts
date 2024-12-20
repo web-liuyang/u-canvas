@@ -5,5 +5,6 @@ export { Rectangle } from "./rectangle";
 export { Polyline } from "./polyline";
 export { Polygon } from "./polygon";
 export { Text } from "./text";
+export type { ImageResource } from "./image";
 export { Image } from "./image";
 export { ImagePixel } from "./image-pixel";

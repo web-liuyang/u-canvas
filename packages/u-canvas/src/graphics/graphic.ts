@@ -5,7 +5,7 @@ import { generateUUID, getStyle } from "./utils";
 import { Transform } from "../transform";
 import { Container } from "../container";
 import { Paint } from "../u-paint";
-import { Canvas } from "../canvas";
+import { Canvas } from "../renderer/canvas";
 
 export type GraphicId = string;
 

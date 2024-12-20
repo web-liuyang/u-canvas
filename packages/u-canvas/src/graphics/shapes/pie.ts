@@ -2,8 +2,8 @@ import type { CopyWithParameter, GraphicOptions } from "../graphic";
 import { Graphic } from "../graphic";
 import type { Point } from "../../types";
 import { Offset, Paint } from "../..";
-import { Canvas } from "../../canvas";
-import { Path } from "../../path";
+import { Canvas } from "../../renderer/canvas";
+import { Path } from "../../renderer/path";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;

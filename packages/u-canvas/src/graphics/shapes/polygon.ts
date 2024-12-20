@@ -3,7 +3,7 @@ import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
 import type { Point } from "../../types";
 import { Offset } from "../..";
-import { Canvas } from "../../canvas";
+import { Canvas } from "../../renderer/canvas";
 
 export interface PolygonOptions extends GraphicOptions {
 	points: Point[];
