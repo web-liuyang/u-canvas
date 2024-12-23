@@ -32,12 +32,12 @@ export class Circle extends Graphic<CircleOptions> {
 		canvas.drawCircle(cx, cy, radius, style);
 	}
 
-	public override hitTest(point: Point): boolean {
+	public override hitTest(point: Point): this | undefined {
 		const [x, y] = point;
 		const { cx, cy, radius } = this;
 
-		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return true;
+		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return this;
 
-		return false;
+		return undefined;
 	}
 }

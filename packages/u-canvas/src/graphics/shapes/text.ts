@@ -44,10 +44,11 @@ export class Text extends Graphic<TextOptions> {
 	// 	});
 	// }
 
-	public override hitTest(point: Point): boolean {
+	public override hitTest(point: Point): this | undefined {
 		// const [x, y] = point;
 		const { x, y, text } = this;
-		return false;
+		// 这里要计算文本的宽高后才能算命中
+		return undefined;
 	}
 
 	// public override equals(other: Text): boolean {

@@ -86,8 +86,15 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	// 	}
 	// }
 
-	public override hitTest(point: Point): boolean {
-		return false;
+	public override hitTest(point: Point): this | undefined {
+		const [x, y] = point;
+		const {
+			imageData: { width, height },
+		} = this;
+
+		if (x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height) return this;
+
+		return undefined;
 	}
 
 	// public override equals(other: ImagePixel): boolean {

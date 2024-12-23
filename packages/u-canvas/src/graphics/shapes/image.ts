@@ -164,8 +164,14 @@ export class Image extends Graphic<ImageOptions> {
 	// 	}
 	// }
 
-	public override hitTest(point: Point): boolean {
-		return false;
+	public override hitTest(point: Point): this | undefined {
+		const [x, y] = point;
+		const { sx, sy, sw, sh } = this;
+		// 没有传宽高就需要自己计算了
+
+		// if (x >= sx && x <= sx + sw && y >= sy && y <= sy + sh) return this;
+
+		return undefined;
 	}
 
 	// public override equals(other: Image): boolean {

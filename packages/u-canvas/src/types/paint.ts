@@ -26,8 +26,8 @@ export interface Paintable {
 	paint(canvas: Canvas, Offset: Offset): void;
 }
 
-export interface Hittable {
-	hitTest(point: Point): boolean;
+export interface Hittable<T> {
+	hitTest(point: Point): T;
 }
 
 export interface Parent<T> {

@@ -70,7 +70,7 @@ export class Ring extends Graphic<RingOptions> {
 	// 	});
 	// }
 
-	public override hitTest(point: Point): boolean {
+	public override hitTest(point: Point): this | undefined {
 		const [x, y] = point;
 		const { cx, cy, innerRadius, outerRadius, startAngle, endAngle } = this;
 
@@ -81,10 +81,10 @@ export class Ring extends Graphic<RingOptions> {
 			let angle = Math.atan2(dy, dx);
 			// Adjust the angle to be between 0 and 2π
 			if (angle < 0) angle += 2 * Math.PI;
-			if (angle >= startAngle && angle <= endAngle) return true;
+			if (angle >= startAngle && angle <= endAngle) return this;
 		}
 
-		return false;
+		return undefined;
 	}
 
 	// public override equals(other: Ring): boolean {

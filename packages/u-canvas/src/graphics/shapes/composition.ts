@@ -36,8 +36,13 @@ export class Composition extends Graphic<CompositionOptions> {
 		});
 	}
 
-	public hitTest(point: Point): boolean {
-		return this.children.some(child => child.hitTest(point));
+	public override hitTest(point: Point) {
+		if (this.children.length === 0) return undefined;
+		for (let i = this.children.length - 1; i >= 0; i--) {
+			const child = this.children[i];
+			if (child.hitTest(point)) return child;
+		}
+		return undefined;
 	}
 
 	public addChild(child: Graphic): void {

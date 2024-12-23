@@ -15,7 +15,7 @@ export interface GraphicOptions {
 
 export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	extends Transform
-	implements Paintable, Hittable, Parent<Graphic>
+	implements Paintable, Hittable<Graphic | undefined>, Parent<Graphic>
 {
 	public abstract readonly type: string;
 
@@ -34,7 +34,7 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 
 	public abstract paint(canvas: Canvas, offset: Offset): void;
 
-	public abstract hitTest(point: Point): boolean;
+	public abstract hitTest(point: Point): Graphic | undefined;
 
 	// public abstract copyWith(options: CopyWithParameter<T>): Graphic<T>;
 

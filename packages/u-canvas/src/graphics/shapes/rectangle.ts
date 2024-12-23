@@ -82,16 +82,16 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	// 	});
 	// }
 
-	public override hitTest(point: Point): boolean {
+	public override hitTest(point: Point): this | undefined {
 		// TODO 没有判断圆角
 		const [x, y] = point;
 		const { x: leftTopX, y: leftTopY, w, h } = this;
 		const rightBottomX = leftTopX + w;
 		const rightBottomY = leftTopY + h;
 
-		if (x >= leftTopX && x <= rightBottomX && y >= leftTopY && y <= rightBottomY) return true;
+		if (x >= leftTopX && x <= rightBottomX && y >= leftTopY && y <= rightBottomY) return this;
 
-		return false;
+		return undefined;
 	}
 
 	// public override equals(other: Rectangle): boolean {

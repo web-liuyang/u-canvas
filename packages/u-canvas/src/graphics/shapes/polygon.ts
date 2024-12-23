@@ -43,15 +43,16 @@ export class Polygon extends Graphic<PolygonOptions> {
 	// 	});
 	// }
 
-	public override hitTest(point: Point): boolean {
+	public override hitTest(point: Point): this | undefined {
+		// 这个要重新计算，这里是错误的，是polyline的算法
 		let currentPoint = this.points[0];
 		for (let i = 1; i < this.points.length; i++) {
 			const isOnSegment = isPointOnLineSegment(point, [currentPoint, this.points[i]]);
-			if (isOnSegment) return true;
+			if (isOnSegment) return this;
 			currentPoint = this.points[i];
 		}
 
-		return false;
+		return undefined;
 	}
 
 	// public override equals(other: Polygon): boolean {
