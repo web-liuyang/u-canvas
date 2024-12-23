@@ -25,9 +25,9 @@ export class Polygon extends Graphic<PolygonOptions> {
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
-		const { close = false, style } = this;
+		const { close, style } = this;
 		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
-		if (close) points.unshift(points[0]);
+		if (close) points.push(points[0]);
 
 		canvas.drawPolygon(points, style);
 	}
