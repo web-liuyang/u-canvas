@@ -1,6 +1,6 @@
 import type { Point } from "./types";
-import { Composition, Graphic } from "./graphics";
-import { Renderer } from "./renderer";
+import { Composition, defaultStyle, Graphic, Style } from "./graphics";
+import { applyStyle, Renderer } from "./renderer";
 import { Matrix } from "./transform";
 
 export interface UCanvasOptions {
@@ -19,12 +19,9 @@ export class UCanvas {
 
 	public readonly dpr: number = uni.getDeviceInfo().devicePixelRatio || 1;
 
-	public get ctx(): CanvasRenderingContext2D {
-		const ctx = this.canvasContext.getContext("2d")!;
-		// uniapp-x 并沒有提供 getTransform 方法，所以自己注入一个
-		ctx.getTransform = () => this.root.matrix.toDOMMatrix();
-		return ctx;
-	}
+	public style: Style = defaultStyle;
+
+	public ctx!: CanvasRenderingContext2D;
 
 	private _viewbox: Viewbox = [0, 0, 0, 0];
 
@@ -82,6 +79,8 @@ export class UCanvas {
 		const canvasContext = await this.getCanvasContext(this.options);
 		const element = await this.getCanvasElement(this.options);
 		this.canvasContext = canvasContext;
+		this.ctx = this.canvasContext.getContext("2d")!;
+
 		this.element = element;
 		const window = uni.getWindowInfo();
 		this.hidpi(element, window.windowWidth, window.windowHeight, this.dpr);
@@ -123,7 +122,6 @@ export class UCanvas {
 	}
 
 	public clear() {
-		// console.log(...this._viewbox);
 		this.ctx.clearRect(...this._viewbox);
 		this.paintOrigin();
 	}
@@ -132,8 +130,12 @@ export class UCanvas {
 		const matrix = this.root.matrix;
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
 		this.setViewbox(matrix);
-
 		this.clear();
+
+		// uniapp-x 并沒有提供 getTransform 方法，所以自己注入一个
+		this.ctx.getTransform = () => this.root.matrix.toDOMMatrix();
+		applyStyle(this.ctx, this.style);
+
 		this.renderer.renderRoot();
 	}
 }

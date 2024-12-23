@@ -1,34 +1,3 @@
-// import { Cloneable, Equatable } from "../../types";
-// import { Fill } from "./fill";
-// import { Stroke } from "./stroke";
-
-// export interface StyleOptions {
-// 	stroke: Stroke;
-// 	fill: Fill;
-// }
-
-// export class Style implements Cloneable<StyleOptions>, Equatable<Style> {
-// 	public stroke: Stroke;
-
-// 	public fill: Fill;
-
-// 	constructor(options?: Partial<StyleOptions>) {
-// 		this.stroke = options?.stroke ?? new Stroke();
-// 		this.fill = options?.fill ?? new Fill();
-// 	}
-
-// 	public copyWith(options: Partial<StyleOptions>): Style {
-// 		return new Style({
-// 			stroke: options.stroke ?? this.stroke,
-// 			fill: options.fill ?? this.fill,
-// 		});
-// 	}
-
-// 	public equals(other: Style): boolean {
-// 		return this.stroke.equals(other.stroke) && this.fill.equals(other.fill);
-// 	}
-// }
-
 export interface Style {
 	stroke?: StrokeStyle;
 	fill?: FillStyle;
@@ -61,7 +30,7 @@ export interface FillStyle {
 export interface TextStyle {
 	fontSize?: number;
 	fontFamily?: string;
-	fontWeight?: FontWeight;
+	fontWeight?: CanvasFontWeight;
 	direction?: CanvasDirection;
 	letterSpacing?: number;
 	wordSpacing?: number;
@@ -70,7 +39,27 @@ export interface TextStyle {
 	textRendering?: CanvasTextRendering;
 }
 
-export enum FontWeight {
-	"bold",
-	"normal",
-}
+export type CanvasFontWeight = "bold" | "normal";
+
+export const defaultStyle: Style = {
+	stroke: {
+		color: "blue",
+		width: 1,
+		cap: StrokeCap.butt,
+		join: StrokeJoin.miter,
+	},
+	fill: {
+		color: "black",
+	},
+	text: {
+		fontSize: 24,
+		fontFamily: "serif",
+		fontWeight: "bold",
+		direction: "ltr",
+		letterSpacing: 0,
+		wordSpacing: 0,
+		textAlign: "start",
+		textBaseline: "alphabetic",
+		textRendering: "auto",
+	},
+};

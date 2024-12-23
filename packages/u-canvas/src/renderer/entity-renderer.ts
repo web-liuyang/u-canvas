@@ -19,21 +19,25 @@ import { EntityType } from "./entity";
 import { RecordType } from "./recored";
 
 export function applyStyle(ctx: CanvasRenderingContext2D, style?: Style): void {
+	// Stroke
 	ctx.strokeStyle = style?.stroke?.color ?? ctx.strokeStyle;
 	ctx.lineWidth = style?.stroke?.width ?? ctx.lineWidth;
 	ctx.lineCap = style?.stroke?.cap ?? ctx.lineCap;
 	ctx.lineJoin = style?.stroke?.join ?? ctx.lineJoin;
+
+	// Fill
 	ctx.fillStyle = style?.fill?.color ?? ctx.fillStyle;
 
 	// Text
 	const font = ctx.font.split(" ");
 	const fontSize = style?.text?.fontSize ?? parseFloat(font[0]);
 	const fontFamily = style?.text?.fontFamily ?? font[1];
+	// 注意App平台只支持font-size、font-family、font-weight
 	const fontWeight = style?.text?.fontWeight ?? font[2];
 	const letterSpacing = style?.text?.letterSpacing ?? parseFloat(ctx.letterSpacing);
 	const wordSpacing = style?.text?.wordSpacing ?? parseFloat(ctx.wordSpacing);
 
-	ctx.font = `${fontSize}px ${fontFamily} ${fontWeight}`;
+	ctx.font = `${fontSize}px ${fontWeight} ${fontFamily}`;
 	ctx.direction = style?.text?.direction ?? ctx.direction;
 	ctx.letterSpacing = `${letterSpacing}px`;
 	ctx.wordSpacing = `${wordSpacing}px`;
@@ -76,19 +80,24 @@ export function renderCanvas(entity: CanvasEntity, ctx: CanvasRenderingContext2D
 
 export function renderRect(entity: RectEntity, ctx: CanvasRenderingContext2D): void {
 	const { x, y, w, h, radii, style } = entity;
-	applyStyle(ctx, style);
 
 	ctx.roundRect(x, y, w, h, radii);
-	ctx.fill();
-	ctx.stroke();
+	colorize(ctx, style);
 }
 
 export function renderText(entity: TextEntity, ctx: CanvasRenderingContext2D): void {
 	const { x, y, text, style } = entity;
+
 	applyStyle(ctx, style);
 
-	ctx.fillText(text, x, y);
-	ctx.strokeText(text, x, y);
+	if (style?.fill !== undefined && style?.stroke !== undefined) {
+		ctx.fillText(text, x, y);
+		ctx.strokeText(text, x, y);
+	} else if (style?.fill !== undefined) {
+		ctx.fillText(text, x, y);
+	} else {
+		ctx.strokeText(text, x, y);
+	}
 }
 
 export function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D): void {
@@ -123,16 +132,13 @@ export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingC
 
 export function renderArc(entity: ArcEntity, ctx: CanvasRenderingContext2D): void {
 	const { cx, cy, radius, startAngle, endAngle, counterclockwise, style } = entity;
-	applyStyle(ctx, style);
 
 	ctx.arc(cx, cy, radius, startAngle, endAngle, counterclockwise);
-	ctx.stroke();
-	ctx.fill();
+	colorize(ctx, style);
 }
 
 export function renderPolyline(entity: PolylineEntity, ctx: CanvasRenderingContext2D): void {
 	const { points, style } = entity;
-	applyStyle(ctx, style);
 
 	const [[fx1, fx2], ...remaining] = points;
 	ctx.moveTo(fx1, fx2);
@@ -141,15 +147,11 @@ export function renderPolyline(entity: PolylineEntity, ctx: CanvasRenderingConte
 		ctx.lineTo(x, y);
 	}
 
-	ctx.stroke();
-	// Polyline应该是不需要fill的
-	ctx.fill();
+	colorize(ctx, style);
 }
 
 export function renderPolygon(entity: PolygonEntity, ctx: CanvasRenderingContext2D): void {
 	const { points, style } = entity;
-	applyStyle(ctx, style);
-
 	const [[fx1, fx2], ...remaining] = points;
 	ctx.moveTo(fx1, fx2);
 
@@ -157,13 +159,11 @@ export function renderPolygon(entity: PolygonEntity, ctx: CanvasRenderingContext
 		ctx.lineTo(x, y);
 	}
 
-	ctx.stroke();
-	ctx.fill();
+	colorize(ctx, style);
 }
 
 export function renderPath(entity: PathEntity, ctx: CanvasRenderingContext2D): void {
 	const { path, style } = entity;
-	applyStyle(ctx, style);
 
 	for (const record of path.records) {
 		switch (record.type) {
@@ -188,6 +188,23 @@ export function renderPath(entity: PathEntity, ctx: CanvasRenderingContext2D): v
 		}
 	}
 
-	ctx.stroke();
-	ctx.fill();
+	colorize(ctx, style);
+}
+
+/**
+ * 路径上色
+ * @param style 样式，默认以 stroke 方式上色
+ * @param ctx canvas 上下文
+ */
+export function colorize(ctx: CanvasRenderingContext2D, style?: Style) {
+	applyStyle(ctx, style);
+
+	if (style?.fill !== undefined && style?.stroke !== undefined) {
+		ctx.fill();
+		ctx.stroke();
+	} else if (style?.fill !== undefined) {
+		ctx.fill();
+	} else {
+		ctx.stroke();
+	}
 }

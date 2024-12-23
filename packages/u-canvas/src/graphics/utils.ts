@@ -1,7 +1,7 @@
 // import { v4 as uuid } from "uuid";
 import type { Line, Point } from "../types";
-import type { Style } from "./styles";
-import { StrokeCap, StrokeJoin, FontWeight } from "./styles";
+import type { Style, CanvasFontWeight } from "./styles";
+import { StrokeCap, StrokeJoin } from "./styles";
 
 export function generateUUID(): string {
 	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -25,7 +25,7 @@ export function extractStyle(options: CanvasRenderingContext2D): Style {
 		text: {
 			fontSize: parseFloat(fontSize),
 			fontFamily: fontFamily,
-			fontWeight: fontWeight as unknown as FontWeight,
+			fontWeight: fontWeight as CanvasFontWeight,
 			direction: options.direction,
 			letterSpacing: parseFloat(options.letterSpacing),
 			wordSpacing: parseFloat(options.wordSpacing),

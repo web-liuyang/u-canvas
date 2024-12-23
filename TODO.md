@@ -4,12 +4,13 @@
 [√] Matrix
 [√] 重构属性为可写
 [√] Renderer
-[ ] Graphic Event
-[ ] Finger Event Stop
-[ ] 全局事件代理
 [√] 图形结构调整
 [√] 统一Style与TextStyle样式处理
-[] 样式继承
+[√] 样式继承
+[ ] Graphic Event
+
+[ ] Finger Event Stop
+[ ] 全局事件代理
 
 ### Bug
 
