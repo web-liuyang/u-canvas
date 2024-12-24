@@ -1,9 +1,9 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
-import { isPointOnLineSegment } from "../utils";
+import { Aabb } from "../aabb";
 
 export interface PolygonOptions extends GraphicOptions {
 	points: Point[];
@@ -22,6 +22,31 @@ export class Polygon extends Graphic<PolygonOptions> {
 		if (options.points.length < 2) throw new Error("Polygon must have at least two points");
 		this.points = options.points;
 		this.close = options.close ?? true;
+	}
+
+	public override aabb(): Aabb {
+		let minX = Number.MAX_VALUE;
+		let minY = Number.MAX_VALUE;
+		let maxX = Number.MIN_VALUE;
+		let maxY = Number.MIN_VALUE;
+
+		const points = this.points.slice();
+		if (this.close) points.push(points[0]);
+
+		for (const point of points) {
+			const [x, y] = point;
+			minX = Math.min(minX, x);
+			minY = Math.min(minY, y);
+			maxX = Math.max(maxX, x);
+			maxY = Math.max(maxY, y);
+		}
+
+		const [x, y] = this.matrix.applyVector(minX, minY);
+		const aabb = Aabb.zero()
+			.offset(new Offset(x, y))
+			.grow([maxX - minX, maxY - minY]);
+
+		return aabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
@@ -44,13 +69,22 @@ export class Polygon extends Graphic<PolygonOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		// 这个要重新计算，这里是错误的，是polyline的算法
-		let currentPoint = this.points[0];
-		for (let i = 1; i < this.points.length; i++) {
-			const isOnSegment = isPointOnLineSegment(point, [currentPoint, this.points[i]]);
-			if (isOnSegment) return this;
-			currentPoint = this.points[i];
+		const points = this.points.slice();
+		if (this.close) points.push(points[0]);
+
+		const [x, y] = point;
+		let isInside = false;
+		// 多边形边界检测
+		for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+			const [vix, viy] = points[i];
+			const [vjx, vjy] = points[j];
+
+			if (viy > y !== vjy > y && x < ((vjx - vix) * (y - viy)) / (vjy - viy) + vix) {
+				isInside = !isInside;
+			}
 		}
+
+		if (isInside) this;
 
 		return undefined;
 	}

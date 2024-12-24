@@ -1,8 +1,9 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
+import { Aabb } from "../aabb";
 
 export interface RectangleOptions extends GraphicOptions {
 	x: number;
@@ -63,6 +64,13 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		this.radii = options.radii ?? 0;
 	}
 
+	public override aabb(): Aabb {
+		const [x, y] = this.matrix.applyVector(this.x, this.y);
+		const aabb = Aabb.zero().offset(new Offset(x, y)).grow([this.w, this.h]);
+
+		return aabb;
+	}
+
 	public override paint(canvas: Canvas, offset: Offset): void {
 		const { style, radii } = this;
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
@@ -83,15 +91,42 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		// TODO 没有判断圆角
+		// // TODO 没有判断圆角
+		// const [x, y] = point;
+		// const { x: leftTopX, y: leftTopY, w, h } = this;
+		// const rightBottomX = leftTopX + w;
+		// const rightBottomY = leftTopY + h;
+
+		// if (x >= leftTopX && x <= rightBottomX && y >= leftTopY && y <= rightBottomY) return this;
+
+		// return undefined;
+
 		const [x, y] = point;
-		const { x: leftTopX, y: leftTopY, w, h } = this;
+		const { x: leftTopX, y: leftTopY, w, h, radii } = this;
 		const rightBottomX = leftTopX + w;
 		const rightBottomY = leftTopY + h;
 
 		if (x >= leftTopX && x <= rightBottomX && y >= leftTopY && y <= rightBottomY) return this;
 
-		return undefined;
+		if (x >= leftTopX && x <= leftTopX + w && y >= leftTopY && y <= leftTopY + h) {
+			return this; // 点在矩形内部
+			// 检查点是否在圆角矩形的圆角区域内
+		} else if (
+			(x >= leftTopX && x <= leftTopX + radii && y >= leftTopY && y <= leftTopY + radii) ||
+			(x >= leftTopX + w - radii && x <= leftTopX + w && y >= leftTopY && y <= leftTopY + radii) ||
+			(x >= leftTopX && x <= leftTopX + radii && y >= leftTopY + h - radii && y <= leftTopY + h) ||
+			(x >= leftTopX + w - radii && x <= leftTopX + w && y >= leftTopY + h - radii && y <= leftTopY + h)
+		) {
+			const res =
+				Math.sqrt(Math.pow(x - (leftTopX + radii), 2) + Math.pow(y - (leftTopY + radii), 2)) <= radii ||
+				Math.sqrt(Math.pow(x - (leftTopX + w - radii), 2) + Math.pow(y - (leftTopY + radii), 2)) <= radii ||
+				Math.sqrt(Math.pow(x - (leftTopX + radii), 2) + Math.pow(y - (leftTopY + h - radii), 2)) <= radii ||
+				Math.sqrt(Math.pow(x - (leftTopX + w - radii), 2) + Math.pow(y - (leftTopY + h - radii), 2)) <= radii;
+
+			if (res) return this;
+		}
+
+		return;
 	}
 
 	// public override equals(other: Rectangle): boolean {

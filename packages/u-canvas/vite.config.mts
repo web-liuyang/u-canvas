@@ -24,7 +24,6 @@ export default defineConfig({
 		},
 		sourcemap: true, // 输出.map文件
 		manifest: true,
-
 		// rollupOptions: {
 		// 	// make sure to externalize deps that shouldn't be bundled
 		// 	// into your library

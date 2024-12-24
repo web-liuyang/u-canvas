@@ -8,9 +8,16 @@
 [√] 统一Style与TextStyle样式处理
 [√] 样式继承
 [ ] Graphic Event
+[ ] 计算 Graphic 的 AABB. aabb是自身的aabb，全局下的aabb应该有个方法转换
+文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小，
 
 [ ] Finger Event Stop
 [ ] 全局事件代理
+
+记：
+
+1. 当前坐标系是屏幕坐标系，即 0,0 在左上角
+2. 所有图形的方法应该都获取的是基于自身（local）的数据，如果想要转化成全局（global）的数据，应该通过某种方法。
 
 ### Bug
 

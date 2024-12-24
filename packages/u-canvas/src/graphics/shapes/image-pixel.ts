@@ -1,8 +1,9 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
+import { Aabb } from "../aabb";
 
 export interface ImagePixelPureOptions extends GraphicOptions {
 	imageData: ImageData;
@@ -48,6 +49,13 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 		this.dy = options?.dy ?? 0;
 		this.dw = options?.dw ?? this.imageData.width;
 		this.dh = options?.dh ?? this.imageData.height;
+	}
+
+	public override aabb(): Aabb {
+		const [x, y] = this.matrix.applyVector(this.x, this.y);
+		const aabb = Aabb.zero().offset(new Offset(x, y)).grow([this.dw, this.dh]);
+
+		return aabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {

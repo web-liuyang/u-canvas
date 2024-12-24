@@ -1,8 +1,9 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
+import { Aabb } from "../aabb";
 
 export interface TextOptions extends GraphicOptions {
 	text: string;
@@ -26,6 +27,16 @@ export class Text extends Graphic<TextOptions> {
 		this.y = options.y;
 	}
 
+	public override aabb(): Aabb {
+		// const aabb = this.parent?.aabb() ?? Aabb.zero();
+		// const [x, y] = this.matrix.applyVector(this.x, this.y);
+		// const offset = new Offset(x, y);
+		// const newAabb = aabb.offset(offset).grow([this.w, this.h]);
+		// return newAabb;
+
+		return Aabb.zero();
+	}
+
 	public override paint(canvas: Canvas, offset: Offset): void {
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 		const { text, style } = this;
@@ -46,8 +57,10 @@ export class Text extends Graphic<TextOptions> {
 
 	public override hitTest(point: Point): this | undefined {
 		// const [x, y] = point;
-		const { x, y, text } = this;
+		const { x, y, text, style } = this;
+
 		// 这里要计算文本的宽高后才能算命中
+
 		return undefined;
 	}
 

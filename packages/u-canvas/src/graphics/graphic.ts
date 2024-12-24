@@ -4,6 +4,7 @@ import { Style } from "./styles";
 import { generateUUID } from "./utils";
 import { Transform } from "../transform";
 import { Canvas } from "../renderer/canvas";
+import { Aabb } from "./aabb";
 
 export type GraphicId = string;
 
@@ -31,6 +32,8 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 		this.style = options.style;
 		this.parent = options?.parent;
 	}
+
+	public abstract aabb(): Aabb;
 
 	public abstract paint(canvas: Canvas, offset: Offset): void;
 

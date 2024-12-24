@@ -1,9 +1,10 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
 import { Path } from "../../renderer";
+import { Aabb } from "../aabb";
 
 export interface PieOptions extends GraphicOptions {
 	cx: number;
@@ -37,6 +38,15 @@ export class Pie extends Graphic<PieOptions> {
 		this.startAngle = options.startAngle;
 		this.endAngle = options.endAngle;
 		this.counterclockwise = options.counterclockwise ?? false;
+	}
+
+	public override aabb(): Aabb {
+		const [x, y] = this.matrix.applyVector(this.cx / 2, this.cy / 2);
+		const aabb = Aabb.zero()
+			.offset(new Offset(x, y))
+			.grow([this.radius * 2, this.radius * 2]);
+
+		return aabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {

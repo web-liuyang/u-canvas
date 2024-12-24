@@ -1,9 +1,10 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
 import { isPointOnLineSegment } from "../utils";
+import { Aabb } from "../aabb";
 
 export interface PolylineOptions extends GraphicOptions {
 	points: Point[];
@@ -18,6 +19,30 @@ export class Polyline extends Graphic<PolylineOptions> {
 		super(options);
 		if (options.points.length < 2) throw new Error("Polyline must have at least two points");
 		this.points = options.points;
+	}
+
+	public override aabb(): Aabb {
+		let minX = Number.MAX_VALUE;
+		let minY = Number.MAX_VALUE;
+		let maxX = Number.MIN_VALUE;
+		let maxY = Number.MIN_VALUE;
+
+		const points = this.points.slice();
+
+		for (const point of points) {
+			const [x, y] = point;
+			minX = Math.min(minX, x);
+			minY = Math.min(minY, y);
+			maxX = Math.max(maxX, x);
+			maxY = Math.max(maxY, y);
+		}
+
+		const [x, y] = this.matrix.applyVector(minX, minY);
+		const aabb = Aabb.zero()
+			.offset(new Offset(x, y))
+			.grow([maxX - minX, maxY - minY]);
+
+		return aabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {

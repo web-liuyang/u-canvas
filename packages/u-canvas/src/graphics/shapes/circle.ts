@@ -1,8 +1,9 @@
 import type { GraphicOptions } from "../graphic";
 import type { Point } from "../../types";
-import type { Offset } from "../../offset";
 import type { Canvas } from "../../renderer";
+import { Offset } from "../../offset";
 import { Graphic } from "../graphic";
+import { Aabb } from "../aabb";
 
 export interface CircleOptions extends GraphicOptions {
 	cx: number;
@@ -26,6 +27,15 @@ export class Circle extends Graphic<CircleOptions> {
 		this.radius = options.radius;
 	}
 
+	public override aabb(): Aabb {
+		const [x, y] = this.matrix.applyVector(this.cx / 2, this.cy / 2);
+		const aabb = Aabb.zero()
+			.offset(new Offset(x, y))
+			.grow([this.radius * 2, this.radius * 2]);
+
+		return aabb;
+	}
+
 	public override paint(canvas: Canvas, offset: Offset): void {
 		const { radius, style } = this;
 		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
@@ -34,7 +44,8 @@ export class Circle extends Graphic<CircleOptions> {
 
 	public override hitTest(point: Point): this | undefined {
 		const [x, y] = point;
-		const { cx, cy, radius } = this;
+		const { radius, worldMatrix } = this;
+		const [cx, cy] = worldMatrix.applyVector(this.cx, this.cy);
 
 		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return this;
 
