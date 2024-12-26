@@ -5,11 +5,12 @@
 [√] 重构属性为可写
 [√] Renderer
 [√] 图形结构调整
-[√] 统一Style与TextStyle样式处理
-[√] 样式继承
-[ ] Graphic Event
-[ ] 计算 Graphic 的 AABB. aabb是自身的aabb，全局下的aabb应该有个方法转换
-文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小，
+[√] 样式
+    [√] 继承
+[ ] Graphic
+    [ ] Event
+    [√] AABB. 文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小
+    [√] hitTest 文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小
 
 [ ] Finger Event Stop
 [ ] 全局事件代理
