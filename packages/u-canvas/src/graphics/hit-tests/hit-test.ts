@@ -1,6 +1,6 @@
 import { Circle, Composition, ImagePixel, Image, Pie, Polygon, Polyline, Rectangle, Ring, Text } from "../shapes";
 import { Point } from "../../types";
-import { Graphic } from "../graphic";
+import { Graphic } from "../shapes/graphic";
 import { isPointOnLineSegment } from "../utils";
 
 export function hitTestCircle(point: Point, circle: Circle): Circle | undefined {

@@ -1,10 +1,10 @@
-import type { Hittable, Paintable, Point, CoordinateScope, Parent } from "../types";
-import { Offset } from "../offset";
-import { Style } from "./styles";
-import { generateUUID } from "./utils";
-import { Transform } from "../transform";
-import { Canvas } from "../renderer/canvas";
-import { Aabb } from "./aabb";
+import type { Hittable, Paintable, Point, CoordinateScope, Parent } from "../../types";
+import { Offset } from "../../offset";
+import { Style } from "../styles";
+import { generateUUID } from "../utils";
+import { Transform } from "../../transform";
+import { Canvas } from "../../renderer/canvas";
+import { Aabb } from "../aabb";
 
 export type GraphicId = string;
 
@@ -35,9 +35,26 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 		this.parent = options?.parent;
 	}
 
-	public abstract aabb(): Aabb;
+	/**
+	 * 自身 aabb
+	 */
+	public abstract getAabb(): Aabb;
 
-	public abstract paint(canvas: Canvas, offset: Offset): void;
+	/**
+	 * 全局 aabb
+	 */
+	public getGlobalAabb(): Aabb {
+		return this.getAabb().offset(this.offset);
+	}
+
+	/**
+	 * 绘制方法
+	 * @param canvas 画布
+	 * @param offset 全局偏移量
+	 */
+	public paint(canvas: Canvas, offset: Offset): void {
+		this.offset = offset;
+	}
 
 	public abstract hitTest(point: Point): Graphic | undefined;
 

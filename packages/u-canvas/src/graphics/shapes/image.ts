@@ -1,8 +1,8 @@
-import type { GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "./graphic";
 import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
 import { Offset } from "../../offset";
-import { Graphic } from "../graphic";
+import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
 export interface ImageResource {
@@ -83,7 +83,7 @@ export class Image extends Graphic<ImageOptions> {
 		// }
 	}
 
-	public override aabb(): Aabb {
+	public override getAabb(): Aabb {
 		// 需要知道图片大小
 		// const aabb = this.parent?.aabb() ?? Aabb.zero();
 		// const [x, y] = this.matrix.applyVector(this.sx, this.sy);
@@ -95,6 +95,7 @@ export class Image extends Graphic<ImageOptions> {
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
+		super.paint(canvas, offset);
 		const { image, sw, sh, dx, dy, dw, dh, style } = this;
 		const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
 

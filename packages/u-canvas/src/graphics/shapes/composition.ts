@@ -1,8 +1,8 @@
-import type { GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "./graphic";
 import type { Point } from "../../types";
 import { Canvas } from "../../renderer";
 import { Offset } from "../../offset";
-import { Graphic } from "../graphic";
+import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
 export interface CompositionOptions extends GraphicOptions {
@@ -28,10 +28,10 @@ export class Composition extends Graphic<CompositionOptions> {
 		this.children.forEach(child => (child.parent = this));
 	}
 
-	public aabb(): Aabb {
+	public override getAabb(): Aabb {
 		const newAabb = this.children.reduce(
 			(aabb, item) => {
-				const itemAabb = item.aabb();
+				const itemAabb = item.getAabb();
 				const minX = aabb.min[0] < itemAabb.min[0] ? aabb.min[0] : itemAabb.min[0];
 				const minY = aabb.min[1] < itemAabb.min[1] ? aabb.min[1] : itemAabb.min[1];
 				const maxX = aabb.max[0] > itemAabb.max[0] ? aabb.max[0] : itemAabb.max[0];
@@ -45,11 +45,11 @@ export class Composition extends Graphic<CompositionOptions> {
 		return newAabb;
 	}
 
-	public paint(canvas: Canvas, offset: Offset): void {
+	public override paint(canvas: Canvas, offset: Offset): void {
+		super.paint(canvas, offset);
 		const offsetSelf = new Offset(this.x, this.y).add(offset);
 		this.children.forEach(child => {
 			const childCanvas = new Canvas({ matrix: child.worldMatrix });
-			child.offset = offsetSelf;
 			child.paint(childCanvas, offsetSelf);
 			canvas.addCanvas(childCanvas);
 		});

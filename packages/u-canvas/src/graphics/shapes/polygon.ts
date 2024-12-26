@@ -1,8 +1,8 @@
-import type { GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "./graphic";
 import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
 import { Offset } from "../../offset";
-import { Graphic } from "../graphic";
+import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
 export interface PolygonOptions extends GraphicOptions {
@@ -24,7 +24,7 @@ export class Polygon extends Graphic<PolygonOptions> {
 		this.close = options.close ?? true;
 	}
 
-	public override aabb(): Aabb {
+	public override getAabb(): Aabb {
 		let minX = Number.MAX_VALUE;
 		let minY = Number.MAX_VALUE;
 		let maxX = Number.MIN_VALUE;
@@ -41,7 +41,7 @@ export class Polygon extends Graphic<PolygonOptions> {
 			maxY = Math.max(maxY, y);
 		}
 
-		const [x, y] = this.matrix.applyVector(minX, minY);
+		const [x, y] = this.matrix.apply(minX, minY);
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
 			.grow([maxX - minX, maxY - minY]);
@@ -50,6 +50,7 @@ export class Polygon extends Graphic<PolygonOptions> {
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
+		super.paint(canvas, offset);
 		const { close, style } = this;
 		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
 		if (close) points.push(points[0]);

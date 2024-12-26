@@ -117,7 +117,7 @@ export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingC
 	const xs = matrix.a;
 	const ys = matrix.d;
 	imageData = scaleImageData(imageData, xs, ys);
-	[x, y] = matrix.applyVector(x, y);
+	[x, y] = matrix.apply(x, y);
 	dx *= xs;
 	dy *= ys;
 	dw *= xs;

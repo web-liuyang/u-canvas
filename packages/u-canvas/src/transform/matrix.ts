@@ -47,7 +47,7 @@ export class Matrix {
 	/**
 	 * Matrix multiplication vector
 	 */
-	public applyVector(x: number, y: number): Point {
+	public apply(x: number, y: number): Point {
 		const x1 = this.a * x + this.c * y + this.e;
 		const y1 = this.b * x + this.d * y + this.f;
 

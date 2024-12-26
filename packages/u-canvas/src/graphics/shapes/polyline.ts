@@ -1,8 +1,8 @@
-import type { GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "./graphic";
 import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
 import { Offset } from "../../offset";
-import { Graphic } from "../graphic";
+import { Graphic } from "./graphic";
 import { isPointOnLineSegment } from "../utils";
 import { Aabb } from "../aabb";
 
@@ -21,7 +21,7 @@ export class Polyline extends Graphic<PolylineOptions> {
 		this.points = options.points;
 	}
 
-	public override aabb(): Aabb {
+	public override getAabb(): Aabb {
 		let minX = Number.MAX_VALUE;
 		let minY = Number.MAX_VALUE;
 		let maxX = Number.MIN_VALUE;
@@ -37,7 +37,7 @@ export class Polyline extends Graphic<PolylineOptions> {
 			maxY = Math.max(maxY, y);
 		}
 
-		const [x, y] = this.matrix.applyVector(minX, minY);
+		const [x, y] = this.matrix.apply(minX, minY);
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
 			.grow([maxX - minX, maxY - minY]);
@@ -46,6 +46,7 @@ export class Polyline extends Graphic<PolylineOptions> {
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
+		super.paint(canvas, offset);
 		const { style } = this;
 		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
 		canvas.drawPolyline(points, style);

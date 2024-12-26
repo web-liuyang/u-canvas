@@ -1,8 +1,8 @@
-import type { GraphicOptions } from "../graphic";
+import type { GraphicOptions } from "./graphic";
 import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
 import { Offset } from "../../offset";
-import { Graphic } from "../graphic";
+import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
 export interface TextOptions extends GraphicOptions {
@@ -27,7 +27,7 @@ export class Text extends Graphic<TextOptions> {
 		this.y = options.y;
 	}
 
-	public override aabb(): Aabb {
+	public override getAabb(): Aabb {
 		// const aabb = this.parent?.aabb() ?? Aabb.zero();
 		// const [x, y] = this.matrix.applyVector(this.x, this.y);
 		// const offset = new Offset(x, y);
@@ -38,6 +38,7 @@ export class Text extends Graphic<TextOptions> {
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
+		super.paint(canvas, offset);
 		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
 		const { text, style } = this;
 		canvas.drawText(text, x, y, style);
