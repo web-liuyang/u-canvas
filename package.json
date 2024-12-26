@@ -3,9 +3,9 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"dev": "pnpm dev:u-canvas & pnpm dev:u-canvas-components",
-		"dev:u-canvas": "cd packages/u-canvas && vite build --watch",
-		"dev:u-canvas-components": "cd packages/u-canvas-components && vite build --watch",
+		"dev": "pnpm dev:u-canvas & pnpm dev:utils",
+		"dev:u-canvas": "pnpm --dir=./packages/u-canvas dev",
+		"dev:utils": "pnpm --dir=./packages/utils dev",
 
 		"build": "pnpm build:u-canvas & pnpm build:u-canvas-components",
 		"build:u-canvas": "cd packages/u-canvas && vite build",

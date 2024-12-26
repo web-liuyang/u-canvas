@@ -1,6 +1,6 @@
 import { FTouchdownEvent, FTouchmoveEvent } from "@/components/event";
 import { BaseStateMachine } from "./base-state-machine";
-import { Polyline } from "@u-canvas";
+import { Polyline } from "u-canvas";
 
 export class BrushStateMachine extends BaseStateMachine {
 	private polyline: Polyline | undefined;

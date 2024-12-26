@@ -6,10 +6,13 @@
 		"dist",
 		"src"
 	],
-	"main": "./dist/es/index.js",
-	"module": "./dist/es/index.js",
 	"types": "./dist/types/index.d.ts",
-	"typings": "./dist/types/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/es/index.js",
+			"require": "./dist/es/index.js"
+		}
+	},
 	"scripts": {
 		"dev": "vite build --watch",
 		"build": "vite build",

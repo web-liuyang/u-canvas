@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { TouchInfo } from "@/components/event";
-export type ToolButton = { icon: any; text: string; onTap: () => void };
+import type { ToolButton } from "./toolbar-interface";
 
 import { nextTick, ref } from "vue";
 

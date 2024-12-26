@@ -17,6 +17,7 @@ export class Renderer {
 			matrix: this.canvas.root.worldMatrix,
 		});
 		// canvas.matrix = this.canvas.root.worldMatrix;
+		this.canvas.root.offset = offset;
 		this.canvas.root.paint(canvas, offset);
 		const entity = EntityFactory.createCanvasEntity(canvas);
 		renderCanvas(entity, this.canvas.ctx);

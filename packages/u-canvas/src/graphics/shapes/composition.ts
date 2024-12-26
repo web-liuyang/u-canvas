@@ -49,6 +49,7 @@ export class Composition extends Graphic<CompositionOptions> {
 		const offsetSelf = new Offset(this.x, this.y).add(offset);
 		this.children.forEach(child => {
 			const childCanvas = new Canvas({ matrix: child.worldMatrix });
+			child.offset = offsetSelf;
 			child.paint(childCanvas, offsetSelf);
 			canvas.addCanvas(childCanvas);
 		});
@@ -59,7 +60,6 @@ export class Composition extends Graphic<CompositionOptions> {
 		for (let i = this.children.length - 1; i >= 0; i--) {
 			const child = this.children[i];
 			const hitTarget = child.hitTest(point);
-			console.log(child.type, child.aabb());
 			if (hitTarget) return hitTarget;
 		}
 		return undefined;

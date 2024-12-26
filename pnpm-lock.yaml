@@ -38,12 +38,12 @@ importers:
 
   example:
     dependencies:
+      '@app/utils':
+        specifier: workspace:*
+        version: link:../packages/utils
       u-canvas:
         specifier: workspace:*
         version: link:../packages/u-canvas
-      u-canvas-components:
-        specifier: workspace:*
-        version: link:../packages/u-canvas-components
     devDependencies:
       vconsole:
         specifier: 3.15.1
@@ -55,11 +55,11 @@ importers:
         specifier: 15.11.7
         version: 15.11.7
 
-  packages/u-canvas-components:
+  packages/utils:
     dependencies:
-      u-canvas:
-        specifier: workspace:*
-        version: link:../u-canvas
+      vite-plugin-dts:
+        specifier: ^4.2.1
+        version: 4.2.1(@types/node@22.5.5)(rollup@4.21.3)(typescript@5.6.2)(vite@5.4.5(@types/node@22.5.5))
 
 packages:
 

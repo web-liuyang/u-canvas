@@ -25,6 +25,7 @@
 [ ] packages - u-canvas-components 里使用 u-canvas 没有被热更新
 [ ] Matrix 基点尚未确定，图形的基点应该是在左上角
 
+
 ### Issue
 
 [√] Path2D绘制时 基点在 ios 上与 web 不一致
@@ -34,5 +35,6 @@
 [ ] h5 无法触发 tap事件
 [ ] @/u-canvas 可以访问类型与值，@u-canvas不可以访问类型，但可以访问值
 [ ] .uvue 后缀只能导出Type，导出Interface不可以用
+[ ] packages 热更新, 暂时通过更新vite-config来重启服务
 
 roundRect/strokeText 文档错误

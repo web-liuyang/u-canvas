@@ -17,8 +17,9 @@ onMounted(() => {
 				const h = window.windowHeight;
 				canvas.width = w * dpr;
 				canvas.height = h * dpr;
-				canvas.style.width = `${w}px`;
-				canvas.style.height = `${h}px`;
+				// hbuilderx 类型报错
+				// canvas.style.width = `${w}px`;
+				// canvas.style.height = `${h}px`;
 
 				const path = new Path2D();
 				path.rect(0, 70, 100, 100);

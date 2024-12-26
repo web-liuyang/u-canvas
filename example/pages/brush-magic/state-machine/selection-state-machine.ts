@@ -12,7 +12,7 @@ import {
 import type { TouchInfo } from "@/components/event";
 
 import { BaseStateMachine } from "./base-state-machine";
-import { Matrix } from "@u-canvas";
+import { Matrix } from "u-canvas";
 
 export class SelectionStateMachine extends BaseStateMachine {
 	private originMatrix?: Matrix;
@@ -24,10 +24,9 @@ export class SelectionStateMachine extends BaseStateMachine {
 
 	public onTouchup(e: FTouchupEvent): void {
 		const point = this.canvas.toCanvasPoint([e.x, e.y]);
-		console.log(point);
-
+		// console.log(point);
 		const hitTarget = this.canvas.root.hitTest(point);
-		console.log(hitTarget);
+		// console.log(hitTarget);
 	}
 
 	public onTouchstart(e: FTouchstartEvent) {

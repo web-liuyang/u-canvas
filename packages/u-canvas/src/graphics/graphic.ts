@@ -22,6 +22,8 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 
 	public readonly id: GraphicId;
 
+	public offset: Offset = new Offset(0, 0);
+
 	public style?: Style;
 
 	public parent?: Graphic;

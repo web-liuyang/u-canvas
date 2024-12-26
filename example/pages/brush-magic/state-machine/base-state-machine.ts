@@ -9,7 +9,7 @@ import type {
 	FZoominEvent,
 	FZoomoutEvent,
 } from "@/components/event";
-import { UCanvas } from "@u-canvas";
+import type { UCanvas } from "u-canvas";
 
 export abstract class BaseStateMachine {
 	constructor(protected canvas: UCanvas) {}

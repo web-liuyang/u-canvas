@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { Point } from "@/u-canvas";
-import { calMidpoint } from "@/u-canvas";
+import type { Point } from "u-canvas";
+import { calMidpoint } from "u-canvas";
 import { ref } from "vue";
 import {
 	FTapEvent,
@@ -38,9 +38,10 @@ const moving = ref(false);
 const onTapTimestamp = ref(0);
 const onTapTimer = ref<number>();
 
-const onSetTimeout = (handler: TimerHandler, timeout?: number) => {
-	onTapTimer.value = setTimeout(handler, timeout);
-};
+// hbuilderx 中 没有 TimerHandler，暂时注释
+// const onSetTimeout = (handler: TimerHandler, timeout?: number) => {
+// 	onTapTimer.value = setTimeout(handler, timeout);
+// };
 
 const onClearTimeout = () => {
 	if (onTapTimer.value) {

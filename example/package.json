@@ -15,7 +15,7 @@
 	"description": "",
 	"dependencies": {
 		"u-canvas": "workspace:*",
-		"u-canvas-components": "workspace:*"
+		"@app/utils": "workspace:*"
 	},
 	"devDependencies": {
 		"vconsole": "3.15.1"
