@@ -26,7 +26,7 @@ export class SelectionStateMachine extends BaseStateMachine {
 		const point = this.canvas.toCanvasPoint([e.x, e.y]);
 		// console.log(point);
 		const hitTarget = this.canvas.root.hitTest(point);
-		// console.log(hitTarget);
+		console.log(hitTarget?.type);
 	}
 
 	public onTouchstart(e: FTouchstartEvent) {

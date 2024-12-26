@@ -61,7 +61,7 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { imageData, dx, dy, dw, dh } = this;
-		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+		const [x, y] = this.toGlobalPoint([this.x, this.y]);
 
 		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
 	}
@@ -96,12 +96,13 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		const [x, y] = point;
+		const [px, py] = point;
 		const {
 			imageData: { width, height },
 		} = this;
+		const [x, y] = this.toGlobalPoint([this.x, this.y]);
 
-		if (x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height) return this;
+		if (px >= x && px <= x + width && py >= y && py <= y + height) return this;
 
 		return undefined;
 	}

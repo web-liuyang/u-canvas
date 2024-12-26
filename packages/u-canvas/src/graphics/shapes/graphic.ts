@@ -63,4 +63,8 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	// public equals(other: Graphic): boolean {
 	// 	return this === other || (this.type === other.type && this.id === other.id && this.style.equals(other.style));
 	// }
+
+	public toGlobalPoint(point: Point): Point {
+		return [this.offset.dx + point[0], this.offset.dy + point[1]];
+	}
 }

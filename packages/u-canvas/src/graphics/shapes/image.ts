@@ -97,7 +97,7 @@ export class Image extends Graphic<ImageOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { image, sw, sh, dx, dy, dw, dh, style } = this;
-		const [sx, sy] = [this.sx + offset.dx, this.sy + offset.dy];
+		const [sx, sy] = this.toGlobalPoint([this.sx, this.sy]);
 
 		canvas.drawImage(image, sx, sy);
 

@@ -52,7 +52,7 @@ export class Pie extends Graphic<PieOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { radius, startAngle, endAngle, counterclockwise, style } = this;
-		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
+		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
 		const path = new Path();
 		path.moveTo(cx, cy);
 		path.arc(cx, cy, radius, startAngle, endAngle, counterclockwise);
@@ -76,7 +76,8 @@ export class Pie extends Graphic<PieOptions> {
 
 	public override hitTest(point: Point): this | undefined {
 		const [x, y] = point;
-		const { cx, cy, radius, startAngle, endAngle } = this;
+		const { radius, startAngle, endAngle } = this;
+		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
 		const [dx, dy] = [x - cx, y - cy];
 		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 

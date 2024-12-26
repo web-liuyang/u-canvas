@@ -39,8 +39,9 @@ export class Text extends Graphic<TextOptions> {
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
-		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+		const [x, y] = this.toGlobalPoint([this.x, this.y]);
 		const { text, style } = this;
+
 		canvas.drawText(text, x, y, style);
 	}
 

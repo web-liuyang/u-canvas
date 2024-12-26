@@ -52,7 +52,7 @@ export class Polygon extends Graphic<PolygonOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { close, style } = this;
-		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
+		const points = this.points.map<Point>(vertex => this.toGlobalPoint(vertex));
 		if (close) points.push(points[0]);
 
 		canvas.drawPolygon(points, style);
@@ -70,24 +70,21 @@ export class Polygon extends Graphic<PolygonOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		const points = this.points.slice();
+		const points = this.points.map<Point>(vertex => this.toGlobalPoint(vertex));
 		if (this.close) points.push(points[0]);
-
 		const [x, y] = point;
-		let isInside = false;
-		// 多边形边界检测
-		for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
-			const [vix, viy] = points[i];
-			const [vjx, vjy] = points[j];
 
-			if (viy > y !== vjy > y && x < ((vjx - vix) * (y - viy)) / (vjy - viy) + vix) {
-				isInside = !isInside;
+		let inside = false;
+		for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+			const [xi, yi] = points[i];
+			const [xj, yj] = points[j];
+
+			if (isIntersect(y, x, yj, yi, xj, xi)) {
+				inside = !inside;
 			}
 		}
 
-		if (isInside) this;
-
-		return undefined;
+		return inside ? this : undefined;
 	}
 
 	// public override equals(other: Polygon): boolean {
@@ -98,4 +95,17 @@ export class Polygon extends Graphic<PolygonOptions> {
 	// 		this.points.every((point, index) => point[0] === other.points[index][0] && point[1] === other.points[index][1])
 	// 	);
 	// }
+}
+
+// 线性插值
+// y = y0 + (x − x0) * ((y1 − y0) / (x1 − x0)​)
+/**
+ * 检测点向右的射线是否与线段相交，
+ * 可以理解为检测点是否在线段的左边
+ */
+function isIntersect(pointY: number, pointX: number, yj: number, yi: number, xj: number, xi: number): boolean {
+	// 判断坐标点Y 是否在线段的Y区间
+	if (!(yi > pointY !== yj > pointY)) return false;
+	const value = ((xj - xi) * (pointY - yi)) / (yj - yi) + xi;
+	return pointX < value;
 }

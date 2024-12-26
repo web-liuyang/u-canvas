@@ -48,7 +48,7 @@ export class Polyline extends Graphic<PolylineOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { style } = this;
-		const points = this.points.map<Point>(vertex => [vertex[0] + offset.dx, vertex[1] + offset.dy]);
+		const points = this.points.map<Point>(vertex => this.toGlobalPoint(vertex));
 		canvas.drawPolyline(points, style);
 	}
 
@@ -65,7 +65,7 @@ export class Polyline extends Graphic<PolylineOptions> {
 	public override hitTest(point: Point): this | undefined {
 		let currentPoint = this.points[0];
 		for (let i = 1; i < this.points.length; i++) {
-			const isOnSegment = isPointOnLineSegment(point, [currentPoint, this.points[i]]);
+			const isOnSegment = isPointOnLineSegment(point, [this.toGlobalPoint(currentPoint), this.toGlobalPoint(this.points[i])]);
 			if (isOnSegment) return this;
 			currentPoint = this.points[i];
 		}

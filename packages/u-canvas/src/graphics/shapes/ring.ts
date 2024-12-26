@@ -55,7 +55,7 @@ export class Ring extends Graphic<RingOptions> {
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
-		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
+		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
 		const { innerRadius, outerRadius, startAngle, endAngle, counterclockwise, style } = this;
 		const path = new Path();
 
@@ -83,8 +83,8 @@ export class Ring extends Graphic<RingOptions> {
 
 	public override hitTest(point: Point): this | undefined {
 		const [x, y] = point;
-		const { cx, cy, innerRadius, outerRadius, startAngle, endAngle } = this;
-
+		const { innerRadius, outerRadius, startAngle, endAngle } = this;
+		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
 		const [dx, dy] = [x - cx, y - cy];
 		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 

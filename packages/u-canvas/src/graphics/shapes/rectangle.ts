@@ -74,7 +74,7 @@ export class Rectangle extends Graphic<RectangleOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { style, radii } = this;
-		const [x, y] = [this.x + offset.dx, this.y + offset.dy];
+		const [x, y] = this.toGlobalPoint([this.x, this.y]);
 		const [w, h] = [this.w, this.h];
 		canvas.drawRect(x, y, w, h, radii, style);
 	}
@@ -103,7 +103,8 @@ export class Rectangle extends Graphic<RectangleOptions> {
 		// return undefined;
 
 		const [x, y] = point;
-		const { x: leftTopX, y: leftTopY, w, h, radii } = this;
+		const { w, h, radii } = this;
+		const [leftTopX, leftTopY] = this.toGlobalPoint([this.x, this.y]);
 		const rightBottomX = leftTopX + w;
 		const rightBottomY = leftTopY + h;
 

@@ -39,14 +39,15 @@ export class Circle extends Graphic<CircleOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { radius, style } = this;
-		const [cx, cy] = [this.cx + offset.dx, this.cy + offset.dy];
+		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
 		canvas.drawCircle(cx, cy, radius, style);
 	}
 
 	public override hitTest(point: Point): this | undefined {
 		const [x, y] = point;
-		const { radius, worldMatrix } = this;
-		const [cx, cy] = worldMatrix.apply(this.cx, this.cy);
+		const { radius } = this;
+
+		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
 
 		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return this;
 
