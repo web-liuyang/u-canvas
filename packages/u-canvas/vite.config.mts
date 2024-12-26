@@ -3,15 +3,32 @@ import { defineConfig, Plugin } from "vite";
 import fs from "fs";
 import dts from "vite-plugin-dts";
 
+function debounce(func: Function, delay: number): Function {
+	let timer: NodeJS.Timeout;
+
+	return function (...args: any[]) {
+		const context = this;
+
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			func.apply(context, args);
+		}, delay);
+	};
+}
+
 const resolvePath = (path: string) => resolve(__dirname, path);
+
+const restart = debounce(() => {
+	const path = resolvePath("../../example/vite.config.ts");
+	const data = fs.readFileSync(path);
+	fs.writeFileSync(path, data);
+}, 2000);
 
 function restartExample(): Plugin {
 	return {
 		name: "restart-example",
 		transform: (code: string, id: string) => {
-			const path = resolvePath("../../example/vite.config.ts");
-			const data = fs.readFileSync(path);
-			fs.writeFileSync(path, data);
+			restart();
 		},
 	};
 }
