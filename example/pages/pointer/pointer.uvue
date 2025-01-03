@@ -1,0 +1,81 @@
+<script lang="ts" setup>
+import type {
+	ClickEvent,
+	Pointer,
+	PointerdownEvent,
+	PointermoveEvent,
+	PointerupEvent,
+} from "@/components/pointer/events";
+import { ref } from "vue";
+import PointerComponent from "@components/pointer/pointer.uvue";
+
+const pointers = ref<Map<number, Pointer>>(new Map());
+
+function pointerdown(e: PointerdownEvent) {
+	console.log("pointerdown", e.pointer.id);
+	pointers.value.set(e.pointer.id, e.pointer);
+}
+
+function pointermove(e: PointermoveEvent) {
+	console.log("pointermove", e.pointer.id);
+	pointers.value.set(e.pointer.id, e.pointer);
+}
+
+function pointerup(e: PointerupEvent) {
+	console.log("pointerup", e.pointer.id);
+	pointers.value.delete(e.pointer.id);
+}
+
+function click(e: ClickEvent) {
+	console.log("click", e.pointer.id);
+}
+</script>
+
+<template>
+	<view class="container">
+		<PointerComponent
+			class="pointer"
+			@onclick="click"
+			@onpointerdown="pointerdown"
+			@onpointermove="pointermove"
+			@onpointerup="pointerup"
+		>
+			<view class="rect"></view>
+		</PointerComponent>
+
+		<view class="info">
+			触摸信息
+			<view v-for="pointer in pointers.values()" :key="pointer.id">
+				<view>id: {{ pointer.id }}</view>
+				<view>x: {{ pointer.x }}, y: {{ pointer.y }}</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<style scoped>
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+.pointer {
+	position: absolute;
+	left: 100px;
+	top: 0px;
+}
+
+.info {
+	position: absolute;
+	bottom: 300px;
+}
+
+.rect {
+	/* position: relative; */
+	/* left: 100px; */
+	/* top: 0px; */
+	width: 100px;
+	height: 100px;
+	background-color: red;
+}
+</style>

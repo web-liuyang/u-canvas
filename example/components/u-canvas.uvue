@@ -12,6 +12,7 @@ import {
 	Image,
 	Style,
 	Matrix,
+	Point,
 } from "u-canvas";
 
 import { onMounted, nextTick, ref } from "vue";
@@ -183,14 +184,14 @@ const onTouchcancel = (e: FTouchcancelEvent) => {
 };
 
 const onZoomin = (e: FZoominEvent) => {
-	const [x, y] = uCanvas.toCanvasPoint([e.x, e.y]);
-	const matrix = uCanvas.matrix.scale(1.1, 1.1, [x, y]);
+	const point = uCanvas.toCanvasPoint(new Point(e.x, e.y));
+	const matrix = uCanvas.matrix.scale(1.1, 1.1, point);
 	uCanvas.matrix = matrix;
 };
 
 const onZoomout = (e: FZoomoutEvent) => {
-	const [x, y] = uCanvas.toCanvasPoint([e.x, e.y]);
-	const matrix = uCanvas.matrix.scale(0.9, 0.9, [x, y]);
+	const point = uCanvas.toCanvasPoint(new Point(e.x, e.y));
+	const matrix = uCanvas.matrix.scale(0.9, 0.9, point);
 	uCanvas.matrix = matrix;
 };
 </script>

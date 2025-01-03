@@ -1,0 +1,228 @@
+<script lang="ts" setup>
+import type { Pointer, EventTypeMap } from "./events";
+import { ref } from "vue";
+
+import { ClickEvent, PointerdownEvent, PointerupEvent, PointermoveEvent, PointercancelEvent } from "./events";
+import { getPointersByMouse, getPointersByTouch } from "./utils";
+
+// 注意事项
+// click事件在按下后如果移动指针就不会触发
+// 统一H5与PC的pointerdown/move/up 触发规则
+
+const isPC = uni.getSystemInfoSync().deviceType === "pc";
+
+const emit = defineEmits<{
+	<T extends keyof EventTypeMap>(name: T, event: EventTypeMap[T]): void;
+}>();
+
+const PRESS_TIMEOUT = 300; // 0 - 300
+const DB_PRESS_TIMEOUT = 500; // 300 - 500
+const LONG_PRESS_TIMEOUT = 500; // 500 - 1000
+
+const pressedPointers = ref<Set<Pointer>>(new Set());
+const preonclickPointers: Map<Pointer["id"], number> = new Map();
+
+const onTouchstart = (e: UniTouchEvent) => {
+	console.log("onTouchstart");
+
+	const pointers: Pointer[] = getPointersByTouch(e);
+	for (const pointer of pointers) {
+		const pointerdown = new PointerdownEvent(pointer, e);
+		emit("onpointerdown", pointerdown);
+		pressedPointers.value.add(pointer);
+		preonclickPointers.set(pointer.id, pointerdown.timestamp);
+
+		setTimeout(() => {
+			// 超时取消 click
+			const timestamp = preonclickPointers.get(pointer.id);
+			if (timestamp === pointerdown.timestamp) {
+				console.log("cancel click");
+				preonclickPointers.delete(pointer.id);
+			}
+		}, PRESS_TIMEOUT);
+	}
+};
+
+const onTouchmove = (e: UniTouchEvent) => {
+	console.log("onTouchmove");
+	const pointers: Pointer[] = getPointersByTouch(e);
+	const newPressedPointers: Set<Pointer> = new Set();
+	const pressedPointerArray = Array.from(pressedPointers.value);
+	for (const pointer of pointers) {
+		const isPressed = pressedPointerArray.some(t => t.id === pointer.id);
+		if (isPressed) {
+			const pointermove = new PointermoveEvent(pointer, e);
+			emit("onpointermove", pointermove);
+			newPressedPointers.add(pointer);
+			preonclickPointers.delete(pointer.id);
+		}
+	}
+	pressedPointers.value = newPressedPointers;
+};
+
+const onTouchend = (e: UniTouchEvent) => {
+	console.log("onTouchend");
+	const pointers: Pointer[] = getPointersByTouch(e);
+	const newPressedPointers: Set<Pointer> = new Set();
+	for (const pointer of pressedPointers.value) {
+		const isPressed = pointers.some(t => t.id === pointer.id);
+		if (!isPressed) {
+			const pointerup = new PointerupEvent(pointer, e);
+			emit("onpointerup", pointerup);
+
+			if (preonclickPointers.has(pointer.id)) {
+				preonclickPointers.delete(pointer.id);
+				const click = new ClickEvent(pointer, e);
+				emit("onclick", click);
+			}
+		} else {
+			newPressedPointers.add(pointer);
+		}
+	}
+
+	pressedPointers.value = newPressedPointers;
+};
+
+const onTouchcancel = (e: UniTouchEvent) => {
+	const pointers: Pointer[] = getPointersByTouch(e);
+	const newPressedPointers: Set<Pointer> = new Set();
+	for (const pointer of pressedPointers.value) {
+		const isPressed = pointers.some(t => t.id === pointer.id);
+		if (!isPressed) {
+			const pointercancel = new PointercancelEvent(pointer, e);
+			emit("onpointercancel", pointercancel);
+
+			if (preonclickPointers.has(pointer.id)) {
+				preonclickPointers.delete(pointer.id);
+				const click = new ClickEvent(pointer, e);
+				emit("onclick", click);
+			}
+		} else {
+			newPressedPointers.add(pointer);
+		}
+	}
+
+	pressedPointers.value = newPressedPointers;
+};
+
+// const onWheel = (e: WheelEvent) => {
+// 	e.preventDefault();
+// 	const sign = Math.sign(e.deltaY);
+// 	if (sign === 0) return;
+// 	const uniTouch = resolveTouchInfo(e);
+// 	if (sign < 0) {
+// 		emit("onZoomin", new FZoominEvent(uniTouch));
+// 	} else {
+// 		emit("onZoomout", new FZoomoutEvent(uniTouch));
+// 	}
+// };
+
+// web -> 只有单击与双击会触发 tap 事件
+// const onTapTT = e => {
+// 	console.log("onTapTT", e.touches);
+// };
+
+/////////////////////////////////////////////////////
+///////////////                       ///////////////
+///////////////         兼容PC         ///////////////
+///////////////                       ///////////////
+/////////////////////////////////////////////////////
+
+function onMousedown(e: MouseEvent) {
+	// 防止在H5中触发
+	if (!isPC) return;
+		console.log("onMousedown", e);
+	const pointers: Pointer[] = getPointersByMouse(e);
+	for (const pointer of pointers) {
+		const pointerdown = new PointerdownEvent(pointer, e);
+		emit("onpointerdown", pointerdown);
+		pressedPointers.value.add(pointer);
+		preonclickPointers.set(pointer.id, pointerdown.timestamp);
+
+		setTimeout(() => {
+			// 超时取消 click
+			const timestamp = preonclickPointers.get(pointer.id);
+			if (timestamp === pointerdown.timestamp) {
+				console.log("cancel click");
+				preonclickPointers.delete(pointer.id);
+			}
+		}, PRESS_TIMEOUT);
+	}
+
+	window.addEventListener("mousemove", onMousemove);
+	window.addEventListener("mouseup", onMouseup);
+}
+
+function onMousemove(e: MouseEvent) {
+	if (!isPC) return;
+
+	const pointers: Pointer[] = getPointersByMouse(e);
+	const newPressedPointers: Set<Pointer> = new Set();
+	const pressedPointerArray = Array.from(pressedPointers.value);
+	for (const pointer of pointers) {
+		const isPressed = pressedPointerArray.some(t => t.id === pointer.id);
+		if (isPressed) {
+			const pointermove = new PointermoveEvent(pointer, e);
+			emit("onpointermove", pointermove);
+			newPressedPointers.add(pointer);
+			preonclickPointers.delete(pointer.id);
+		}
+	}
+	pressedPointers.value = newPressedPointers;
+}
+
+function onMouseup(e: MouseEvent) {
+	if (!isPC) return;
+	window.removeEventListener("mousemove", onMousemove);
+	window.removeEventListener("mouseup", onMouseup);
+
+	const pointers: Pointer[] = getPointersByMouse(e);
+	const newPressedPointers: Set<Pointer> = new Set();
+
+	for (const pointer of pressedPointers.value) {
+		// 这里与Touch是反的
+		// Touch是不会返回指针，Mouse会返回指针，所以需要取反
+		const isPressed = pointers.some(t => t.id !== pointer.id);
+		if (!isPressed) {
+			const pointerup = new PointerupEvent(pointer, e);
+			emit("onpointerup", pointerup);
+
+			if (preonclickPointers.has(pointer.id)) {
+				preonclickPointers.delete(pointer.id);
+				const click = new ClickEvent(pointer, e);
+				emit("onclick", click);
+			}
+		} else {
+			newPressedPointers.add(pointer);
+		}
+	}
+
+	pressedPointers.value = newPressedPointers;
+}
+</script>
+
+<template>
+	<view
+		@touchstart="onTouchstart"
+		@touchmove="onTouchmove"
+		@touchcancel="onTouchcancel"
+		@touchend="onTouchend"
+		@mousedown="onMousedown"
+	>
+		<slot />
+	</view>
+	<!-- <view
+		@mousedown="onTouchstart"
+		@mousemove="onTouchmove"
+		@mouseup="onTouchend"
+		@wheel="onWheel"
+		@touchstart="onTouchstart"
+		@touchmove="onTouchmove"
+		@touchend="onTouchend"
+		@touchcancel="onTouchcancel"
+	>
+		<slot />
+	</view> -->
+</template>
+
+<style></style>
