@@ -48,6 +48,8 @@ function click(e: ClickEvent) {
 			<view v-for="pointer in pointers.values()" :key="pointer.id">
 				<view>id: {{ pointer.id }}</view>
 				<view>x: {{ pointer.x }}, y: {{ pointer.y }}</view>
+				<view>screenX: {{ pointer.screenX }}, screenY: {{ pointer.screenY }}</view>
+				<view>pageX: {{ pointer.pageX }}, pageY: {{ pointer.pageY }}</view>
 			</view>
 		</view>
 	</view>
