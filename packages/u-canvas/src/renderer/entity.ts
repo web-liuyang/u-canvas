@@ -1,9 +1,8 @@
-import { Canvas } from "./canvas";
-import { Style } from "../graphics";
-import { ImageResource } from "../graphics/shapes/image";
-import { Path } from "./path";
-import { Matrix } from "../transform";
-import { Point } from "../types";
+import type { Canvas } from "./canvas";
+import type { Style, ImageResource } from "../graphics";
+import type { Path } from "./path";
+import type { Matrix } from "../transform";
+import type { Point } from "../offset";
 
 export enum EntityType {
 	matrix,

@@ -1,13 +1,12 @@
-import { Offset } from "../offset";
-import { Point, Size } from "../types";
+import { Offset, Point } from "../offset";
 
 export class Aabb {
 	public static zero(): Aabb {
-		return new Aabb([0, 0], [0, 0]);
+		return new Aabb(Point.origin(), Point.origin());
 	}
 
 	public static world(): Aabb {
-		return new Aabb([Number.MIN_VALUE, Number.MIN_VALUE], [Number.MAX_VALUE, Number.MAX_VALUE]);
+		return new Aabb(new Point(Number.MIN_VALUE, Number.MIN_VALUE), new Point(Number.MAX_VALUE, Number.MAX_VALUE));
 	}
 
 	public min: Point;
@@ -15,11 +14,11 @@ export class Aabb {
 	public max: Point;
 
 	get width(): number {
-		return this.max[0] - this.min[0];
+		return this.max.x - this.min.x;
 	}
 
 	get height(): number {
-		return this.max[1] - this.min[1];
+		return this.max.y - this.min.y;
 	}
 
 	constructor(min: Point, max: Point) {
@@ -28,13 +27,14 @@ export class Aabb {
 	}
 
 	public offset(offset: Offset): Aabb {
-		return new Aabb(
-			[this.min[0] + offset.dx, this.min[1] + offset.dy],
-			[this.max[0] + offset.dx, this.max[1] + offset.dy]
-		);
+		return new Aabb(this.min.offset(offset), this.max.offset(offset));
 	}
 
-	public grow(size: Size): Aabb {
-		return new Aabb([this.min[0], this.min[1]], [this.max[0] + size[0], this.max[1] + size[1]]);
+	public grow(offset: Offset): Aabb {
+		return new Aabb(this.min, this.max.offset(offset));
+	}
+
+	public swap(): Aabb {
+		return new Aabb(this.max, this.min);
 	}
 }

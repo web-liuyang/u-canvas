@@ -14,6 +14,7 @@ import {
 	Polygon,
 	Image,
 	ImagePixel,
+	Point,
 } from "u-canvas";
 
 import { onMounted, nextTick, ref, getCurrentInstance } from "vue";
@@ -61,12 +62,7 @@ onReady(() => {
 				y: 10,
 				children: [
 					new Polyline({
-						points: [
-							[0, 0],
-							[100, 0],
-							[0, 100],
-							[100, 100],
-						],
+						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100), new Point(100, 100)],
 					}),
 					//
 					new Text({ x: 0, y: 120, text: "Polyline" }),
@@ -80,11 +76,7 @@ onReady(() => {
 				y: 10,
 				children: [
 					new Polygon({
-						points: [
-							[0, 0],
-							[100, 0],
-							[0, 100],
-						],
+						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100)],
 					}),
 					//
 					new Text({ x: 0, y: 120, text: "Polygon" }),

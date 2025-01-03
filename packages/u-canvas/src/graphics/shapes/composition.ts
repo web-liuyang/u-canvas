@@ -1,7 +1,6 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
 import { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -29,18 +28,15 @@ export class Composition extends Graphic<CompositionOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		const newAabb = this.children.reduce(
-			(aabb, item) => {
-				const itemAabb = item.getAabb();
-				const minX = aabb.min[0] < itemAabb.min[0] ? aabb.min[0] : itemAabb.min[0];
-				const minY = aabb.min[1] < itemAabb.min[1] ? aabb.min[1] : itemAabb.min[1];
-				const maxX = aabb.max[0] > itemAabb.max[0] ? aabb.max[0] : itemAabb.max[0];
-				const maxY = aabb.max[1] > itemAabb.max[1] ? aabb.max[1] : itemAabb.max[1];
+		const newAabb = this.children.reduce((aabb, item) => {
+			const itemAabb = item.getAabb();
+			const minX = aabb.min.x < itemAabb.min.x ? aabb.min.x : itemAabb.min.x;
+			const minY = aabb.min.y < itemAabb.min.y ? aabb.min.y : itemAabb.min.y;
+			const maxX = aabb.max.x > itemAabb.max.x ? aabb.max.x : itemAabb.max.x;
+			const maxY = aabb.max.y > itemAabb.max.y ? aabb.max.y : itemAabb.max.y;
 
-				return new Aabb([minX, minY], [maxX, maxY]);
-			},
-			new Aabb([Number.MAX_VALUE, Number.MAX_VALUE], [Number.MIN_VALUE, Number.MIN_VALUE])
-		);
+			return new Aabb(new Point(minX, minY), new Point(maxX, maxY));
+		}, Aabb.world().swap());
 
 		return newAabb;
 	}

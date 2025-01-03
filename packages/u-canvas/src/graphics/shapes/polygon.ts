@@ -1,7 +1,7 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
+
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -34,17 +34,17 @@ export class Polygon extends Graphic<PolygonOptions> {
 		if (this.close) points.push(points[0]);
 
 		for (const point of points) {
-			const [x, y] = point;
+			const { x, y } = point;
 			minX = Math.min(minX, x);
 			minY = Math.min(minY, y);
 			maxX = Math.max(maxX, x);
 			maxY = Math.max(maxY, y);
 		}
 
-		const [x, y] = this.matrix.apply(minX, minY);
+		const { x, y } = this.matrix.apply(new Point(minX, minY));
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
-			.grow([maxX - minX, maxY - minY]);
+			.grow(new Offset(maxX - minX, maxY - minY));
 
 		return aabb;
 	}
@@ -72,14 +72,10 @@ export class Polygon extends Graphic<PolygonOptions> {
 	public override hitTest(point: Point): this | undefined {
 		const points = this.points.map<Point>(vertex => this.toGlobalPoint(vertex));
 		if (this.close) points.push(points[0]);
-		const [x, y] = point;
 
 		let inside = false;
 		for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
-			const [xi, yi] = points[i];
-			const [xj, yj] = points[j];
-
-			if (isIntersect(y, x, yj, yi, xj, xi)) {
+			if (isIntersect(point, points[i], points[j])) {
 				inside = !inside;
 			}
 		}
@@ -103,9 +99,9 @@ export class Polygon extends Graphic<PolygonOptions> {
  * 检测点向右的射线是否与线段相交，
  * 可以理解为检测点是否在线段的左边
  */
-function isIntersect(pointY: number, pointX: number, yj: number, yi: number, xj: number, xi: number): boolean {
+function isIntersect(point: Point, p1: Point, p2: Point): boolean {
 	// 判断坐标点Y 是否在线段的Y区间
-	if (!(yi > pointY !== yj > pointY)) return false;
-	const value = ((xj - xi) * (pointY - yi)) / (yj - yi) + xi;
-	return pointX < value;
+	if (!(p1.y > point.y !== p2.y > point.y)) return false;
+	const value = ((p2.x - p1.x) * (point.y - p1.y)) / (p2.y - p1.y) + p1.x;
+	return point.x < value;
 }

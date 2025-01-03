@@ -1,9 +1,9 @@
 import type { AllEntity } from "./entity";
 import type { Style, ImageResource } from "../graphics";
-import type { Point } from "../types";
 import { EntityFactory } from "./entity";
 import { Path } from "./path";
 import { Matrix } from "../transform";
+import { Point } from "../offset";
 
 export interface CanvasOptions {
 	matrix?: Matrix;
@@ -41,10 +41,7 @@ export class Canvas {
 	}
 
 	public drawLine(x1: number, y1: number, x2: number, y2: number, style?: Style) {
-		const points: Point[] = [
-			[x1, y1],
-			[x2, y2],
-		];
+		const points: Point[] = [new Point(x1, y1), new Point(x2, y2)];
 
 		this.entities.push(EntityFactory.createPolylineEntity(points, style));
 	}

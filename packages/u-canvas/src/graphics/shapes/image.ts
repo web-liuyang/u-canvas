@@ -1,7 +1,7 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
+
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -97,7 +97,7 @@ export class Image extends Graphic<ImageOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { image, sw, sh, dx, dy, dw, dh, style } = this;
-		const [sx, sy] = this.toGlobalPoint([this.sx, this.sy]);
+		const { x: sx, y: sy } = this.toGlobalPoint(new Point(this.sx, this.sy));
 
 		canvas.drawImage(image, sx, sy);
 
@@ -178,7 +178,6 @@ export class Image extends Graphic<ImageOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		const [x, y] = point;
 		const { sx, sy, sw, sh } = this;
 		// 没有传宽高就需要自己计算了
 

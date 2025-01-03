@@ -1,7 +1,6 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Path } from "../../renderer";
 import { Aabb } from "../aabb";
@@ -45,17 +44,17 @@ export class Ring extends Graphic<RingOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		const [x, y] = this.matrix.apply(this.cx / 2, this.cy / 2);
+		const { x, y } = this.matrix.apply(new Point(this.cx / 2, this.cy / 2));
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
-			.grow([this.outerRadius * 2, this.outerRadius * 2]);
+			.grow(new Offset(this.outerRadius * 2, this.outerRadius * 2));
 
 		return aabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
-		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
+		const { x: cx, y: cy } = this.toGlobalPoint(new Point(this.cx, this.cy));
 		const { innerRadius, outerRadius, startAngle, endAngle, counterclockwise, style } = this;
 		const path = new Path();
 
@@ -82,10 +81,8 @@ export class Ring extends Graphic<RingOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		const [x, y] = point;
 		const { innerRadius, outerRadius, startAngle, endAngle } = this;
-		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
-		const [dx, dy] = [x - cx, y - cy];
+		const { x: dx, y: dy } = point.subtract(this.toGlobalPoint(new Point(this.cx, this.cy)));
 		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
 		if (distance >= innerRadius && distance <= outerRadius) {

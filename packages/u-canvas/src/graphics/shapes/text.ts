@@ -1,7 +1,6 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -39,7 +38,7 @@ export class Text extends Graphic<TextOptions> {
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
-		const [x, y] = this.toGlobalPoint([this.x, this.y]);
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
 		const { text, style } = this;
 
 		canvas.drawText(text, x, y, style);

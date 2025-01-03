@@ -1,7 +1,7 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
+
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Line, Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { isPointOnLineSegment } from "../utils";
 import { Aabb } from "../aabb";
@@ -30,17 +30,17 @@ export class Polyline extends Graphic<PolylineOptions> {
 		const points = this.points.slice();
 
 		for (const point of points) {
-			const [x, y] = point;
+			const { x, y } = point;
 			minX = Math.min(minX, x);
 			minY = Math.min(minY, y);
 			maxX = Math.max(maxX, x);
 			maxY = Math.max(maxY, y);
 		}
 
-		const [x, y] = this.matrix.apply(minX, minY);
+		const { x, y } = this.matrix.apply(new Point(minX, minY));
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
-			.grow([maxX - minX, maxY - minY]);
+			.grow(new Offset(maxX - minX, maxY - minY));
 
 		return aabb;
 	}
@@ -65,7 +65,10 @@ export class Polyline extends Graphic<PolylineOptions> {
 	public override hitTest(point: Point): this | undefined {
 		let currentPoint = this.points[0];
 		for (let i = 1; i < this.points.length; i++) {
-			const isOnSegment = isPointOnLineSegment(point, [this.toGlobalPoint(currentPoint), this.toGlobalPoint(this.points[i])]);
+			const isOnSegment = isPointOnLineSegment(
+				point,
+				new Line(this.toGlobalPoint(currentPoint), this.toGlobalPoint(this.points[i]))
+			);
 			if (isOnSegment) return this;
 			currentPoint = this.points[i];
 		}

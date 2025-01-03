@@ -1,5 +1,6 @@
 import type { Style } from "../graphics";
 import { extractStyle, scaleImageData } from "../graphics/utils";
+import { Point } from "../offset";
 import { Matrix } from "../transform";
 import type {
 	AllEntity,
@@ -110,14 +111,15 @@ export function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D):
 
 export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingContext2D): void {
 	// 应该会有一个参数给用户选择 用方法一还是二进行渲染
-	let { imageData, x, y, dx, dy, dw, dh } = entity;
+	let { imageData, dx, dy, dw, dh } = entity;
 	// 方法一：保证绘制的图片数据跟随 Matrix 不会模糊，但如果不是整数倍的缩放就会有一些像素失真。
 	// 并且进行缩放平移时Canvas有卡顿，不知道是优化问题，还是我计算问题
 	const matrix = Matrix.fromDOMMatrix(ctx.getTransform());
 	const xs = matrix.a;
 	const ys = matrix.d;
+	const { x, y } = matrix.apply(new Point(entity.x, entity.y));
+
 	imageData = scaleImageData(imageData, xs, ys);
-	[x, y] = matrix.apply(x, y);
 	dx *= xs;
 	dy *= ys;
 	dw *= xs;
@@ -139,11 +141,10 @@ export function renderArc(entity: ArcEntity, ctx: CanvasRenderingContext2D): voi
 
 export function renderPolyline(entity: PolylineEntity, ctx: CanvasRenderingContext2D): void {
 	const { points, style } = entity;
+	const [first, ...remaining] = points;
+	ctx.moveTo(first.x, first.y);
 
-	const [[fx1, fx2], ...remaining] = points;
-	ctx.moveTo(fx1, fx2);
-
-	for (const [x, y] of remaining) {
+	for (const { x, y } of remaining) {
 		ctx.lineTo(x, y);
 	}
 
@@ -152,10 +153,10 @@ export function renderPolyline(entity: PolylineEntity, ctx: CanvasRenderingConte
 
 export function renderPolygon(entity: PolygonEntity, ctx: CanvasRenderingContext2D): void {
 	const { points, style } = entity;
-	const [[fx1, fx2], ...remaining] = points;
-	ctx.moveTo(fx1, fx2);
+	const [first, ...remaining] = points;
+	ctx.moveTo(first.x, first.y);
 
-	for (const [x, y] of remaining) {
+	for (const { x, y } of remaining) {
 		ctx.lineTo(x, y);
 	}
 

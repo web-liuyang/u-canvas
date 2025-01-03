@@ -1,5 +1,5 @@
 // import { v4 as uuid } from "uuid";
-import type { Line, Point } from "../types";
+import { Point, Line } from "../offset";
 import type { Style, CanvasFontWeight } from "./styles";
 import { StrokeCap, StrokeJoin } from "./styles";
 
@@ -36,20 +36,24 @@ export function extractStyle(options: CanvasRenderingContext2D): Style {
 	};
 }
 
-export function isPointOnLineSegment(point: Point, line: Line): boolean {
-	const vectorAP = [point[0] - line[0][0], point[1] - line[0][1]];
-	const vectorAB = [line[1][0] - line[0][0], line[1][1] - line[0][1]];
+// 投影法
+export function isPointOnLineSegment(point: Point, line: Line, tolerance: number = 0): boolean {
+	const dx = line.end.x - line.start.x;
+	const dy = line.end.y - line.start.y;
 
-	// 共线
-	const cross = vectorAP[0] * vectorAB[1] - vectorAP[1] * vectorAB[0];
-	if (cross !== 0) return false;
+	const lengthSquared = dx * dx + dy * dy;
+	const t = ((point.x - line.start.x) * dx + (point.y - line.start.y) * dy) / lengthSquared;
 
-	// 两点之间
-	const squaredLengthAB = Math.pow(vectorAB[0], 2) + Math.pow(vectorAB[1], 2);
-	const dotProduct = vectorAP[0] * vectorAB[0] + vectorAP[1] * vectorAB[1];
-	if (dotProduct < 0 || dotProduct > squaredLengthAB) return false;
+	if (t < 0) {
+		return Math.hypot(point.x - line.start.x, point.y - line.start.y) <= tolerance;
+	} else if (t > 1) {
+		return Math.hypot(point.x - line.end.x, point.y - line.end.y) <= tolerance;
+	}
 
-	return true;
+	const projectionX = line.start.x + t * dx;
+	const projectionY = line.start.y + t * dy;
+
+	return Math.hypot(point.x - projectionX, point.y - projectionY) <= tolerance;
 }
 
 export function repeatArray(array: Uint8ClampedArray, count: number): Uint8ClampedArray {
@@ -130,14 +134,6 @@ export function createImageData(options: CreateImageDataOptions): ImageData {
 }
 
 export function calMidpoint(points: Point[]): Point {
-	const [x, y] = points.reduce(
-		(prev, item) => {
-			prev[0] += item[0];
-			prev[1] += item[1];
-			return prev;
-		},
-		[0, 0]
-	);
-
-	return [x / points.length, y / points.length];
+	const point = points.reduce((prev, item) => prev.add(item), Point.origin());
+	return point.divide(points.length);
 }

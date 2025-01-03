@@ -1,20 +1,19 @@
-import type { Point } from "../types";
 import type { MatrixArray } from "./matrix";
+import { Point } from "../offset";
 import { Matrix } from "./matrix";
 
 /**
  * Return true, if Point in the Polygon.
  */
 export function isPointInPolygon(point: Point, polygon: Point[]) {
-	const [px, py] = point;
 	let isInside = false;
 
 	for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-		const xi = polygon[i][0];
-		const yi = polygon[i][1];
-		const xj = polygon[j][0];
-		const yj = polygon[j][1];
-		const intersect = yi > py !== yj > py && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi;
+		const xi = polygon[i].x;
+		const yi = polygon[i].y;
+		const xj = polygon[j].x;
+		const yj = polygon[j].y;
+		const intersect = yi > point.y !== yj > point.y && point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
 		if (intersect) isInside = !isInside;
 	}
 
@@ -74,10 +73,9 @@ export function scale(m: Matrix, xs: number, ys: number, point?: Point): Matrix 
 	let matrix: Matrix = m;
 
 	if (point) {
-		const [x, y] = point;
-		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, x, y]));
+		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, point.x, point.y]));
 		matrix = multiply(matrix, new Matrix([xs, 0, 0, ys, 0, 0]));
-		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, -x, -y]));
+		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, -point.x, -point.y]));
 	} else {
 		matrix = multiply(new Matrix([xs, 0, 0, ys, 0, 0]), m);
 	}

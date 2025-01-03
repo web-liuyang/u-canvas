@@ -1,4 +1,4 @@
-import type { Point } from "./types";
+import { Point } from "./offset";
 import { Composition, defaultStyle, Graphic, Style } from "./graphics";
 import { applyStyle, Renderer } from "./renderer";
 import { Matrix } from "./transform";
@@ -102,9 +102,8 @@ export class UCanvas {
 	public toCanvasPoint(point: Point): Point {
 		const [startX, startY] = this.viewbox;
 		const { a, d } = this.matrix;
-		const [x, y] = point;
 
-		return [startX + (x * this.dpr) / a, startY + (y * this.dpr) / d];
+		return new Point(startX + (point.x * this.dpr) / a, startY + (point.y * this.dpr) / d);
 	}
 
 	public add(p: Graphic) {

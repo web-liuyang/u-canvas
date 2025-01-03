@@ -1,10 +1,11 @@
-import type { Hittable, Paintable, Point, CoordinateScope, Parent } from "../../types";
-import { Offset } from "../../offset";
+import type { Hittable, Paintable, Parent } from "../../types";
+import { Offset, Point } from "../../offset";
 import { Style } from "../styles";
 import { generateUUID } from "../utils";
 import { Transform } from "../../transform";
 import { Canvas } from "../../renderer/canvas";
 import { Aabb } from "../aabb";
+import { EventTypeMap } from "../events";
 
 export type GraphicId = string;
 
@@ -65,6 +66,20 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	// }
 
 	public toGlobalPoint(point: Point): Point {
-		return [this.offset.dx + point[0], this.offset.dy + point[1]];
+		return point.offset(this.offset);
+	}
+
+	private readonly listener = new Map<keyof EventTypeMap, ((e: EventTypeMap[keyof EventTypeMap]) => void)[]>();
+
+	public on<K extends keyof EventTypeMap>(evnetName: K, callback: (e: EventTypeMap[K]) => void) {
+		if (!this.listener.has(evnetName)) return;
+		this.listener.get(evnetName)!.push(callback);
+	}
+
+	public off<K extends keyof EventTypeMap>(evnetName: K, callback: (e: EventTypeMap[K]) => void) {
+		if (!this.listener.has(evnetName)) return;
+		const index = this.listener.get(evnetName)!.findIndex(cb => cb === callback);
+		if (index < 0) return;
+		this.listener.get(evnetName)!.slice(index, 1);
 	}
 }

@@ -12,7 +12,7 @@ import {
 import type { TouchInfo } from "@/components/event";
 
 import { BaseStateMachine } from "./base-state-machine";
-import { Matrix } from "u-canvas";
+import { Matrix, Point } from "u-canvas";
 
 export class SelectionStateMachine extends BaseStateMachine {
 	private originMatrix?: Matrix;
@@ -23,10 +23,10 @@ export class SelectionStateMachine extends BaseStateMachine {
 	}
 
 	public onTouchup(e: FTouchupEvent): void {
-		const point = this.canvas.toCanvasPoint([e.x, e.y]);
+		const point = this.canvas.toCanvasPoint(new Point(e.x, e.y));
 		// console.log(point);
 		const hitTarget = this.canvas.root.hitTest(point);
-		console.log(hitTarget?.type);
+		// console.log(hitTarget?.type);
 	}
 
 	public onTouchstart(e: FTouchstartEvent) {
@@ -55,14 +55,14 @@ export class SelectionStateMachine extends BaseStateMachine {
 	}
 
 	public onZoomin(e: FZoominEvent) {
-		const [x, y] = this.canvas.toCanvasPoint([e.x, e.y]);
-		this.canvas.matrix.scale(1.1, 1.1, [x, y]);
+		const point = this.canvas.toCanvasPoint(new Point(e.x, e.y));
+		this.canvas.matrix.scale(1.1, 1.1, point);
 		this.canvas.render();
 	}
 
 	public onZoomout(e: FZoomoutEvent) {
-		const [x, y] = this.canvas.toCanvasPoint([e.x, e.y]);
-		this.canvas.matrix.scale(0.9, 0.9, [x, y]);
+		const point = this.canvas.toCanvasPoint(new Point(e.x, e.y));
+		this.canvas.matrix.scale(0.9, 0.9, point);
 		this.canvas.render();
 	}
 }

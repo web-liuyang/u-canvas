@@ -1,7 +1,6 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -52,8 +51,8 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		const [x, y] = this.matrix.apply(this.x, this.y);
-		const aabb = Aabb.zero().offset(new Offset(x, y)).grow([this.dw, this.dh]);
+		const { x, y } = this.matrix.apply(new Point(this.x, this.y));
+		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(this.dw, this.dh));
 
 		return aabb;
 	}
@@ -61,7 +60,7 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { imageData, dx, dy, dw, dh } = this;
-		const [x, y] = this.toGlobalPoint([this.x, this.y]);
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
 
 		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
 	}
@@ -96,13 +95,12 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	// }
 
 	public override hitTest(point: Point): this | undefined {
-		const [px, py] = point;
 		const {
 			imageData: { width, height },
 		} = this;
-		const [x, y] = this.toGlobalPoint([this.x, this.y]);
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
 
-		if (px >= x && px <= x + width && py >= y && py <= y + height) return this;
+		if (point.x >= x && point.x <= x + width && point.y >= y && point.y <= y + height) return this;
 
 		return undefined;
 	}

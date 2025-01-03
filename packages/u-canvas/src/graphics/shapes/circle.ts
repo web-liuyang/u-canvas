@@ -1,7 +1,6 @@
 import type { GraphicOptions } from "./graphic";
-import type { Point } from "../../types";
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
+import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -28,10 +27,10 @@ export class Circle extends Graphic<CircleOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		const [x, y] = this.matrix.apply(this.cx / 2, this.cy / 2);
+		const { x, y } = this.matrix.apply(new Point(this.cx / 2, this.cy / 2));
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
-			.grow([this.radius * 2, this.radius * 2]);
+			.grow(new Offset(this.radius * 2, this.radius * 2));
 
 		return aabb;
 	}
@@ -39,17 +38,15 @@ export class Circle extends Graphic<CircleOptions> {
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
 		const { radius, style } = this;
-		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
+		const { x: cx, y: cy } = this.toGlobalPoint(new Point(this.cx, this.cy));
 		canvas.drawCircle(cx, cy, radius, style);
 	}
 
 	public override hitTest(point: Point): this | undefined {
-		const [x, y] = point;
 		const { radius } = this;
+		const { x: cx, y: cy } = this.toGlobalPoint(new Point(this.cx, this.cy));
 
-		const [cx, cy] = this.toGlobalPoint([this.cx, this.cy]);
-
-		if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= Math.pow(radius, 2)) return this;
+		if (Math.pow(point.x - cx, 2) + Math.pow(point.y - cy, 2) <= Math.pow(radius, 2)) return this;
 
 		return undefined;
 	}

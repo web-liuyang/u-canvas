@@ -1,4 +1,4 @@
-import type { Point } from "../types";
+import { Point } from "../offset";
 import { multiply, rotate, scale, setTranslate, translate } from "./utils";
 
 /**
@@ -47,11 +47,11 @@ export class Matrix {
 	/**
 	 * Matrix multiplication vector
 	 */
-	public apply(x: number, y: number): Point {
-		const x1 = this.a * x + this.c * y + this.e;
-		const y1 = this.b * x + this.d * y + this.f;
+	public apply(point: Point): Point {
+		const x1 = this.a * point.x + this.c * point.y + this.e;
+		const y1 = this.b * point.x + this.d * point.y + this.f;
 
-		return [x1, y1];
+		return new Point(x1, y1);
 	}
 
 	public translate(tx: number, ty: number): Matrix {

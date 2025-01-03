@@ -32,7 +32,7 @@
 		"paths": {
 			"@/*": ["./*"],
 			// "@u-canvas": ["./u-canvas"],
-			// "@/components/*": ["./components/*"],
+			"@components/*": ["./components/*"],
 			// "@u-canvas-components/*": ["../packages/u-canvas-components/*"]
 		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
 		// "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
