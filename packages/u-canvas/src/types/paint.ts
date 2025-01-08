@@ -1,5 +1,6 @@
 import { Canvas } from "../renderer/canvas";
 import { Offset, Point } from "../offset";
+import { Matrix } from "../transform";
 
 /**
  * [w, h]
@@ -16,4 +17,11 @@ export interface Hittable<T> {
 
 export interface Parent<T> {
 	parent?: T;
+}
+
+declare global {
+	interface CanvasTransform {
+		getMatrix(): Matrix;
+		setMatrix(matrix: Matrix): void;
+	}
 }

@@ -40,7 +40,7 @@ import { BaseStateMachine, BrushStateMachine, SelectionStateMachine } from "./st
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
-onReady(() => {
+onMounted(() => {
 	nextTick(async () => {
 		await uCanvas.ensureInitialize();
 

@@ -81,8 +81,9 @@ export function renderCanvas(entity: CanvasEntity, ctx: CanvasRenderingContext2D
 
 export function renderRect(entity: RectEntity, ctx: CanvasRenderingContext2D): void {
 	const { x, y, w, h, radii, style } = entity;
-
-	ctx.roundRect(x, y, w, h, radii);
+	// iOS/Android 不支持
+	// ctx.roundRect(x, y, w, h, radii);
+	ctx.rect(x, y, w, h);
 	colorize(ctx, style);
 }
 
@@ -114,7 +115,7 @@ export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingC
 	let { imageData, dx, dy, dw, dh } = entity;
 	// 方法一：保证绘制的图片数据跟随 Matrix 不会模糊，但如果不是整数倍的缩放就会有一些像素失真。
 	// 并且进行缩放平移时Canvas有卡顿，不知道是优化问题，还是我计算问题
-	const matrix = Matrix.fromDOMMatrix(ctx.getTransform());
+	const matrix = ctx.getMatrix();
 	const xs = matrix.a;
 	const ys = matrix.d;
 	const { x, y } = matrix.apply(new Point(entity.x, entity.y));

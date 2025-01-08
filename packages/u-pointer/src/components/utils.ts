@@ -44,3 +44,25 @@ export function getPointersByMouse(e: MouseEvent): Pointer[] {
 
 	return pointers;
 }
+
+export function getPointersByWheel(e: WheelEvent): Pointer[] {
+	if (!e.target) {
+		// 目前还没有出现过target不存在的情况, 出现此情况再来看如何处理
+		throw new Error("no target");
+	}
+
+	const pointers: Pointer[] = [
+		{
+			id: 0,
+			x: e.x,
+			y: e.y,
+			pageX: e.pageX,
+			pageY: e.pageY,
+			screenX: e.screenX,
+			screenY: e.screenY,
+			target: e.target,
+		},
+	];
+
+	return pointers;
+}

@@ -4,6 +4,4 @@ node_modules
 dist
 
 unpackage
-
-example/u-canvas
-example/u-canvas-components
+.hbuilderx

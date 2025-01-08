@@ -29,10 +29,12 @@
 
 ### Issue
 
-[√] Path2D绘制时 基点在 ios 上与 web 不一致
-[ ] uni.createCanvasContextAsync 在 IOS 上报错 - 正在修复
+[√] Path2D 绘制原点与 Context 绘制原点不一致. 8748
+[√] uni.createCanvasContextAsync 在 IOS 上报错. 14065
+[ ] putImageData 无法绘制自定义的ImageData. 15053
+
 [ ] clearRect iOS在矩形区域比较大时，有卡顿性能不好
-[ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下 - 正在修复
+[ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下. 9901 -> 14285
 [ ] h5 无法触发 tap事件
 [ ] @/u-canvas 可以访问类型与值，@u-canvas不可以访问类型，但可以访问值
 [ ] .uvue 后缀只能导出Type，导出Interface不可以用

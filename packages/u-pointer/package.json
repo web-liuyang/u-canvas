@@ -1,14 +1,14 @@
 {
-	"id": "u-canvas",
-	"name": "u-canvas",
-	"displayName": "u-canvas",
-	"description": "u-canvas",
-	"version": "0.0.1",
+	"id": "u-pointer",
+	"name": "u-pointer",
+	"displayName": "u-pointer",
+	"version": "1.0.0",
+	"description": "u-pointer",
 	"author": "LiuYang",
-	"repository": "",
 	"keywords": [
-		"u-canvas"
+		"u-pointer"
 	],
+	"repository": "",
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -23,9 +23,7 @@
 		"format": "prettier --write src/**/*.ts",
 		"test": "vitest"
 	},
-	"devDependencies": {
-		"happy-dom": "15.11.7"
-	},
+	"devDependencies": {},
 	"engines": {
 		"HBuilderX": "^3.1.0"
 	},

@@ -6,10 +6,6 @@ import uni from "@dcloudio/vite-plugin-uni";
 
 export default defineConfig({
 	plugins: [uni()],
-	optimizeDeps: {
-		exclude: ["u-canvas", "@app/utils"],
-		force: true,
-	},
 	resolve: {
 		alias: {
 			"@": resolve(__dirname, "."),

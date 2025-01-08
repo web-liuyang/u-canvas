@@ -1,22 +1,29 @@
 {
 	"name": "u-canvas-repo",
-	"version": "1.0.0",
-	"description": "",
+	"version": "0.0.1",
+	"main": "main.uts",
+	"private": true,
 	"scripts": {
-		"dev": "pnpm dev:u-canvas & pnpm dev:utils",
+		"dev": "pnpm dev:u-canvas & pnpm dev:u-pointer",
 		"dev:u-canvas": "pnpm --dir=./packages/u-canvas dev",
-		"dev:utils": "pnpm --dir=./packages/utils dev",
-
-		"build": "pnpm build:u-canvas & pnpm build:u-canvas-components",
-		"build:u-canvas": "cd packages/u-canvas && vite build",
-		"build:u-canvas-components": "cd packages/u-canvas-components && vite build",
+		"dev:u-pointer": "pnpm --dir=./packages/u-pointer dev",
 		"format": "prettier --write packages/**/*.ts",
-
-		"test": "cd packages/u-canvas && vitest"
+		"test": "pnpm --dir=./packages/u-canvas vitest"
 	},
-	"keywords": [],
+	"keywords": [
+		"canvas",
+		"paint",
+		"uniapp",
+		"uniapp x"
+	],
 	"author": "web-liuyang",
+	"description": "",
+	"dependencies": {
+		"u-canvas": "workspace:*",
+		"u-pointer": "workspace:*"
+	},
 	"devDependencies": {
+		"vconsole": "3.15.1",
 		"@dcloudio/uni-app-x": "^0.7.30",
 		"@types/node": "^22.5.5",
 		"prettier": "^3.3.3",

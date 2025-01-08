@@ -34,10 +34,8 @@ export class UCanvas {
 	}
 
 	public set matrix(matrix: Matrix) {
-		this.root.matrix = matrix;
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
-		this.setViewbox(matrix);
-		this.render();
+		this.root.matrix = matrix;
 	}
 
 	public root!: Composition;
@@ -131,8 +129,14 @@ export class UCanvas {
 		this.setViewbox(matrix);
 		this.clear();
 
-		// uniapp-x 并沒有提供 getTransform 方法，所以自己注入一个
-		this.ctx.getTransform = () => this.root.matrix.toDOMMatrix();
+		// uniapp-x 并沒有提供 getTransform 方法
+		// 注入 set/getMatrix
+		this.ctx.getMatrix = () => this.root.matrix.clone();
+		this.ctx.setMatrix = (matrix: Matrix) => {
+			this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
+			this.root.matrix = matrix;
+		};
+
 		applyStyle(this.ctx, this.style);
 
 		this.renderer.renderRoot();
