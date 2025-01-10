@@ -9,6 +9,10 @@
 		"u-pointer"
 	],
 	"repository": "",
+	"files": [
+		"dist",
+		"src"
+	],
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -23,7 +27,6 @@
 		"format": "prettier --write src/**/*.ts",
 		"test": "vitest"
 	},
-	"devDependencies": {},
 	"engines": {
 		"HBuilderX": "^3.1.0"
 	},

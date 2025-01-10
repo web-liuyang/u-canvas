@@ -33,12 +33,16 @@
 			"@/*": ["./*"],
 			// "@u-canvas": ["./u-canvas"],
 			"@components/*": ["./components/*"]
+			// "u-canvas": ["./packages/u-canvas"],
+			// "u-pointer": ["./packages/u-pointer"],
+			// "@u-pointer": ["./packages/u-pointer/src/index"]
 			// "@u-canvas-components/*": ["../packages/u-canvas-components/*"]
 		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
 		// "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
 		// "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
 		"types": [
-			"@dcloudio/uni-app-x"
+			"@dcloudio/uni-app-x",
+			"u-pointer",
 			// "@types/uni-app"
 		] /* Specify type package names to be included without being referenced in a source file. */,
 		// "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */

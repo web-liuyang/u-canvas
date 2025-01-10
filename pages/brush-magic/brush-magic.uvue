@@ -19,7 +19,8 @@ import {
 
 import { onMounted, nextTick, ref, getCurrentInstance } from "vue";
 
-import interactiveCanvas from "@/components/interactive-canvas.uvue";
+// import interactiveCanvas from "@/components/interactive-canvas.uvue";
+import InteractiveCanvas from "./interactive-canvas.uvue";
 import finger from "@/components/finger.uvue";
 import globalEventTarget from "./global-evnet-target.uvue";
 import toolbar from "./toolbar.uvue";
@@ -40,152 +41,152 @@ import { BaseStateMachine, BrushStateMachine, SelectionStateMachine } from "./st
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
-onMounted(() => {
-	nextTick(async () => {
-		await uCanvas.ensureInitialize();
+// onMounted(() => {
+// 	nextTick(async () => {
+// 		await uCanvas.ensureInitialize();
 
-		uCanvas.add(
-			new Composition({
-				x: 10,
-				y: 10,
-				children: [
-					new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
-					//
-					new Text({ x: 0, y: 120, text: "Rectangle" }),
-				],
-			})
-		);
+// 		uCanvas.add(
+// 			new Composition({
+// 				x: 10,
+// 				y: 10,
+// 				children: [
+// 					new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
+// 					//
+// 					new Text({ x: 0, y: 120, text: "Rectangle" }),
+// 				],
+// 			})
+// 		);
 
-		uCanvas.add(
-			new Composition({
-				x: 140,
-				y: 10,
-				children: [
-					new Polyline({
-						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100), new Point(100, 100)],
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "Polyline" }),
-				],
-			})
-		);
+// 		uCanvas.add(
+// 			new Composition({
+// 				x: 140,
+// 				y: 10,
+// 				children: [
+// 					new Polyline({
+// 						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100), new Point(100, 100)],
+// 					}),
+// 					//
+// 					new Text({ x: 0, y: 120, text: "Polyline" }),
+// 				],
+// 			})
+// 		);
 
-		uCanvas.add(
-			new Composition({
-				x: 270,
-				y: 10,
-				children: [
-					new Polygon({
-						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100)],
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "Polygon" }),
-				],
-			})
-		);
+// 		uCanvas.add(
+// 			new Composition({
+// 				x: 270,
+// 				y: 10,
+// 				children: [
+// 					new Polygon({
+// 						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100)],
+// 					}),
+// 					//
+// 					new Text({ x: 0, y: 120, text: "Polygon" }),
+// 				],
+// 			})
+// 		);
 
-		uCanvas.add(
-			new Composition({
-				x: 10,
-				y: 160,
-				children: [
-					new Pie({
-						cx: 50,
-						cy: 50,
-						radius: 50,
-						startAngle: 0,
-						endAngle: Math.PI + Math.PI / 3,
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "Pie" }),
-				],
-			})
-		);
+// 		uCanvas.add(
+// 			new Composition({
+// 				x: 10,
+// 				y: 160,
+// 				children: [
+// 					new Pie({
+// 						cx: 50,
+// 						cy: 50,
+// 						radius: 50,
+// 						startAngle: 0,
+// 						endAngle: Math.PI + Math.PI / 3,
+// 					}),
+// 					//
+// 					new Text({ x: 0, y: 120, text: "Pie" }),
+// 				],
+// 			})
+// 		);
 
-		uCanvas.add(
-			new Composition({
-				x: 140,
-				y: 160,
-				children: [
-					new Circle({
-						cx: 50,
-						cy: 50,
-						radius: 50,
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "Circle" }),
-				],
-			})
-		);
+// 		uCanvas.add(
+// 			new Composition({
+// 				x: 140,
+// 				y: 160,
+// 				children: [
+// 					new Circle({
+// 						cx: 50,
+// 						cy: 50,
+// 						radius: 50,
+// 					}),
+// 					//
+// 					new Text({ x: 0, y: 120, text: "Circle" }),
+// 				],
+// 			})
+// 		);
 
-		uCanvas.add(
-			new Composition({
-				x: 270,
-				y: 160,
-				children: [
-					new Ring({
-						cx: 50,
-						cy: 50,
-						innerRadius: 30,
-						outerRadius: 50,
-						startAngle: 0,
-						endAngle: Math.PI + Math.PI / 1.5,
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "Ring" }),
-				],
-			})
-		);
+// 		uCanvas.add(
+// 			new Composition({
+// 				x: 270,
+// 				y: 160,
+// 				children: [
+// 					new Ring({
+// 						cx: 50,
+// 						cy: 50,
+// 						innerRadius: 30,
+// 						outerRadius: 50,
+// 						startAngle: 0,
+// 						endAngle: Math.PI + Math.PI / 1.5,
+// 					}),
+// 					//
+// 					new Text({ x: 0, y: 120, text: "Ring" }),
+// 				],
+// 			})
+// 		);
 
-		const data = new Uint8ClampedArray([
-			parseInt("10000000", 2),
-			parseInt("01000000", 2),
-			parseInt("00100000", 2),
-			parseInt("00010000", 2),
-			parseInt("00001000", 2),
-			parseInt("00000100", 2),
-			parseInt("00000010", 2),
-			parseInt("00000001", 2),
-		]);
+// 		// const data = new Uint8ClampedArray([
+// 		// 	parseInt("10000000", 2),
+// 		// 	parseInt("01000000", 2),
+// 		// 	parseInt("00100000", 2),
+// 		// 	parseInt("00010000", 2),
+// 		// 	parseInt("00001000", 2),
+// 		// 	parseInt("00000100", 2),
+// 		// 	parseInt("00000010", 2),
+// 		// 	parseInt("00000001", 2),
+// 		// ]);
 
-		uCanvas.add(
-			new Composition({
-				x: 10,
-				y: 300,
-				children: [
-					new ImagePixel({
-						imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
-						x: 0,
-						y: 0,
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "ImagePixel" }),
-				],
-			})
-		);
+// 		// uCanvas.add(
+// 		// 	new Composition({
+// 		// 		x: 10,
+// 		// 		y: 300,
+// 		// 		children: [
+// 		// 			new ImagePixel({
+// 		// 				imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+// 		// 				x: 0,
+// 		// 				y: 0,
+// 		// 			}),
+// 		// 			//
+// 		// 			new Text({ x: 0, y: 120, text: "ImagePixel" }),
+// 		// 		],
+// 		// 	})
+// 		// );
 
-		const image = new window.Image();
-		image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
+// 		// const image = new window.Image();
+// 		// image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
 
-		uCanvas.add(
-			new Composition({
-				x: 160,
-				y: 300,
-				children: [
-					new Image({
-						image: image,
-						sx: 0,
-						sy: 0,
-					}),
-					//
-					new Text({ x: 0, y: 120, text: "Image" }),
-				],
-			})
-		);
+// 		// uCanvas.add(
+// 		// 	new Composition({
+// 		// 		x: 160,
+// 		// 		y: 300,
+// 		// 		children: [
+// 		// 			new Image({
+// 		// 				image: image,
+// 		// 				sx: 0,
+// 		// 				sy: 0,
+// 		// 			}),
+// 		// 			//
+// 		// 			new Text({ x: 0, y: 120, text: "Image" }),
+// 		// 		],
+// 		// 	})
+// 		// );
 
-		uCanvas.render();
-	});
-});
+// 		uCanvas.render();
+// 	});
+// });
 
 const stateMachine = ref<BaseStateMachine>(new SelectionStateMachine(uCanvas));
 
@@ -282,7 +283,11 @@ const toolButtons: ToolButton[] = [
 
 <template>
 	<view class="brush-magic">
-		<global-event-target>
+		<!-- <interactive-canvas
+				id="ucanvas"
+				class="ucanvas"
+			/> -->
+		<!-- <global-event-target>
 			<toolbar :currentIndex="currentToolIndex" :buttons="toolButtons" @onChange="onChangeCurrentTool" />
 			<interactive-canvas
 				id="ucanvas"
@@ -297,15 +302,11 @@ const toolButtons: ToolButton[] = [
 				@onZoomin="onZoomin"
 				@onZoomout="onZoomout"
 			/>
-		</global-event-target>
+		</global-event-target> -->
 	</view>
 </template>
 
 <style>
-body {
-	overflow: hidden;
-}
-
 .brush-magic {
 	width: 100%;
 	height: 100%;

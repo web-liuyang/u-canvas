@@ -6,14 +6,23 @@
 [√] Renderer
 [√] 图形结构调整
 [√] 样式
-    [√] 继承
+[√] 继承
 [ ] Graphic
-    [ ] Event
-    [√] AABB. 文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小
-    [√] hitTest 文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小
+[ ] Event
+[√] AABB. 文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小
+[√] hitTest 文字与图片的aabb需要通过某种方法计算，图片/文字暂时无法知道大小
 
 [ ] Finger Event Stop
 [ ] 全局事件代理
+
+[ ] 解决在客户端上绘制错误 Possible Unhandled Promise Rejection:
+[ ] roundRect 不支持iOS/Android端
+[ ] Image 需要在 onload 中进行绘制, 要不然绘制不上去
+[ ] putImageData 无法绘制自定义的ImageData. 15053
+
+[ ] 提 issue: 通过 resolve.alias 设置的路径无法导出导入类型
+[ ] 提 issue: workspace 无法导入组件
+
 
 记：
 
@@ -25,7 +34,6 @@
 [√] canvas 用户拖动操作，等待了 按下的时间后才触发
 [ ] packages - u-canvas-components 里使用 u-canvas 没有被热更新
 [ ] Matrix 基点尚未确定，图形的基点应该是在左上角
-
 
 ### Issue
 
@@ -41,3 +49,4 @@
 [ ] packages 热更新, 暂时通过更新vite-config来重启服务
 
 roundRect/strokeText 文档错误
+
