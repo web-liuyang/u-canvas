@@ -31,18 +31,12 @@
 		"baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
 		"paths": {
 			"@/*": ["./*"],
-			// "@u-canvas": ["./u-canvas"],
-			"@components/*": ["./components/*"]
-			// "u-canvas": ["./packages/u-canvas"],
-			// "u-pointer": ["./packages/u-pointer"],
-			// "@u-pointer": ["./packages/u-pointer/src/index"]
-			// "@u-canvas-components/*": ["../packages/u-canvas-components/*"]
+			"u-pointer": ["./packages/u-pointer/src/index.ts"],
 		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
 		// "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
 		// "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
 		"types": [
 			"@dcloudio/uni-app-x",
-			"u-pointer",
 			// "@types/uni-app"
 		] /* Specify type package names to be included without being referenced in a source file. */,
 		// "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
@@ -117,6 +111,7 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
+	"include": ["./**/*"],
 	"exclude": ["node_modules/", "unpackage/"],
 	"vueCompilerOptions": {
 		"extensions": [".vue", ".uvue"]

@@ -1,4 +1,4 @@
-import { EventTypeMap } from "../events";
+import { EventTypeMap } from "../pointer-events";
 
 export class RootPointer {
 	private _listeners = new Map<keyof EventTypeMap, ((e: EventTypeMap[keyof EventTypeMap]) => void)[]>();

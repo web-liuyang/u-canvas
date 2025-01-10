@@ -13,6 +13,10 @@ import {
 
 import { ref } from "vue";
 
+const props = defineProps<{
+	canvasid: string;
+}>();
+
 const pointers = ref<Map<number, Pointer>>(new Map());
 
 function pointerdown(e: PointerdownEvent) {
@@ -38,52 +42,36 @@ function pointerwheel(e: PointerwheelEvent) {
 	console.log("pointerwheel", e.pointer.id, e.direction);
 }
 
-rootpointer.addEventListener("onpointerdown", e => {
-	console.log("root pointerdown", e.pointer.id);
-});
+// rootpointer.addEventListener("onpointerdown", e => {
+// 	console.log("root pointerdown", e.pointer.id);
+// });
 
-rootpointer.addEventListener("onpointermove", e => {
-	console.log("root pointermove", e.pointer.id);
-});
+// rootpointer.addEventListener("onpointermove", e => {
+// 	console.log("root pointermove", e.pointer.id);
+// });
 
-rootpointer.addEventListener("onpointerup", e => {
-	console.log("root pointerup", e.pointer.id);
-});
+// rootpointer.addEventListener("onpointerup", e => {
+// 	console.log("root pointerup", e.pointer.id);
+// });
 
-rootpointer.addEventListener("onpointerclick", e => {
-	console.log("root pointerclick", e.pointer.id);
-});
+// rootpointer.addEventListener("onpointerclick", e => {
+// 	console.log("root pointerclick", e.pointer.id);
+// });
 
-rootpointer.addEventListener("onpointerwheel", e => {
-	console.log("root pointerwheel", e.pointer.id, e.direction);
-});
+// rootpointer.addEventListener("onpointerwheel", e => {
+// 	console.log("root pointerwheel", e.pointer.id, e.direction);
+// });
 </script>
 
 <template>
-	<view class="container">
-		<RootPointerComponent>
-			<!-- <view> -->
-			<!-- <PointerComponent
-				class="pointer"
-				@onpointerclick="pointerclick"
-				@onpointerdown="pointerdown"
-				@onpointermove="pointermove"
-				@onpointerup="pointerup"
-				@onpointerwheel="pointerwheel"
-			>
-				<view class="rect"></view>
-			</PointerComponent> -->
-
-			<view class="info">
-				触摸信息
-				<view v-for="pointer in pointers.values()" :key="pointer.id">
-					<view>id: {{ pointer.id }}</view>
-					<view>x: {{ pointer.x }}, y: {{ pointer.y }}</view>
-					<view>screenX: {{ pointer.screenX }}, screenY: {{ pointer.screenY }}</view>
-					<view>pageX: {{ pointer.pageX }}, pageY: {{ pointer.pageY }}</view>
-				</view>
-			</view>
-			<!-- </view> -->
-		</RootPointerComponent>
-	</view>
+	<PointerComponent>
+		<canvas
+			:id="props.canvasid"
+			@onpointerclick="pointerclick"
+			@onpointerdown="pointerdown"
+			@onpointermove="pointermove"
+			@onpointerup="pointerup"
+			@onpointerwheel="pointerwheel"
+		/>
+	</PointerComponent>
 </template>

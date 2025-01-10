@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Pointer, EventTypeMap } from "../events";
+import type { Pointer, EventTypeMap } from "../pointer-events";
 import { defineEmits } from "vue";
 import {
 	PointerclickEvent,
@@ -8,7 +8,7 @@ import {
 	PointermoveEvent,
 	PointercancelEvent,
 	PointerwheelEvent,
-} from "../events";
+} from "../pointer-events";
 import { getPointersByMouse, getPointersByTouch, getPointersByWheel } from "../utils";
 
 const isPC = uni.getSystemInfoSync().deviceType === "pc";
@@ -122,9 +122,13 @@ function onpointermove(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
 	pressedPointers.clear();
 
 	for (const pointer of pointers) {
-		const isPressed = _tempPressedPointers.has(pointer.id);
-		if (isPressed) {
-			const pointermove = new PointermoveEvent(pointer, e);
+		const pressedPointer = _tempPressedPointers.get(pointer.id);
+		if (pressedPointer) {
+			pointer;
+			const deltaX = pointer.x - pressedPointer.x;
+			const deltaY = pointer.y - pressedPointer.y;
+
+			const pointermove = new PointermoveEvent({ ...pointer, delta: { x: deltaX, y: deltaY } }, e);
 			emit("onpointermove", pointermove);
 			pressedPointers.set(pointer.id, pointer);
 			preonclickPointers.delete(pointer.id);
@@ -186,6 +190,13 @@ function onpointerwheel(pointers: Pointer[], e: WheelEvent) {
 }
 </script>
 
+<style>
+/* .pointer-component {
+	width: inherit;
+	height: inherit;
+} */
+</style>
+
 <template>
 	<view
 		class="pointer-component"
@@ -199,10 +210,3 @@ function onpointerwheel(pointers: Pointer[], e: WheelEvent) {
 		<slot />
 	</view>
 </template>
-
-<style>
-/* .pointer-component {
-	width: inherit;
-	height: inherit;
-} */
-</style>

@@ -32,6 +32,11 @@ export class BasePointerEvent {
 	}
 }
 
+export interface Delta {
+	x: number;
+	y: number;
+}
+
 export class PointerclickEvent extends BasePointerEvent {
 	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
@@ -45,8 +50,11 @@ export class PointerdownEvent extends BasePointerEvent {
 }
 
 export class PointermoveEvent extends BasePointerEvent {
-	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: BasePointerEvent["nativeEvent"]) {
+	public pointer: Pointer & { delta: Delta };
+
+	constructor(pointer: BasePointerEvent["pointer"] & { delta: Delta }, nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
+		this.pointer = pointer;
 	}
 }
 
@@ -63,14 +71,19 @@ export class PointercancelEvent extends BasePointerEvent {
 }
 
 export class PointerwheelEvent extends BasePointerEvent {
-	public readonly direction: "up" | "down";
+	public readonly direction: "up" | "down" | "left" | "right";
 
 	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: WheelEvent) {
 		super(pointer, nativeEvent);
-		const sign = Math.sign(nativeEvent.deltaY);
-		// 滚轮不会出现此情况
-		if (sign === 0) throw new Error("no deltaY");
-		this.direction = sign < 0 ? "up" : "down";
+
+		const deltaX = nativeEvent.deltaX;
+		const deltaY = nativeEvent.deltaY;
+
+		if (deltaY === 0) {
+			this.direction = deltaX < 0 ? "left" : "right";
+		} else {
+			this.direction = deltaY < 0 ? "up" : "down";
+		}
 	}
 }
 

@@ -1,7 +1,0 @@
-<script lang="ts" setup></script>
-
-<template>
-	<view class="container"> Component </view>
-</template>
-
-<style scoped></style>

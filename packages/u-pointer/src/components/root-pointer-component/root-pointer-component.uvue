@@ -6,7 +6,7 @@ import type {
 	PointermoveEvent,
 	PointercancelEvent,
 	PointerwheelEvent,
-} from "../events";
+} from "../pointer-events";
 import PointerComponent from "../pointer-component/pointer-component.uvue";
 import { rootpointer } from "./root-pointer";
 

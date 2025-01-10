@@ -40,6 +40,8 @@
 [√] Path2D 绘制原点与 Context 绘制原点不一致. 8748
 [√] uni.createCanvasContextAsync 在 IOS 上报错. 14065
 [ ] putImageData 无法绘制自定义的ImageData. 15053
+[ ] options 名称被编译器占用. 15107
+[ ] 设置别名后 无法导入类型. 15105
 
 [ ] clearRect iOS在矩形区域比较大时，有卡顿性能不好
 [ ] 客户端 父级触摸事件会触发两次，在嵌套的情况下. 9901 -> 14285

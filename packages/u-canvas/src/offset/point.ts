@@ -5,6 +5,10 @@ export class Point {
 		return new Point(0, 0);
 	}
 
+	public static fromXY(options: { x: number; y: number }): Point {
+		return new Point(options.x, options.y);
+	}
+
 	constructor(
 		public x: number,
 		public y: number

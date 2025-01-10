@@ -1,5 +1,14 @@
 <script lang="ts" setup>
 import type { ToolButton } from "./toolbar-interface";
+import {
+	PointerclickEvent,
+	PointerwheelEvent,
+	Pointer,
+	PointerdownEvent,
+	PointermoveEvent,
+	PointerupEvent,
+	PointerComponent,
+} from "u-pointer";
 
 import {
 	createImageData,
@@ -17,214 +26,160 @@ import {
 	Point,
 } from "u-canvas";
 
-import { onMounted, nextTick, ref, getCurrentInstance } from "vue";
+import { onMounted, nextTick, ref } from "vue";
 
-// import interactiveCanvas from "@/components/interactive-canvas.uvue";
-import InteractiveCanvas from "./interactive-canvas.uvue";
-import finger from "@/components/finger.uvue";
-import globalEventTarget from "./global-evnet-target.uvue";
-import toolbar from "./toolbar.uvue";
-
-import {
-	FTapEvent,
-	FTouchcancelEvent,
-	FTouchdownEvent,
-	FTouchendEvent,
-	FTouchmoveEvent,
-	FTouchstartEvent,
-	FTouchupEvent,
-	FZoominEvent,
-	FZoomoutEvent,
-} from "@/components/event";
-// import t from "../t.uvue";
-import { BaseStateMachine, BrushStateMachine, SelectionStateMachine } from "./state-machine/index";
+import { BrushStateMachine, SelectionStateMachine } from "./state-machine/index";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
-// onMounted(() => {
-// 	nextTick(async () => {
-// 		await uCanvas.ensureInitialize();
+onMounted(() => {
+	nextTick(async () => {
+		await uCanvas.ensureInitialize();
 
-// 		uCanvas.add(
-// 			new Composition({
-// 				x: 10,
-// 				y: 10,
-// 				children: [
-// 					new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
-// 					//
-// 					new Text({ x: 0, y: 120, text: "Rectangle" }),
-// 				],
-// 			})
-// 		);
+		uCanvas.add(
+			new Composition({
+				x: 10,
+				y: 10,
+				children: [
+					new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
+					//
+					new Text({ x: 0, y: 120, text: "Rectangle" }),
+				],
+			})
+		);
 
-// 		uCanvas.add(
-// 			new Composition({
-// 				x: 140,
-// 				y: 10,
-// 				children: [
-// 					new Polyline({
-// 						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100), new Point(100, 100)],
-// 					}),
-// 					//
-// 					new Text({ x: 0, y: 120, text: "Polyline" }),
-// 				],
-// 			})
-// 		);
+		uCanvas.add(
+			new Composition({
+				x: 140,
+				y: 10,
+				children: [
+					new Polyline({
+						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100), new Point(100, 100)],
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Polyline" }),
+				],
+			})
+		);
 
-// 		uCanvas.add(
-// 			new Composition({
-// 				x: 270,
-// 				y: 10,
-// 				children: [
-// 					new Polygon({
-// 						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100)],
-// 					}),
-// 					//
-// 					new Text({ x: 0, y: 120, text: "Polygon" }),
-// 				],
-// 			})
-// 		);
+		uCanvas.add(
+			new Composition({
+				x: 270,
+				y: 10,
+				children: [
+					new Polygon({
+						points: [new Point(0, 0), new Point(100, 0), new Point(0, 100)],
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Polygon" }),
+				],
+			})
+		);
 
-// 		uCanvas.add(
-// 			new Composition({
-// 				x: 10,
-// 				y: 160,
-// 				children: [
-// 					new Pie({
-// 						cx: 50,
-// 						cy: 50,
-// 						radius: 50,
-// 						startAngle: 0,
-// 						endAngle: Math.PI + Math.PI / 3,
-// 					}),
-// 					//
-// 					new Text({ x: 0, y: 120, text: "Pie" }),
-// 				],
-// 			})
-// 		);
+		uCanvas.add(
+			new Composition({
+				x: 10,
+				y: 160,
+				children: [
+					new Pie({
+						cx: 50,
+						cy: 50,
+						radius: 50,
+						startAngle: 0,
+						endAngle: Math.PI + Math.PI / 3,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Pie" }),
+				],
+			})
+		);
 
-// 		uCanvas.add(
-// 			new Composition({
-// 				x: 140,
-// 				y: 160,
-// 				children: [
-// 					new Circle({
-// 						cx: 50,
-// 						cy: 50,
-// 						radius: 50,
-// 					}),
-// 					//
-// 					new Text({ x: 0, y: 120, text: "Circle" }),
-// 				],
-// 			})
-// 		);
+		uCanvas.add(
+			new Composition({
+				x: 140,
+				y: 160,
+				children: [
+					new Circle({
+						cx: 50,
+						cy: 50,
+						radius: 50,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Circle" }),
+				],
+			})
+		);
 
-// 		uCanvas.add(
-// 			new Composition({
-// 				x: 270,
-// 				y: 160,
-// 				children: [
-// 					new Ring({
-// 						cx: 50,
-// 						cy: 50,
-// 						innerRadius: 30,
-// 						outerRadius: 50,
-// 						startAngle: 0,
-// 						endAngle: Math.PI + Math.PI / 1.5,
-// 					}),
-// 					//
-// 					new Text({ x: 0, y: 120, text: "Ring" }),
-// 				],
-// 			})
-// 		);
+		uCanvas.add(
+			new Composition({
+				x: 270,
+				y: 160,
+				children: [
+					new Ring({
+						cx: 50,
+						cy: 50,
+						innerRadius: 30,
+						outerRadius: 50,
+						startAngle: 0,
+						endAngle: Math.PI + Math.PI / 1.5,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Ring" }),
+				],
+			})
+		);
 
-// 		// const data = new Uint8ClampedArray([
-// 		// 	parseInt("10000000", 2),
-// 		// 	parseInt("01000000", 2),
-// 		// 	parseInt("00100000", 2),
-// 		// 	parseInt("00010000", 2),
-// 		// 	parseInt("00001000", 2),
-// 		// 	parseInt("00000100", 2),
-// 		// 	parseInt("00000010", 2),
-// 		// 	parseInt("00000001", 2),
-// 		// ]);
+		// const data = new Uint8ClampedArray([
+		// 	parseInt("10000000", 2),
+		// 	parseInt("01000000", 2),
+		// 	parseInt("00100000", 2),
+		// 	parseInt("00010000", 2),
+		// 	parseInt("00001000", 2),
+		// 	parseInt("00000100", 2),
+		// 	parseInt("00000010", 2),
+		// 	parseInt("00000001", 2),
+		// ]);
 
-// 		// uCanvas.add(
-// 		// 	new Composition({
-// 		// 		x: 10,
-// 		// 		y: 300,
-// 		// 		children: [
-// 		// 			new ImagePixel({
-// 		// 				imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
-// 		// 				x: 0,
-// 		// 				y: 0,
-// 		// 			}),
-// 		// 			//
-// 		// 			new Text({ x: 0, y: 120, text: "ImagePixel" }),
-// 		// 		],
-// 		// 	})
-// 		// );
+		// uCanvas.add(
+		// 	new Composition({
+		// 		x: 10,
+		// 		y: 300,
+		// 		children: [
+		// 			new ImagePixel({
+		// 				imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+		// 				x: 0,
+		// 				y: 0,
+		// 			}),
+		// 			//
+		// 			new Text({ x: 0, y: 120, text: "ImagePixel" }),
+		// 		],
+		// 	})
+		// );
 
-// 		// const image = new window.Image();
-// 		// image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
+		// const image = new window.Image();
+		// image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
 
-// 		// uCanvas.add(
-// 		// 	new Composition({
-// 		// 		x: 160,
-// 		// 		y: 300,
-// 		// 		children: [
-// 		// 			new Image({
-// 		// 				image: image,
-// 		// 				sx: 0,
-// 		// 				sy: 0,
-// 		// 			}),
-// 		// 			//
-// 		// 			new Text({ x: 0, y: 120, text: "Image" }),
-// 		// 		],
-// 		// 	})
-// 		// );
+		// uCanvas.add(
+		// 	new Composition({
+		// 		x: 160,
+		// 		y: 300,
+		// 		children: [
+		// 			new Image({
+		// 				image: image,
+		// 				sx: 0,
+		// 				sy: 0,
+		// 			}),
+		// 			//
+		// 			new Text({ x: 0, y: 120, text: "Image" }),
+		// 		],
+		// 	})
+		// );
 
-// 		uCanvas.render();
-// 	});
-// });
+		uCanvas.render();
+	});
+});
 
-const stateMachine = ref<BaseStateMachine>(new SelectionStateMachine(uCanvas));
-
-const onTap = (e: FTapEvent) => {
-	stateMachine.value.onTap(e);
-};
-
-const onTouchdown = (e: FTouchdownEvent) => {
-	stateMachine.value.onTouchdown(e);
-};
-
-const onTouchup = (e: FTouchupEvent) => {
-	stateMachine.value.onTouchup(e);
-};
-
-const onTouchstart = (e: FTouchstartEvent) => {
-	stateMachine.value.onTouchstart(e);
-};
-
-const onTouchmove = (e: FTouchmoveEvent) => {
-	stateMachine.value.onTouchmove(e);
-};
-
-const onTouchend = (e: FTouchendEvent) => {
-	stateMachine.value.onTouchend(e);
-};
-
-const onTouchcancel = (e: FTouchcancelEvent) => {
-	stateMachine.value.onTouchcancel(e);
-};
-
-const onZoomin = (e: FZoominEvent) => {
-	stateMachine.value.onZoomin(e);
-};
-
-const onZoomout = (e: FZoomoutEvent) => {
-	stateMachine.value.onZoomout(e);
-};
+let stateMachine = new SelectionStateMachine(uCanvas);
 
 const currentToolIndex = ref(0);
 
@@ -238,7 +193,7 @@ const toolButtons: ToolButton[] = [
 		text: "Selection",
 		onTap: () => {
 			currentToolIndex.value = 0;
-			stateMachine.value = new SelectionStateMachine(uCanvas);
+			stateMachine = new SelectionStateMachine(uCanvas);
 		},
 	},
 	{
@@ -247,7 +202,7 @@ const toolButtons: ToolButton[] = [
 		onTap: () => {
 			console.log("A");
 			currentToolIndex.value = 1;
-			stateMachine.value = new BrushStateMachine(uCanvas);
+			stateMachine = new BrushStateMachine(uCanvas);
 		},
 	},
 	{
@@ -279,14 +234,44 @@ const toolButtons: ToolButton[] = [
 		},
 	},
 ];
+
+function pointerdown(e: PointerdownEvent) {
+	console.log("pointerdown", e.pointer.id);
+	stateMachine.onpointerdown(e);
+}
+
+function pointermove(e: PointermoveEvent) {
+	console.log("pointermove", e.pointer.id);
+	stateMachine.onpointermove(e);
+}
+
+function pointerup(e: PointerupEvent) {
+	console.log("pointerup", e.pointer.id);
+	stateMachine.onpointerup(e);
+}
+
+function pointerclick(e: PointerclickEvent) {
+	console.log("pointerclick", e.pointer.id);
+	stateMachine.onpointerclick(e);
+}
+
+function pointerwheel(e: PointerwheelEvent) {
+	console.log("pointerwheel", e.pointer.id, e.direction);
+	stateMachine.onpointerwheel(e);
+}
 </script>
 
 <template>
 	<view class="brush-magic">
-		<!-- <interactive-canvas
-				id="ucanvas"
-				class="ucanvas"
-			/> -->
+		<PointerComponent
+			@onpointerclick="pointerclick"
+			@onpointerdown="pointerdown"
+			@onpointermove="pointermove"
+			@onpointerup="pointerup"
+			@onpointerwheel="pointerwheel"
+		>
+			<canvas id="ucanvas" class="ucanvas" />
+		</PointerComponent>
 		<!-- <global-event-target>
 			<toolbar :currentIndex="currentToolIndex" :buttons="toolButtons" @onChange="onChangeCurrentTool" />
 			<interactive-canvas
@@ -313,8 +298,8 @@ const toolButtons: ToolButton[] = [
 }
 
 .ucanvas {
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 
 	border: 1px solid red;
 }

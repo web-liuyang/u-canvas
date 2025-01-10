@@ -1,26 +1,25 @@
-import type {
-	FTapEvent,
-	FTouchdownEvent,
-	FTouchupEvent,
-	FTouchstartEvent,
-	FTouchmoveEvent,
-	FTouchendEvent,
-	FTouchcancelEvent,
-	FZoominEvent,
-	FZoomoutEvent,
-} from "@/components/event";
+import {
+	PointerclickEvent,
+	PointerdownEvent,
+	PointermoveEvent,
+	PointerupEvent,
+	PointercancelEvent,
+	PointerwheelEvent,
+} from "u-pointer";
 import type { UCanvas } from "u-canvas";
 
 export abstract class BaseStateMachine {
 	constructor(protected canvas: UCanvas) {}
 
-	public onTap(e: FTapEvent): void {}
-	public onTouchdown(e: FTouchdownEvent): void {}
-	public onTouchup(e: FTouchupEvent): void {}
-	public onTouchstart(e: FTouchstartEvent): void {}
-	public onTouchmove(e: FTouchmoveEvent): void {}
-	public onTouchend(e: FTouchendEvent): void {}
-	public onTouchcancel(e: FTouchcancelEvent): void {}
-	public onZoomin(e: FZoominEvent): void {}
-	public onZoomout(e: FZoomoutEvent): void {}
+	public onpointerclick(e: PointerclickEvent): void {}
+
+	public onpointerdown(e: PointerdownEvent): void {}
+
+	public onpointermove(e: PointermoveEvent): void {}
+
+	public onpointerup(e: PointerupEvent): void {}
+
+	public onpointercancel(e: PointercancelEvent): void {}
+
+	public onpointerwheel(e: PointerwheelEvent): void {}
 }
