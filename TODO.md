@@ -18,9 +18,7 @@
 [ ] 解决在客户端上绘制错误 Possible Unhandled Promise Rejection:
 [ ] roundRect 不支持iOS/Android端
 [ ] Image 需要在 onload 中进行绘制, 要不然绘制不上去
-[ ] putImageData 无法绘制自定义的ImageData. 15053
 
-[ ] 提 issue: 通过 resolve.alias 设置的路径无法导出导入类型
 [ ] 提 issue: workspace 无法导入组件
 
 

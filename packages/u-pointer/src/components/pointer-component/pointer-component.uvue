@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { Pointer, EventTypeMap } from "../pointer-events";
-import { defineEmits } from "vue";
 import {
 	PointerclickEvent,
 	PointerdownEvent,
