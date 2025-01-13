@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { ToolButton } from "./toolbar-interface";
-
 import { nextTick, ref } from "vue";
-
 import { globalEventTarget } from "./global-event-target";
 
 const props = defineProps<{
