@@ -1,5 +1,4 @@
 import type { GraphicOptions } from "./graphic";
-
 import type { Canvas } from "../../renderer";
 import { Offset, Point } from "../../offset";
 import { Graphic } from "./graphic";

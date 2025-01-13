@@ -81,9 +81,7 @@ export function renderCanvas(entity: CanvasEntity, ctx: CanvasRenderingContext2D
 
 export function renderRect(entity: RectEntity, ctx: CanvasRenderingContext2D): void {
 	const { x, y, w, h, radii, style } = entity;
-	// iOS/Android 不支持
-	// ctx.roundRect(x, y, w, h, radii);
-	ctx.rect(x, y, w, h);
+	drawRoundedRectPath(ctx, entity);
 	colorize(ctx, style);
 }
 
@@ -176,7 +174,7 @@ export function renderPath(entity: PathEntity, ctx: CanvasRenderingContext2D): v
 				ctx.lineTo(record.x, record.y);
 				break;
 			case RecordType.rect:
-				ctx.roundRect(record.x, record.y, record.w, record.h, record.radii);
+				drawRoundedRectPath(ctx, record);
 				break;
 			case RecordType.arc:
 				ctx.arc(record.cx, record.cy, record.radius, record.startAngle, record.endAngle, record.counterclockwise);
@@ -209,4 +207,31 @@ export function colorize(ctx: CanvasRenderingContext2D, style?: Style) {
 	} else {
 		ctx.stroke();
 	}
+}
+
+interface SimpleRect {
+	x: number;
+	y: number;
+	w: number;
+	h: number;
+	radii: number;
+}
+
+function drawRoundedRectPath(ctx: CanvasRenderingContext2D, rect: SimpleRect) {
+	const { x, y, w, h, radii } = rect;
+	const points: Point[] = [new Point(x, y), new Point(x + w, y), new Point(x + w, y + h), new Point(x, y + h)];
+
+	ctx.moveTo(points[0].x, points[0].y + radii);
+	ctx.quadraticCurveTo(points[0].x, points[0].y, points[0].x + radii, points[0].y);
+
+	ctx.lineTo(points[1].x - radii, points[1].y);
+	ctx.quadraticCurveTo(points[1].x, points[1].y, points[1].x, points[1].y + radii);
+
+	ctx.lineTo(points[2].x, points[2].y - radii);
+	ctx.quadraticCurveTo(points[2].x, points[2].y, points[2].x - radii, points[2].y);
+
+	ctx.lineTo(points[3].x + radii, points[3].y);
+	ctx.quadraticCurveTo(points[3].x, points[3].y, points[3].x, points[3].y - radii);
+
+	ctx.closePath();
 }

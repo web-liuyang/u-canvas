@@ -18,6 +18,4 @@ const uCanvasPlugin = (): PluginOption => {
 
 export default defineConfig({
 	plugins: [uni(), uCanvasPlugin()],
-	optimizeDeps: {},
-	resolve: {},
 });

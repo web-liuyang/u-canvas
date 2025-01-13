@@ -1,5 +1,5 @@
 import { Point } from "./offset";
-import { Composition, defaultStyle, Graphic, Style } from "./graphics";
+import { Composition, defaultStyle, Graphic, ImageResource, Style } from "./graphics";
 import { applyStyle, Renderer } from "./renderer";
 import { Matrix } from "./transform";
 
@@ -141,4 +141,59 @@ export class UCanvas {
 
 		this.renderer.renderRoot();
 	}
+
+	public createImage(src: string): Promise<ImageResource> {
+		return new Promise<any>((resolve, reject) => {
+			// TODO 后面会换成请求不用等待 onload , 直接就可以渲染做成同步处理
+			// 目前图片路径是不能有问题的, 要不然就会卡住
+			const image = this.canvasContext.createImage();
+			image.src = src;
+			image.onload = () => {
+				resolve(image);
+			};
+		});
+	}
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			if (typeof reader.result === "string") {
+				resolve(reader.result);
+			} else {
+				reject(new Error("Failed to convert Blob to Base64"));
+			}
+		};
+		reader.onerror = () => {
+			reject(new Error("Failed to read Blob as Base64"));
+		};
+		reader.readAsDataURL(blob);
+	});
+}
+
+function arrayBufferToBase64(arrayBuffer: ArrayBuffer, mimeType: string): Promise<string> {
+	// const uint8Array = new Uint8Array(arrayBuffer);
+	// const base64String = btoa(String.fromCharCode(...uint8Array));
+	// return `data:${mimeType};base64,${base64String}`;
+
+	return new Promise((resolve, reject) => {
+		console.log("A");
+		const blob = new Blob([arrayBuffer], { type: mimeType });
+		console.log("B");
+		const reader = new FileReader();
+		console.log("C");
+		reader.onload = () => {
+			if (typeof reader.result === "string") {
+				resolve(reader.result);
+			} else {
+				reject(new Error("Failed to convert ArrayBuffer to Base64"));
+			}
+		};
+		reader.onerror = () => {
+			reject(new Error("Failed to read ArrayBuffer as Base64"));
+		};
+		console.log("D");
+		reader.readAsDataURL(blob);
+	});
 }

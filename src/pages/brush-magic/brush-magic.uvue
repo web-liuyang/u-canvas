@@ -3,7 +3,6 @@ import type { ToolButton } from "./toolbar-interface";
 import {
 	PointerclickEvent,
 	PointerwheelEvent,
-	Pointer,
 	PointerdownEvent,
 	PointermoveEvent,
 	PointerupEvent,
@@ -41,7 +40,7 @@ onMounted(() => {
 				x: 10,
 				y: 10,
 				children: [
-					new Rectangle({ x: 0, y: 0, w: 100, h: 100 }),
+					new Rectangle({ x: 0, y: 0, w: 100, h: 100, radii: 10 }),
 					//
 					new Text({ x: 0, y: 120, text: "Rectangle" }),
 				],
@@ -156,24 +155,23 @@ onMounted(() => {
 		// 	})
 		// );
 
-		// const image = new window.Image();
-		// image.src = "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png";
+		const image = await uCanvas.createImage("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
 
-		// uCanvas.add(
-		// 	new Composition({
-		// 		x: 160,
-		// 		y: 300,
-		// 		children: [
-		// 			new Image({
-		// 				image: image,
-		// 				sx: 0,
-		// 				sy: 0,
-		// 			}),
-		// 			//
-		// 			new Text({ x: 0, y: 120, text: "Image" }),
-		// 		],
-		// 	})
-		// );
+		uCanvas.add(
+			new Composition({
+				x: 160,
+				y: 300,
+				children: [
+					new Image({
+						image: image,
+						sx: 0,
+						sy: 0,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "Image" }),
+				],
+			})
+		);
 
 		uCanvas.render();
 	});
@@ -236,27 +234,27 @@ const toolButtons: ToolButton[] = [
 ];
 
 function pointerdown(e: PointerdownEvent) {
-	console.log("pointerdown", e.pointer.id);
+	// console.log("pointerdown", e.pointer.id);
 	stateMachine.onpointerdown(e);
 }
 
 function pointermove(e: PointermoveEvent) {
-	console.log("pointermove", e.pointer.id);
+	// console.log("pointermove", e.pointer.id);
 	stateMachine.onpointermove(e);
 }
 
 function pointerup(e: PointerupEvent) {
-	console.log("pointerup", e.pointer.id);
+	// console.log("pointerup", e.pointer.id);
 	stateMachine.onpointerup(e);
 }
 
 function pointerclick(e: PointerclickEvent) {
-	console.log("pointerclick", e.pointer.id);
+	// console.log("pointerclick", e.pointer.id);
 	stateMachine.onpointerclick(e);
 }
 
 function pointerwheel(e: PointerwheelEvent) {
-	console.log("pointerwheel", e.pointer.id, e.direction);
+	// console.log("pointerwheel", e.pointer.id, e.direction);
 	stateMachine.onpointerwheel(e);
 }
 </script>
