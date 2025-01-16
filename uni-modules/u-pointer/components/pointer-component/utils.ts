@@ -1,4 +1,4 @@
-import { Pointer } from "../pointer-events";
+import { Pointer } from "./pointer-events";
 
 export function getPointersByTouch(e: UniTouchEvent): Pointer[] {
 	const touches = Array.from(e.touches);

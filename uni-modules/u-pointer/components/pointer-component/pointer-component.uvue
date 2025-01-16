@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Pointer, EventTypeMap } from "../pointer-events";
+import type { Pointer, EventTypeMap } from "./pointer-events";
 import {
 	PointerclickEvent,
 	PointerdownEvent,
@@ -7,7 +7,7 @@ import {
 	PointermoveEvent,
 	PointercancelEvent,
 	PointerwheelEvent,
-} from "../pointer-events";
+} from "./pointer-events";
 import { getPointersByMouse, getPointersByTouch, getPointersByWheel } from "./utils";
 
 const isPC = uni.getSystemInfoSync().deviceType === "pc";
