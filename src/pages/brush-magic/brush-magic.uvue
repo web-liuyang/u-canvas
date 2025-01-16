@@ -6,13 +6,9 @@ import {
 	PointerdownEvent,
 	PointermoveEvent,
 	PointerupEvent,
-	// 无法在小程序中引用
+	// 无法在小程序中引用, 貌似是因为小程序的静态分析导致的
 	// PointerComponent,
-} from "u-pointer";
-
-// 可以使用, 但好像报错, 路径有问题
-// Component is not found in path "packages/u-pointer/src/components/pointer-component/pointer-component" (using by "src/pages/brush-magic/brush-magic").(env: macOS,mp,1.06.2407120; lib: 3.7.3)
-import PointerComponent from "../../../packages/u-pointer/src/components/pointer-component/pointer-component.uvue";
+} from "@/uni-modules/u-pointer";
 
 import {
 	UCanvas,
@@ -27,7 +23,7 @@ import {
 	Image,
 	ImagePixel,
 	Point,
-} from "u-canvas";
+} from "@/uni-modules/u-canvas/src";
 
 import { onMounted, nextTick, ref } from "vue";
 
@@ -182,7 +178,6 @@ onMounted(() => {
 });
 
 let stateMachine = new SelectionStateMachine(uCanvas);
-console.log(PointerComponent);
 const currentToolIndex = ref(0);
 
 const onChangeCurrentTool = (index: number) => {
@@ -275,24 +270,6 @@ function pointerwheel(e: PointerwheelEvent) {
 		>
 			<canvas canvas-id="ucanvas" id="ucanvas" class="ucanvas" />
 		</PointerComponent>
-		<!-- <text>123</text>  -->
-		<!-- <canvas canvas-id="ucanvas" id="ucanvas" class="ucanvas" /> -->
-		<!-- <global-event-target>
-			<toolbar :currentIndex="currentToolIndex" :buttons="toolButtons" @onChange="onChangeCurrentTool" />
-			<interactive-canvas
-				id="ucanvas"
-				class="ucanvas"
-				@onTap="onTap"
-				@onTouchdown="onTouchdown"
-				@onTouchup="onTouchup"
-				@onTouchstart="onTouchstart"
-				@onTouchmove="onTouchmove"
-				@onTouchend="onTouchend"
-				@onTouchcancel="onTouchcancel"
-				@onZoomin="onZoomin"
-				@onZoomout="onZoomout"
-			/>
-		</global-event-target> -->
 	</view>
 </template>
 

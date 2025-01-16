@@ -7,26 +7,22 @@ import {
 	PointerdownEvent,
 	PointermoveEvent,
 	PointerupEvent,
-	PointerComponent,
-	RootPointerComponent,
 	rootpointer,
-} from "u-pointer";
+} from "@/uni-modules/u-pointer";
 
-const pointers = ref<Map<number, Pointer>>(new Map());
+const localPointers = ref<Map<number, Pointer>>(new Map());
+const globalPointers = ref<Map<number, Pointer>>(new Map());
 
 function pointerdown(e: PointerdownEvent) {
-	console.log("pointerdown", e.pointer.id);
-	pointers.value.set(e.pointer.id, e.pointer);
+	localPointers.value.set(e.pointer.id, e.pointer);
 }
 
 function pointermove(e: PointermoveEvent) {
-	console.log("pointermove", e.pointer.id);
-	pointers.value.set(e.pointer.id, e.pointer);
+	localPointers.value.set(e.pointer.id, e.pointer);
 }
 
 function pointerup(e: PointerupEvent) {
-	console.log("pointerup", e.pointer.id);
-	pointers.value.delete(e.pointer.id);
+	localPointers.value.delete(e.pointer.id);
 }
 
 function pointerclick(e: PointerclickEvent) {
@@ -38,15 +34,15 @@ function pointerwheel(e: PointerwheelEvent) {
 }
 
 rootpointer.addEventListener("onpointerdown", e => {
-	console.log("root pointerdown", e.pointer.id);
+	globalPointers.value.set(e.pointer.id, e.pointer);
 });
 
 rootpointer.addEventListener("onpointermove", e => {
-	console.log("root pointermove", e.pointer.id);
+	globalPointers.value.set(e.pointer.id, e.pointer);
 });
 
 rootpointer.addEventListener("onpointerup", e => {
-	console.log("root pointerup", e.pointer.id);
+	globalPointers.value.delete(e.pointer.id);
 });
 
 rootpointer.addEventListener("onpointerclick", e => {
@@ -56,32 +52,45 @@ rootpointer.addEventListener("onpointerclick", e => {
 rootpointer.addEventListener("onpointerwheel", e => {
 	console.log("root pointerwheel", e.pointer.id, e.direction);
 });
+
+function normalizeNumber(value: number): string {
+	return value.toFixed(2);
+}
 </script>
 
 <template>
 	<view class="container">
-		<!-- <RootPointerComponent> -->
-		<PointerComponent
-			class="pointer"
-			@onpointerclick="pointerclick"
-			@onpointerdown="pointerdown"
-			@onpointermove="pointermove"
-			@onpointerup="pointerup"
-			@onpointerwheel="pointerwheel"
-		>
-			<view class="rect"></view>
-		</PointerComponent>
+		<RootPointerComponent>
+			<pointer-component
+				class="rect"
+				@onpointerclick="pointerclick"
+				@onpointerdown="pointerdown"
+				@onpointermove="pointermove"
+				@onpointerup="pointerup"
+				@onpointerwheel="pointerwheel"
+			>
+			</pointer-component>
 
-		<view class="info">
-			触摸信息
-			<view v-for="pointer in pointers.values()" :key="pointer.id">
-				<view>id: {{ pointer.id }}</view>
-				<view>x: {{ pointer.x }}, y: {{ pointer.y }}</view>
-				<view>screenX: {{ pointer.screenX }}, screenY: {{ pointer.screenY }}</view>
-				<view>pageX: {{ pointer.pageX }}, pageY: {{ pointer.pageY }}</view>
+			<view class="info" age="18">
+				<text class="title">矩形指针信息</text>
+				<view v-for="pointer in localPointers.values()" :key="pointer.id">
+					<view>id: {{ pointer.id }}</view>
+					<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
+					<view>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view>
+					<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+				</view>
 			</view>
-		</view>
-		<!-- </RootPointerComponent> -->
+			<view class="divider"></view>
+			<view class="info">
+				<text class="title">全局指针信息</text>
+				<view v-for="pointer in globalPointers.values()" :key="pointer.id">
+					<view>id: {{ pointer.id }}</view>
+					<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
+					<view>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view>
+					<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+				</view>
+			</view>
+		</RootPointerComponent>
 	</view>
 </template>
 
@@ -89,20 +98,16 @@ rootpointer.addEventListener("onpointerwheel", e => {
 .container {
 	width: 100%;
 	height: 100%;
+	overflow: hidden;
 }
 
-.pointer {
-	position: absolute;
-	left: 100px;
-	top: 0px;
-}
-
-.info {
-	position: absolute;
-	bottom: 300px;
+.title {
+	font-weight: bold;
 }
 
 .rect {
+	left: 100px;
+	top: 0px;
 	width: 100px;
 	height: 100px;
 	background-color: red;

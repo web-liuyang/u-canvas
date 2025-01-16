@@ -8,9 +8,3 @@ declare module "@vue/runtime-core" {
 
 	interface ComponentCustomOptions extends Hooks {}
 }
-
-// declare module "vue" {
-// 	interface AllowedComponentProps {
-// 		age: number;
-// 	}
-// }

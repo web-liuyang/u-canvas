@@ -1,5 +1,5 @@
 import { BaseStateMachine } from "./base-state-machine";
-import { Matrix, Point } from "u-canvas";
+import { Matrix, Point } from "@/uni-modules/u-canvas/src";
 import {
 	PointerclickEvent,
 	PointerdownEvent,
@@ -7,7 +7,7 @@ import {
 	PointerupEvent,
 	PointercancelEvent,
 	PointerwheelEvent,
-} from "u-pointer";
+} from "@/uni-modules/u-pointer";
 
 export class SelectionStateMachine extends BaseStateMachine {
 	private originMatrix?: Matrix;

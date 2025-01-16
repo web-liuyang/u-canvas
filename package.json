@@ -5,10 +5,10 @@
 	"private": true,
 	"scripts": {
 		"dev": "pnpm dev:u-canvas & pnpm dev:u-pointer",
-		"dev:u-canvas": "pnpm --dir=./packages/u-canvas dev",
-		"dev:u-pointer": "pnpm --dir=./packages/u-pointer dev",
-		"format": "prettier --write packages/**/*.ts",
-		"test": "pnpm --dir=./packages/u-canvas vitest"
+		"dev:u-canvas": "pnpm --dir=./uni_modules/u-canvas dev",
+		"dev:u-pointer": "pnpm --dir=./uni_modules/u-pointer dev",
+		"format": "prettier --write uni_modules/**/*.ts",
+		"test": "pnpm --dir=./uni_modules/u-canvas vitest"
 	},
 	"keywords": [
 		"canvas",

@@ -1,0 +1,78 @@
+import type { GraphicOptions } from "./graphic";
+import type { Canvas } from "../../renderer";
+import { Offset, Point } from "../../offset";
+import { Graphic } from "./graphic";
+import { Aabb } from "../aabb";
+
+export interface ImagePixelPureOptions extends GraphicOptions {
+	imageData: ImageData;
+	x: number;
+	y: number;
+}
+
+export interface ImagePixelWithDirtyOptions extends ImagePixelPureOptions {
+	dx: number;
+	dy: number;
+	dw: number;
+	dh: number;
+}
+
+export type ImagePixelOptions = ImagePixelPureOptions & Partial<ImagePixelWithDirtyOptions>;
+
+export class ImagePixel extends Graphic<ImagePixelOptions> {
+	public override readonly type = "ImagePixel";
+
+	public imageData: ImageData;
+
+	public x: number;
+
+	public y: number;
+
+	public dx: number;
+
+	public dy: number;
+
+	public dw: number;
+
+	public dh: number;
+
+	constructor(options: ImagePixelWithDirtyOptions);
+	constructor(options: ImagePixelPureOptions);
+	constructor(options: ImagePixelOptions) {
+		super(options);
+
+		this.imageData = options.imageData;
+		this.x = options.x;
+		this.y = options.y;
+		this.dx = options?.dx ?? 0;
+		this.dy = options?.dy ?? 0;
+		this.dw = options?.dw ?? this.imageData.width;
+		this.dh = options?.dh ?? this.imageData.height;
+	}
+
+	public override getAabb(): Aabb {
+		const { x, y } = this.matrix.apply(new Point(this.x, this.y));
+		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(this.dw, this.dh));
+
+		return aabb;
+	}
+
+	public override paint(canvas: Canvas, offset: Offset): void {
+		super.paint(canvas, offset);
+		const { imageData, dx, dy, dw, dh } = this;
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
+
+		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
+	}
+
+	public override hitTest(point: Point): this | undefined {
+		const {
+			imageData: { width, height },
+		} = this;
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
+
+		if (point.x >= x && point.x <= x + width && point.y >= y && point.y <= y + height) return this;
+
+		return undefined;
+	}
+}

@@ -9,7 +9,7 @@ import {
 	PointerComponent,
 	RootPointerComponent,
 	rootpointer,
-} from "u-pointer";
+} from "@/uni-modules/u-pointer";
 
 import { ref } from "vue";
 
