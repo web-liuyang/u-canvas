@@ -1,7 +1,19 @@
+import type { Graphic, ImageResource, Style } from "./graphics";
 import { Point } from "./offset";
-import { Composition, defaultStyle, Graphic, ImageResource, Style } from "./graphics";
+import { Composition, defaultStyle, repeatArray } from "./graphics";
 import { applyStyle, Renderer } from "./renderer";
 import { Matrix } from "./transform";
+
+export interface CreateImageDataOptions {
+	data: Uint8ClampedArray;
+	bytesPerScanline: number;
+	// TODO
+	// color: any;
+	/**
+	 * Array [Col, Row]. default [1, 1]
+	 */
+	array?: [number, number];
+}
 
 export interface UCanvasOptions {
 	canvasId: string;
@@ -12,8 +24,6 @@ export type Viewbox = [number, number, number, number];
 
 export class UCanvas {
 	public renderer: Renderer = new Renderer(this);
-
-	public element!: UniCanvasElement;
 
 	public canvasContext!: CanvasContext;
 
@@ -58,37 +68,55 @@ export class UCanvas {
 		});
 	}
 
-	private async getCanvasElement(options: UCanvasOptions): Promise<UniCanvasElement> {
-		return uni.getElementById(options.canvasId) as UniCanvasElement;
-	}
-
 	// 处理高清屏逻辑
-	private hidpi(element: UniCanvasElement, w: number, h: number, dpr: number) {
-		element.width = w * dpr;
-		element.height = h * dpr;
-		// @ts-expect-error
-		element.style.width = `${w}px`;
-		// @ts-expect-error
-		element.style.height = `${h}px`;
-		this.ctx.scale(dpr, dpr);
+	private hidpi(ctx: CanvasRenderingContext2D, dpr: number) {
+		// 兼容小程序
+		ctx.canvas.width = ctx.canvas.offsetWidth * dpr;
+		ctx.canvas.height = ctx.canvas.offsetHeight * dpr;
+		ctx.scale(this.dpr, this.dpr);
 	}
 
 	public async ensureInitialize() {
 		const canvasContext = await this.getCanvasContext(this.options);
-		const element = await this.getCanvasElement(this.options);
 		this.canvasContext = canvasContext;
 		this.ctx = this.canvasContext.getContext("2d")!;
-
-		this.element = element;
-		const window = uni.getWindowInfo();
-		this.hidpi(element, window.windowWidth, window.windowHeight, this.dpr);
+		this.mixinCanvasMethod(this.ctx);
+		this.hidpi(this.ctx, this.dpr);
 		this.root = new Composition({ x: 0, y: 0 });
 		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
 		this.setViewbox(this.root.matrix);
 	}
 
+	private mixinCanvasMethod(ctx: CanvasRenderingContext2D) {
+		// uniapp-x 并沒有提供 getTransform 方法
+		// 注入 set/getMatrix
+		ctx.getMatrix = () => this.root.matrix.clone();
+		ctx.setMatrix = (matrix: Matrix) => {
+			ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
+			this.root.matrix = matrix;
+		};
+
+		ctx.createCompatibleImageData = (data: Uint8ClampedArray | number, w: number, h?: number) => {
+			let imageData: ImageData;
+			const _data = data instanceof Uint8ClampedArray ? data : undefined;
+			const _w = data instanceof Uint8ClampedArray ? w : data;
+			const _h = data instanceof Uint8ClampedArray ? h : w;
+
+			// #ifdef APP
+			imageData = _data ? new ImageData(_data, _w, _h) : new ImageData(_w, _h as number);
+			// #endif
+
+			// #ifdef WEB || MP
+			imageData = ctx.createImageData(_w, _h as number);
+			if (_data) imageData.data.set(_data);
+			// #endif
+
+			return imageData;
+		};
+	}
+
 	private setViewbox(matrix: Matrix): void {
-		const { width, height } = this.element;
+		const { width, height } = this.ctx.canvas;
 		this._viewbox = [-matrix.e / matrix.a, -matrix.f / matrix.d, width / matrix.a, height / matrix.d];
 	}
 
@@ -109,11 +137,13 @@ export class UCanvas {
 	}
 
 	private paintOrigin() {
-		const path = new Path2D();
+		const path = this.canvasContext.createPath2D();
 		path.moveTo(-50, 0);
 		path.lineTo(50, 0);
 		path.moveTo(0, -50);
 		path.lineTo(0, 50);
+
+		path.arc(50, 50, 20, 0, 2 * Math.PI);
 
 		this.ctx.stroke(path);
 	}
@@ -128,14 +158,7 @@ export class UCanvas {
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
 		this.setViewbox(matrix);
 		this.clear();
-
-		// uniapp-x 并沒有提供 getTransform 方法
-		// 注入 set/getMatrix
-		this.ctx.getMatrix = () => this.root.matrix.clone();
-		this.ctx.setMatrix = (matrix: Matrix) => {
-			this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
-			this.root.matrix = matrix;
-		};
+		// this.mixinCanvasMethod();
 
 		applyStyle(this.ctx, this.style);
 
@@ -152,6 +175,36 @@ export class UCanvas {
 				resolve(image);
 			};
 		});
+	}
+
+	public createImageData(options: CreateImageDataOptions): ImageData {
+		const { data, bytesPerScanline, array = [1, 1] } = options;
+
+		const [col, row] = array;
+		const w = bytesPerScanline;
+		const h = data.length;
+		const pixels = new Uint8ClampedArray(col * w * h * 4);
+		const dataView = new DataView(pixels.buffer);
+
+		for (let i = 0, len = dataView.byteLength; i < len; i += col * w * 4) {
+			const bitmask = data[i / (col * w * 4)];
+			let offset = i;
+
+			for (let c = 0; c < col; c++) {
+				for (let n = bytesPerScanline - 1; n >= 0; n--) {
+					const alpha = ((1 << n) & bitmask) !== 0 ? 255 : 0;
+					dataView.setUint8(offset + 0, 0);
+					dataView.setUint8(offset + 1, 0);
+					dataView.setUint8(offset + 2, 0);
+					dataView.setUint8(offset + 3, alpha);
+					offset += 4;
+				}
+			}
+		}
+
+		const repeatedPixels = repeatArray(pixels, row);
+		const imageData = this.ctx.createCompatibleImageData(repeatedPixels, w * col, h * row);
+		return imageData;
 	}
 }
 

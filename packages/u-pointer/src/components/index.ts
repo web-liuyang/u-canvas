@@ -1,4 +1,3 @@
-// @ts-nocheck
 import PointerComponent from "./pointer-component/pointer-component.uvue";
 import RootPointerComponent from "./root-pointer-component/root-pointer-component.uvue";
 export { PointerComponent, RootPointerComponent };

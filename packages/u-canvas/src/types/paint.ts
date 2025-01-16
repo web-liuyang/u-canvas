@@ -23,5 +23,8 @@ declare global {
 	interface CanvasTransform {
 		getMatrix(): Matrix;
 		setMatrix(matrix: Matrix): void;
+
+		createCompatibleImageData(data: Uint8ClampedArray, w: number, h?: number): ImageData;
+		createCompatibleImageData(w: number, h: number): ImageData;
 	}
 }

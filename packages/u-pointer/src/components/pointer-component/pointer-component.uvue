@@ -11,7 +11,7 @@ import {
 import { getPointersByMouse, getPointersByTouch, getPointersByWheel } from "../utils";
 
 const isPC = uni.getSystemInfoSync().deviceType === "pc";
-
+console.log("PointerComponent");
 const emit = defineEmits<{
 	<T extends keyof EventTypeMap>(name: T, event: EventTypeMap[T]): void;
 }>();
@@ -188,13 +188,6 @@ function onpointerwheel(pointers: Pointer[], e: WheelEvent) {
 	}
 }
 </script>
-
-<style>
-/* .pointer-component {
-	width: inherit;
-	height: inherit;
-} */
-</style>
 
 <template>
 	<view

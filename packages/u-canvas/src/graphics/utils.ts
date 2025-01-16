@@ -86,52 +86,57 @@ export function scaleImageData(imageData: ImageData, xs: number, ys: number): Im
 		}
 	}
 
-	return new ImageData(scaledData, newWidth, newHeight);
+	return {
+		colorSpace: imageData.colorSpace,
+		data: scaledData,
+		width: newWidth,
+		height: newHeight,
+	} as ImageData;
 }
 
-export interface CreateImageDataOptions {
-	data: Uint8ClampedArray;
-	bytesPerScanline: number;
-	// TODO
-	// color: any;
-	/**
-	 * Array [Col, Row]. default [1, 1]
-	 */
-	array?: [number, number];
-}
+// export interface CreateImageDataOptions {
+// 	data: Uint8ClampedArray;
+// 	bytesPerScanline: number;
+// 	// TODO
+// 	// color: any;
+// 	/**
+// 	 * Array [Col, Row]. default [1, 1]
+// 	 */
+// 	array?: [number, number];
+// }
 
-export function createImageData(options: CreateImageDataOptions): ImageData {
-	const { data, bytesPerScanline, array = [1, 1] } = options;
+// export function createImageData(options: CreateImageDataOptions): ImageData {
+// 	const { data, bytesPerScanline, array = [1, 1] } = options;
 
-	const [col, row] = array;
-	const w = bytesPerScanline;
-	const h = data.length;
-	const pixels = new Uint8ClampedArray(col * w * h * 4);
-	const dataView = new DataView(pixels.buffer);
+// 	const [col, row] = array;
+// 	const w = bytesPerScanline;
+// 	const h = data.length;
+// 	const pixels = new Uint8ClampedArray(col * w * h * 4);
+// 	const dataView = new DataView(pixels.buffer);
 
-	for (let i = 0, len = dataView.byteLength; i < len; i += col * w * 4) {
-		const bitmask = data[i / (col * w * 4)];
-		let offset = i;
+// 	for (let i = 0, len = dataView.byteLength; i < len; i += col * w * 4) {
+// 		const bitmask = data[i / (col * w * 4)];
+// 		let offset = i;
 
-		for (let c = 0; c < col; c++) {
-			for (let n = bytesPerScanline - 1; n >= 0; n--) {
-				const alpha = ((1 << n) & bitmask) !== 0 ? 255 : 0;
-				dataView.setUint8(offset + 0, 0);
-				dataView.setUint8(offset + 1, 0);
-				dataView.setUint8(offset + 2, 0);
-				dataView.setUint8(offset + 3, alpha);
-				offset += 4;
-			}
-		}
-	}
+// 		for (let c = 0; c < col; c++) {
+// 			for (let n = bytesPerScanline - 1; n >= 0; n--) {
+// 				const alpha = ((1 << n) & bitmask) !== 0 ? 255 : 0;
+// 				dataView.setUint8(offset + 0, 0);
+// 				dataView.setUint8(offset + 1, 0);
+// 				dataView.setUint8(offset + 2, 0);
+// 				dataView.setUint8(offset + 3, alpha);
+// 				offset += 4;
+// 			}
+// 		}
+// 	}
 
-	const repeatedPixels = repeatArray(pixels, row);
-	const imageData = new ImageData(repeatedPixels, w * col);
+// 	const repeatedPixels = repeatArray(pixels, row);
+// 	const imageData = new ImageData(repeatedPixels, w * col);
 
-	return imageData;
-	// Web
-	// return createImageBitmap(imageData);
-}
+// 	return imageData;
+// 	// Web
+// 	// return createImageBitmap(imageData);
+// }
 
 export function calMidpoint(points: Point[]): Point {
 	const point = points.reduce((prev, item) => prev.add(item), Point.origin());

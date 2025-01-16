@@ -4,6 +4,9 @@ export { Circle } from "./circle";
 export type { CompositionOptions } from "./composition";
 export { Composition } from "./composition";
 
+export type { GraphicId, GraphicOptions } from "./graphic";
+export { Graphic } from "./graphic";
+
 export type { ImagePixelOptions } from "./image-pixel";
 export { ImagePixel } from "./image-pixel";
 
@@ -13,11 +16,11 @@ export { Image } from "./image";
 export type { PieOptions } from "./pie";
 export { Pie } from "./pie";
 
-export type { PolylineOptions } from "./polyline";
-export { Polyline } from "./polyline";
-
 export type { PolygonOptions } from "./polygon";
 export { Polygon } from "./polygon";
+
+export type { PolylineOptions } from "./polyline";
+export { Polyline } from "./polyline";
 
 export type { RectangleOptions } from "./rectangle";
 export { Rectangle } from "./rectangle";

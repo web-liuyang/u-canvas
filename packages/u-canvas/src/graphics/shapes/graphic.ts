@@ -1,11 +1,12 @@
 import type { Hittable, Paintable, Parent } from "../../types";
-import { Offset, Point } from "../../offset";
-import { Style } from "../styles";
+import type { Style } from "../styles";
+import type { Point } from "../../offset";
+import type { Canvas } from "../../renderer/canvas";
+import type { Aabb } from "../aabb";
+import type { EventTypeMap } from "../events";
+import { Offset } from "../../offset";
 import { generateUUID } from "../utils";
 import { Transform } from "../../transform";
-import { Canvas } from "../../renderer/canvas";
-import { Aabb } from "../aabb";
-import { EventTypeMap } from "../events";
 
 export type GraphicId = string;
 

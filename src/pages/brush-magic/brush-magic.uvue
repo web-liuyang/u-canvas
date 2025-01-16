@@ -6,11 +6,15 @@ import {
 	PointerdownEvent,
 	PointermoveEvent,
 	PointerupEvent,
-	PointerComponent,
+	// 无法在小程序中引用
+	// PointerComponent,
 } from "u-pointer";
 
+// 可以使用, 但好像报错, 路径有问题
+// Component is not found in path "packages/u-pointer/src/components/pointer-component/pointer-component" (using by "src/pages/brush-magic/brush-magic").(env: macOS,mp,1.06.2407120; lib: 3.7.3)
+import PointerComponent from "../../../packages/u-pointer/src/components/pointer-component/pointer-component.uvue";
+
 import {
-	createImageData,
 	UCanvas,
 	Composition,
 	Text,
@@ -128,32 +132,32 @@ onMounted(() => {
 			})
 		);
 
-		// const data = new Uint8ClampedArray([
-		// 	parseInt("10000000", 2),
-		// 	parseInt("01000000", 2),
-		// 	parseInt("00100000", 2),
-		// 	parseInt("00010000", 2),
-		// 	parseInt("00001000", 2),
-		// 	parseInt("00000100", 2),
-		// 	parseInt("00000010", 2),
-		// 	parseInt("00000001", 2),
-		// ]);
+		const data = new Uint8ClampedArray([
+			parseInt("10000000", 2),
+			parseInt("01000000", 2),
+			parseInt("00100000", 2),
+			parseInt("00010000", 2),
+			parseInt("00001000", 2),
+			parseInt("00000100", 2),
+			parseInt("00000010", 2),
+			parseInt("00000001", 2),
+		]);
 
-		// uCanvas.add(
-		// 	new Composition({
-		// 		x: 10,
-		// 		y: 300,
-		// 		children: [
-		// 			new ImagePixel({
-		// 				imageData: createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
-		// 				x: 0,
-		// 				y: 0,
-		// 			}),
-		// 			//
-		// 			new Text({ x: 0, y: 120, text: "ImagePixel" }),
-		// 		],
-		// 	})
-		// );
+		uCanvas.add(
+			new Composition({
+				x: 10,
+				y: 300,
+				children: [
+					new ImagePixel({
+						imageData: uCanvas.createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+						x: 0,
+						y: 0,
+					}),
+					//
+					new Text({ x: 0, y: 120, text: "ImagePixel" }),
+				],
+			})
+		);
 
 		const image = await uCanvas.createImage("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
 
@@ -178,7 +182,7 @@ onMounted(() => {
 });
 
 let stateMachine = new SelectionStateMachine(uCanvas);
-
+console.log(PointerComponent);
 const currentToolIndex = ref(0);
 
 const onChangeCurrentTool = (index: number) => {
@@ -234,7 +238,7 @@ const toolButtons: ToolButton[] = [
 ];
 
 function pointerdown(e: PointerdownEvent) {
-	// console.log("pointerdown", e.pointer.id);
+	console.log("pointerdown", e.pointer.id);
 	stateMachine.onpointerdown(e);
 }
 
@@ -262,14 +266,17 @@ function pointerwheel(e: PointerwheelEvent) {
 <template>
 	<view class="brush-magic">
 		<PointerComponent
+			class="pointer-component"
 			@onpointerclick="pointerclick"
 			@onpointerdown="pointerdown"
 			@onpointermove="pointermove"
 			@onpointerup="pointerup"
 			@onpointerwheel="pointerwheel"
 		>
-			<canvas id="ucanvas" class="ucanvas" />
+			<canvas canvas-id="ucanvas" id="ucanvas" class="ucanvas" />
 		</PointerComponent>
+		<!-- <text>123</text>  -->
+		<!-- <canvas canvas-id="ucanvas" id="ucanvas" class="ucanvas" /> -->
 		<!-- <global-event-target>
 			<toolbar :currentIndex="currentToolIndex" :buttons="toolButtons" @onChange="onChangeCurrentTool" />
 			<interactive-canvas
@@ -295,9 +302,14 @@ function pointerwheel(e: PointerwheelEvent) {
 	height: 100%;
 }
 
+.pointer-component {
+	width: 100%;
+	height: 100%;
+}
+
 .ucanvas {
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 
 	border: 1px solid red;
 }

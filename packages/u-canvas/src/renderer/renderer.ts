@@ -1,5 +1,5 @@
+import type { UCanvas } from "../u-canvas";
 import { Offset } from "../offset";
-import { UCanvas } from "../u-canvas";
 import { Canvas } from "./canvas";
 import { renderCanvas } from "./entity-renderer";
 import { EntityFactory } from "./entity";
