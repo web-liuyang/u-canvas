@@ -1,6 +1,6 @@
 import { BaseStateMachine } from "./base-state-machine";
-import { Point, Polyline } from "@/uni-modules/u-canvas/src";
-import { PointerdownEvent, PointermoveEvent } from "@/uni-modules/u-pointer";
+import { Point, Polyline } from "@/uni_modules/u-canvas/src";
+import { PointerdownEvent, PointermoveEvent } from "@/uni_modules/u-pointer";
 
 export class BrushStateMachine extends BaseStateMachine {
 	private polyline: Polyline | undefined;

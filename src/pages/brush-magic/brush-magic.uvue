@@ -8,7 +8,7 @@ import {
 	PointerupEvent,
 	// 无法在小程序中引用, 貌似是因为小程序的静态分析导致的
 	// PointerComponent,
-} from "@/uni-modules/u-pointer";
+} from "@/uni_modules/u-pointer";
 
 import {
 	UCanvas,
@@ -23,7 +23,7 @@ import {
 	Image,
 	ImagePixel,
 	Point,
-} from "@/uni-modules/u-canvas/src";
+} from "@/uni_modules/u-canvas/src";
 
 import { onMounted, nextTick, ref } from "vue";
 
