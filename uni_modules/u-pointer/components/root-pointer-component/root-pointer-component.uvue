@@ -8,34 +8,34 @@ import type {
 	PointerwheelEvent,
 } from "../pointer-component/pointer-events";
 import PointerComponent from "../pointer-component/pointer-component.uvue";
-import { rootpointer } from "./root-pointer";
+import { pointerListener } from "../pointer-component/pointer-listener";
 
 defineOptions({
 	name: "RootPointerComponent",
 });
 
 function pointerdown(e: PointerdownEvent) {
-	rootpointer.notify("onpointerdown", e);
+	pointerListener.notify("onpointerdown", e);
 }
 
 function pointermove(e: PointermoveEvent) {
-	rootpointer.notify("onpointermove", e);
+	pointerListener.notify("onpointermove", e);
 }
 
 function pointerup(e: PointerupEvent) {
-	rootpointer.notify("onpointerup", e);
+	pointerListener.notify("onpointerup", e);
 }
 
 function pointercancel(e: PointercancelEvent) {
-	rootpointer.notify("onpointercancel", e);
+	pointerListener.notify("onpointercancel", e);
 }
 
 function pointerclick(e: PointerclickEvent) {
-	rootpointer.notify("onpointerclick", e);
+	pointerListener.notify("onpointerclick", e);
 }
 
 function pointerwheel(e: PointerwheelEvent) {
-	rootpointer.notify("onpointerwheel", e);
+	pointerListener.notify("onpointerwheel", e);
 }
 </script>
 

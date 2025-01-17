@@ -7,7 +7,7 @@ import {
 	PointerdownEvent,
 	PointermoveEvent,
 	PointerupEvent,
-	rootpointer,
+	pointerListener,
 } from "@/uni_modules/u-pointer";
 
 const localPointers = ref<Map<number, Pointer>>(new Map());
@@ -33,23 +33,24 @@ function pointerwheel(e: PointerwheelEvent) {
 	console.log("pointerwheel", e.pointer.id, e.direction);
 }
 
-rootpointer.addEventListener("onpointerdown", e => {
+pointerListener.addEventListener("onpointerdown", e => {
+	console.log("root pointerdown", e.pointer.id);
 	globalPointers.value.set(e.pointer.id, e.pointer);
 });
 
-rootpointer.addEventListener("onpointermove", e => {
+pointerListener.addEventListener("onpointermove", e => {
 	globalPointers.value.set(e.pointer.id, e.pointer);
 });
 
-rootpointer.addEventListener("onpointerup", e => {
+pointerListener.addEventListener("onpointerup", e => {
 	globalPointers.value.delete(e.pointer.id);
 });
 
-rootpointer.addEventListener("onpointerclick", e => {
+pointerListener.addEventListener("onpointerclick", e => {
 	console.log("root pointerclick", e.pointer.id);
 });
 
-rootpointer.addEventListener("onpointerwheel", e => {
+pointerListener.addEventListener("onpointerwheel", e => {
 	console.log("root pointerwheel", e.pointer.id, e.direction);
 });
 
@@ -61,35 +62,41 @@ function normalizeNumber(value: number): string {
 <template>
 	<view class="container">
 		<root-pointer-component>
-			<pointer-component
-				class="rect"
-				@onpointerclick="pointerclick"
-				@onpointerdown="pointerdown"
-				@onpointermove="pointermove"
-				@onpointerup="pointerup"
-				@onpointerwheel="pointerwheel"
-			>
-			</pointer-component>
+			<view>
+				<pointer-component
+					class="rect"
+					@onpointerclick="pointerclick"
+					@onpointerdown="pointerdown"
+					@onpointermove="pointermove"
+					@onpointerup="pointerup"
+					@onpointerwheel="pointerwheel"
+				>
+				</pointer-component>
 
-			<view class="info" age="18">
-				<text class="title">矩形指针信息</text>
-				<view v-for="pointer in localPointers.values()" :key="pointer.id">
-					<view>id: {{ pointer.id }}</view>
-					<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
-					<view>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view>
-					<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+				<view class="info" age="18">
+					<text class="title">矩形指针信息</text>
+					<view v-for="pointer in localPointers.values()" :key="pointer.id">
+						<view>id: {{ pointer.id }}</view>
+						<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
+						<view
+							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view
+						>
+						<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+					</view>
 				</view>
-			</view>
 
-			<view class="divider"></view>
+				<view class="divider"></view>
 
-			<view class="info">
-				<text class="title">全局指针信息</text>
-				<view v-for="pointer in globalPointers.values()" :key="pointer.id">
-					<view>id: {{ pointer.id }}</view>
-					<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
-					<view>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view>
-					<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+				<view class="info">
+					<text class="title">全局指针信息</text>
+					<view v-for="pointer in globalPointers.values()" :key="pointer.id">
+						<view>id: {{ pointer.id }}</view>
+						<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
+						<view
+							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view
+						>
+						<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+					</view>
 				</view>
 			</view>
 		</root-pointer-component>

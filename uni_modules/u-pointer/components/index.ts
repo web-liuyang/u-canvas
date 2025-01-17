@@ -3,5 +3,5 @@
 // export { PointerComponent, RootPointerComponent };
 
 export * from "./pointer-component/pointer-events";
+export * from "./pointer-component/pointer-listener";
 export * from "./pointer-component/utils";
-export * from "./root-pointer-component/root-pointer";

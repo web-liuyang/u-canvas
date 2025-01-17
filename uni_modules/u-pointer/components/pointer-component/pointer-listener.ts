@@ -1,6 +1,6 @@
-import { EventTypeMap } from "../pointer-component/pointer-events";
+import type { EventTypeMap } from "./pointer-events";
 
-export class RootPointer {
+export class PointerListener {
 	private _listeners = new Map<keyof EventTypeMap, ((e: EventTypeMap[keyof EventTypeMap]) => void)[]>();
 
 	public addEventListener<K extends keyof EventTypeMap>(type: K, listener: (e: EventTypeMap[K]) => void) {
@@ -24,4 +24,4 @@ export class RootPointer {
 	}
 }
 
-export const rootpointer = new RootPointer();
+export const pointerListener = new PointerListener();

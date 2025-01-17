@@ -20,6 +20,18 @@ const emit = defineEmits<{
 	<T extends keyof EventTypeMap>(name: T, event: EventTypeMap[T]): void;
 }>();
 
+// // 其实在 UniEvent 中是有 currentTarget 来表示当前组件的,
+// // 但是有 BUG 实际上并不是当前组件, 所以用此变量打个补丁
+// const pointerComponent = ref<UniViewElement | null>(null);
+
+// onMounted(() => {
+// 	console.log("onMounted");
+// 	pointerListener.addEventListener("onpointerdown", event => {
+// 		const { target } = event.nativeEvent;
+// 		const currentTarget = pointerComponent.value;
+// 	});
+// });
+
 const PRESS_TIMEOUT = 300; // 0ms - 300ms
 const DB_PRESS_TIMEOUT = 500; // 300ms - 500ms
 const LONG_PRESS_TIMEOUT = 500; // 500ms - 1000ms
@@ -113,7 +125,6 @@ function onpointerdown(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
 			// 超时取消 click
 			const timestamp = preonclickPointers.get(pointer.id);
 			if (timestamp === pointerdown.timestamp) {
-				console.log("cancel click");
 				preonclickPointers.delete(pointer.id);
 			}
 		}, PRESS_TIMEOUT);
