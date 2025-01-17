@@ -206,7 +206,6 @@ function onpointerwheel(pointers: Pointer[], e: WheelEvent) {
 
 <template>
 	<view
-		class="pointer-component"
 		@touchstart="onTouchstart"
 		@touchmove="onTouchmove"
 		@touchcancel="onTouchcancel"

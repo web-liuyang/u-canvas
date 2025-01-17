@@ -28,8 +28,11 @@
 ### 注意事项
 
 1. **@onpointerclick **事件在按下后如果移动指针就不会触发, 并且如果按下超过 **300ms** 同样不会触发.
+1. **@onpointerup** 事件触发后会立即触发 **@onpointerclick** . 此处是已知问题, 但不会影响使用, 只是触发队列不一致, 后面反馈的人多了或有空的话会补上.
 
 ### TODO
 
 1. [ ] @onpointerdbclick 双击事件
 2. [ ] @onpointerlongclick 长按事件
+2. [ ] stopPropagation 阻止当前事件的进一步传播
+2. [ ] preventDefault 阻止当前事件的默认行为

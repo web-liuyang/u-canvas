@@ -60,7 +60,7 @@ function normalizeNumber(value: number): string {
 </script>
 
 <template>
-	<view class="container">
+	<view class="w-100 h-100">
 		<root-pointer-component>
 			<view>
 				<pointer-component
@@ -72,7 +72,6 @@ function normalizeNumber(value: number): string {
 					@onpointerwheel="pointerwheel"
 				>
 				</pointer-component>
-
 				<view class="info" age="18">
 					<text class="title">矩形指针信息</text>
 					<view v-for="pointer in localPointers.values()" :key="pointer.id">
@@ -92,9 +91,7 @@ function normalizeNumber(value: number): string {
 					<view v-for="pointer in globalPointers.values()" :key="pointer.id">
 						<view>id: {{ pointer.id }}</view>
 						<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
-						<view
-							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view
-						>
+						<view>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view>
 						<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
 					</view>
 				</view>
@@ -103,11 +100,13 @@ function normalizeNumber(value: number): string {
 	</view>
 </template>
 
-<style scoped>
-.container {
+<style>
+.w-100 {
 	width: 100%;
+}
+
+.h-100 {
 	height: 100%;
-	overflow: hidden;
 }
 
 .title {

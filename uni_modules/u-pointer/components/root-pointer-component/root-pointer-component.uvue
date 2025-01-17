@@ -41,7 +41,7 @@ function pointerwheel(e: PointerwheelEvent) {
 
 <template>
 	<PointerComponent
-		class="root-pointer-component"
+		style="height: 100%; width: 100%"
 		@onpointerdown="pointerdown"
 		@onpointermove="pointermove"
 		@onpointerup="pointerup"
@@ -52,10 +52,3 @@ function pointerwheel(e: PointerwheelEvent) {
 		<slot />
 	</PointerComponent>
 </template>
-
-<style>
-.root-pointer-component {
-	width: 100%;
-	height: 100%;
-}
-</style>
