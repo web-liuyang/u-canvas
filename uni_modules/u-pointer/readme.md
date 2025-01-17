@@ -21,9 +21,52 @@
 
 #### 事件
 
-此组件一般放在根节点下, 通过引入 **rootpointer** 来进行处理, 事件类型与 **PointerComponent** 保持一致.
+此组件一般放在 **根节点** 下, 通过引入 **rootpointer** 来进行处理, 事件类型与 **PointerComponent** 保持一致.
 
-使用方法类似于 **document.addEventListener**, 通过 **rootpointer.addEventListener** 来监听事件.
+使用方法类似于 **document.addEventListener**, 只不过需要换成 **rootpointer.addEventListener** 来监听事件.
+
+### 使用方法
+
+#### PointerComponent
+
+```vue
+<template>
+  <pointer-component
+      @onpointerclick="pointerclick"
+      @onpointerdown="pointerdown"
+      @onpointermove="pointermove"
+      @onpointerup="pointerup"
+      @onpointerwheel="pointerwheel"
+  >
+      <view>Click Me</view>
+  </pointer-component>
+</template>
+```
+
+#### RootPointerComponent
+
+```vue
+<script lang="ts" setup>
+import { onMounted, onUnmounted } from "vue";
+import { pointerListener } from "@/uni_modules/u-pointer";
+function pointerdown(event: PointerdownEvent): void {}
+
+onMounted(() => {
+	pointerListener.addEventListener("onpointerdown", pointerdown);
+});
+
+onUnmounted(() => {
+	pointerListener.removeEventListener("onpointerdown", pointerdown);
+});
+
+</script>
+
+<template>
+  <root-pointer-component>
+      <view>Click Me</view>
+  </root-pointer-component>
+</template>
+```
 
 ### 注意事项
 
