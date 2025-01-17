@@ -13,10 +13,11 @@ export interface Pointer {
 	screenX: number;
 	/** 相对于屏幕顶部的距离，不包括滚动距离 */
 	screenY: number;
-	/** 指针目标 */
+	/** 触发指针目标 */
 	target: UniElement | EventTarget;
 }
 
+/** 基础指针事件 */
 export class BasePointerEvent {
 	/** 事件创建的时间（以毫秒为单位）。 */
 	public readonly timestamp: number;
@@ -32,23 +33,29 @@ export class BasePointerEvent {
 	}
 }
 
+/** 偏移量 */
 export interface Delta {
+	/** x 方向偏移量 */
 	x: number;
+	/** y 方向偏移量 */
 	y: number;
 }
 
+/** 点击事件 */
 export class PointerclickEvent extends BasePointerEvent {
 	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
 	}
 }
 
+/** 按下事件 */
 export class PointerdownEvent extends BasePointerEvent {
 	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
 	}
 }
 
+/** 移动事件 */
 export class PointermoveEvent extends BasePointerEvent {
 	public pointer: Pointer & { delta: Delta };
 
@@ -58,18 +65,21 @@ export class PointermoveEvent extends BasePointerEvent {
 	}
 }
 
+/** 抬起事件 */
 export class PointerupEvent extends BasePointerEvent {
 	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
 	}
 }
 
+/** 取消事件 */
 export class PointercancelEvent extends BasePointerEvent {
 	constructor(pointer: BasePointerEvent["pointer"], nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
 	}
 }
 
+/** 滚动事件 */
 export class PointerwheelEvent extends BasePointerEvent {
 	public readonly direction: "up" | "down" | "left" | "right";
 
@@ -87,6 +97,7 @@ export class PointerwheelEvent extends BasePointerEvent {
 	}
 }
 
+/** 事件名称到类型的映射 */
 export interface EventTypeMap {
 	onpointerclick: PointerclickEvent;
 	onpointerdown: PointerdownEvent;
