@@ -60,7 +60,7 @@ function normalizeNumber(value: number): string {
 
 <template>
 	<view class="container">
-		<RootPointerComponent>
+		<root-pointer-component>
 			<pointer-component
 				class="rect"
 				@onpointerclick="pointerclick"
@@ -80,7 +80,9 @@ function normalizeNumber(value: number): string {
 					<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
 				</view>
 			</view>
+
 			<view class="divider"></view>
+
 			<view class="info">
 				<text class="title">全局指针信息</text>
 				<view v-for="pointer in globalPointers.values()" :key="pointer.id">
@@ -90,7 +92,7 @@ function normalizeNumber(value: number): string {
 					<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
 				</view>
 			</view>
-		</RootPointerComponent>
+		</root-pointer-component>
 	</view>
 </template>
 
