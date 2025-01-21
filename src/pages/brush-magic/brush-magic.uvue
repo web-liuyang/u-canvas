@@ -260,7 +260,7 @@ function pointerwheel(e: PointerwheelEvent) {
 
 <template>
 	<view class="brush-magic">
-		<PointerComponent
+		<pointer-component
 			class="pointer-component"
 			@onpointerclick="pointerclick"
 			@onpointerdown="pointerdown"
@@ -269,7 +269,7 @@ function pointerwheel(e: PointerwheelEvent) {
 			@onpointerwheel="pointerwheel"
 		>
 			<canvas canvas-id="ucanvas" id="ucanvas" class="ucanvas" />
-		</PointerComponent>
+		</pointer-component>
 	</view>
 </template>
 

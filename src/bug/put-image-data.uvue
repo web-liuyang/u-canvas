@@ -1,0 +1,43 @@
+<script lang="ts" setup>
+	import { nextTick } from "vue";
+
+	onReady(() => {
+		nextTick(async () => {
+			uni.createCanvasContextAsync({
+				id: "canvas",
+				success: (context : CanvasContext) => {
+					const renderingContext = context.getContext("2d")!;
+					const image = context.createImage();
+					image.src = "/static/logo.png";
+					image.onload = () => {
+						renderingContext.drawImage(image, 0, 0, 50, 50);
+						const canvasImageData = renderingContext.getImageData(0, 0, 50, 50);
+						renderingContext.putImageData(canvasImageData, 50, 0);
+						console.log("canvasImageData: ", canvasImageData);
+						// const imageData = renderingContext.createImageData(canvasImageData.width, canvasImageData.height);
+						const imageData = renderingContext.getImageData(0, 0, canvasImageData.width, canvasImageData.height);
+						// const imageData = renderingContext.createImageData(canvasImageData.data);
+						console.log("imageData: ", imageData);
+						// imageData.data.buffer.byteLength;
+						// const imageData = new ImageData(canvasImageData.data, canvasImageData.width, canvasImageData.height);
+						renderingContext.putImageData(imageData, 50, 50);
+					};
+				},
+			});
+		});
+	});
+</script>
+
+<template>
+	<view class="container">
+		<canvas id="canvas" />
+	</view>
+</template>
+
+<style>
+	.container {
+		width: 100%;
+		height: 100%;
+		border: 1px red solid;
+	}
+</style>

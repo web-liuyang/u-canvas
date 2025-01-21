@@ -80,37 +80,35 @@ export class UCanvas {
 		const canvasContext = await this.getCanvasContext(this.options);
 		this.canvasContext = canvasContext;
 		this.ctx = this.canvasContext.getContext("2d")!;
-		this.mixinCanvasMethod(this.ctx);
+		this.mixinCanvasMethod();
 		this.hidpi(this.ctx, this.dpr);
 		this.root = new Composition({ x: 0, y: 0 });
 		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
 		this.setViewbox(this.root.matrix);
 	}
 
-	private mixinCanvasMethod(ctx: CanvasRenderingContext2D) {
+	private mixinCanvasMethod() {
 		// uniapp-x 并沒有提供 getTransform 方法
 		// 注入 set/getMatrix
-		ctx.getMatrix = () => this.root.matrix.clone();
-		ctx.setMatrix = (matrix: Matrix) => {
-			ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
+		this.ctx.getMatrix = () => this.root.matrix.clone();
+		this.ctx.setMatrix = (matrix: Matrix) => {
+			this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
 			this.root.matrix = matrix;
 		};
-
-		ctx.createCompatibleImageData = (data: Uint8ClampedArray | number, w: number, h?: number) => {
-			let imageData: ImageData;
-			const _data = data instanceof Uint8ClampedArray ? data : undefined;
-			const _w = data instanceof Uint8ClampedArray ? w : data;
-			const _h = data instanceof Uint8ClampedArray ? h : w;
-
+		this.ctx.createCompatibleImageData = (data: Uint8ClampedArray, w: number, h: number) => {
 			// #ifdef APP
-			imageData = _data ? new ImageData(_data, _w, _h) : new ImageData(_w, _h as number);
+			// Web 有跨源问题
+			// @ts-expect-error Uni 条件编译
+			const imageData: ImageData = this.ctx.getImageData(0, 0, w, h);
 			// #endif
 
 			// #ifdef WEB || MP
-			imageData = ctx.createImageData(_w, _h as number);
-			if (_data) imageData.data.set(_data);
+			// 有Android/iOS不支持
+			// @ts-expect-error Uni 条件编译
+			const imageData: ImageData = this.ctx.createImageData(w, h);
 			// #endif
 
+			imageData.data.set(data);
 			return imageData;
 		};
 	}
@@ -170,8 +168,6 @@ export class UCanvas {
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
 		this.setViewbox(matrix);
 		this.clear();
-		// this.mixinCanvasMethod();
-
 		applyStyle(this.ctx, this.style);
 
 		this.renderer.renderRoot();
@@ -225,7 +221,6 @@ declare global {
 		getMatrix(): Matrix;
 		setMatrix(matrix: Matrix): void;
 
-		createCompatibleImageData(data: Uint8ClampedArray, w: number, h?: number): ImageData;
-		createCompatibleImageData(w: number, h: number): ImageData;
+		createCompatibleImageData(data: Uint8ClampedArray, w: number, h: number): ImageData;
 	}
 }
