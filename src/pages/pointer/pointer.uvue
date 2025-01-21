@@ -14,6 +14,7 @@ const localPointers = ref<Map<number, Pointer>>(new Map());
 const globalPointers = ref<Map<number, Pointer>>(new Map());
 
 function pointerdown(e: PointerdownEvent) {
+	console.log("pointerdown");
 	localPointers.value.set(e.pointer.id, e.pointer);
 }
 
@@ -22,6 +23,7 @@ function pointermove(e: PointermoveEvent) {
 }
 
 function pointerup(e: PointerupEvent) {
+	console.log("pointerup");
 	localPointers.value.delete(e.pointer.id);
 }
 
@@ -75,12 +77,10 @@ function normalizeNumber(value: number): string {
 				<view class="info" age="18">
 					<text class="title">矩形指针信息</text>
 					<view v-for="pointer in localPointers.values()" :key="pointer.id">
-						<view>id: {{ pointer.id }}</view>
-						<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
-						<view
-							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view
-						>
-						<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+						<text>id: {{ pointer.id }}</text>
+						<text>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</text>
+						<text>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text>
+						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
 					</view>
 				</view>
 
@@ -89,10 +89,10 @@ function normalizeNumber(value: number): string {
 				<view class="info">
 					<text class="title">全局指针信息</text>
 					<view v-for="pointer in globalPointers.values()" :key="pointer.id">
-						<view>id: {{ pointer.id }}</view>
-						<view>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</view>
-						<view>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</view>
-						<view>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</view>
+						<text>id: {{ pointer.id }}</text>
+						<text>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</text>
+						<text>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text>
+						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
 					</view>
 				</view>
 			</view>

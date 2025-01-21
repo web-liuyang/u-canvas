@@ -117,6 +117,10 @@ const onWheel = (e: WheelEvent) => {
 function onpointerdown(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
 	for (const pointer of pointers) {
 		const pointerdown = new PointerdownEvent(pointer, e);
+		if (pressedPointers.has(pointer.id) || preonclickPointers.has(pointer.id)) {
+			continue;
+		}
+
 		emit("onpointerdown", pointerdown);
 		pressedPointers.set(pointer.id, pointer);
 		preonclickPointers.set(pointer.id, pointerdown.timestamp);
