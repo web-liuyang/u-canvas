@@ -14,7 +14,7 @@ import { getPointersByMouse, getPointersByTouch, getPointersByWheel } from "./ut
 const isPC = uni.getSystemInfoSync().deviceType === "pc";
 
 defineOptions({
-	name: "PointerComponent",
+	name: "u-pointer",
 });
 
 const emit = defineEmits<{
@@ -23,7 +23,7 @@ const emit = defineEmits<{
 
 // 其实在 UniEvent 中是有 currentTarget 来表示当前组件的,
 // 但是有 BUG 实际上并不是当前组件, 所以用此变量打个补丁
-const pointerComponent = ref<UniViewElement | null>(null);
+const uPointer = ref<UniViewElement | null>(null);
 
 const PRESS_TIMEOUT = 300; // 0ms - 300ms
 const DB_PRESS_TIMEOUT = 500; // 300ms - 500ms
@@ -109,7 +109,7 @@ const onWheel = (e: WheelEvent) => {
 
 async function onpointerdown(pointers: Pointer[], e: UniTouchEvent | MouseEvent): Promise<void> {
 	for (const pointer of pointers) {
-		const curRect = await pointerComponent.value?.getBoundingClientRectAsync();
+		const curRect = await uPointer.value?.getBoundingClientRectAsync();
 		if (!curRect) continue;
 		// 没有在范围内
 		if (
@@ -214,7 +214,7 @@ function onpointerwheel(pointers: Pointer[], e: WheelEvent) {
 
 <template>
 	<view
-		ref="pointerComponent"
+		ref="uPointer"
 		@touchstart="onTouchstart"
 		@touchmove="onTouchmove"
 		@touchcancel="onTouchcancel"

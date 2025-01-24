@@ -4,7 +4,7 @@
 
 消除 **uni** 中组件事件触发的[各端异性](https://doc.dcloud.net.cn/uni-app-x/component/common.html#%E7%BB%84%E4%BB%B6%E5%85%A8%E5%B1%80%E4%BA%8B%E4%BB%B6), 统一事件处理, 减轻负担
 
-### PointerComponent
+### u-pointer
 
 #### 事件
 
@@ -17,21 +17,11 @@
 | @onpointercancel    | @touchcancel            | 在元素上动作被打断，如来电提醒，弹窗等 |
 | @onpointerwheel     | 无                      | 鼠标滚轮                               |
 
-### RootPointerComponent
-
-#### 事件
-
-此组件一般放在 **根节点** 下, 通过引入 **rootpointer** 来进行处理, 事件类型与 **PointerComponent** 保持一致.
-
-使用方法类似于 **document.addEventListener**, 只不过需要换成 **rootpointer.addEventListener** 来监听事件.
-
-### 使用方法
-
-#### PointerComponent
+#### 使用方法
 
 ```vue
 <template>
-  <pointer-component
+  <u-pointer
       @onpointerclick="pointerclick"
       @onpointerdown="pointerdown"
       @onpointermove="pointermove"
@@ -39,38 +29,50 @@
       @onpointerwheel="pointerwheel"
   >
       <view>Click Me</view>
-  </pointer-component>
+  </u-pointer>
 </template>
 ```
 
-#### RootPointerComponent
+### u-pointer-root
+
+#### 事件
+
+此组件一般放在 **根节点** 下, 组件上无任何事件, 但有一个 **globalPointer** 的全局指针监听器, 回调参数类型与 **u-pointer** 事件保持一致.
+
+使用方法类似于 **document.addEventListener**, 只不过需要换成 **globalPointer.addEventListener** 来监听事件.
+
+### 使用方法
+
+#### u-pointer-root
 
 ```vue
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from "vue";
-import { pointerListener } from "@/uni_modules/u-pointer";
-function pointerdown(event: PointerdownEvent): void {}
+import { globalPointer } from "@/uni_modules/u-pointer";
+function pointerdown(event: PointerdownEvent): void {
+  console.log("pointerdown", event)
+}
 
 onMounted(() => {
-	pointerListener.addEventListener("onpointerdown", pointerdown);
+	globalPointer.addEventListener("onpointerdown", pointerdown);
 });
 
 onUnmounted(() => {
-	pointerListener.removeEventListener("onpointerdown", pointerdown);
+	globalPointer.removeEventListener("onpointerdown", pointerdown);
 });
 
 </script>
 
 <template>
-  <root-pointer-component>
+  <u-pointer-root>
       <view>Click Me</view>
-  </root-pointer-component>
+  </u-pointer-root>
 </template>
 ```
 
 ### 注意事项
 
-1. **@onpointerclick **事件在按下后如果移动指针就不会触发, 并且如果按下超过 **300ms** 同样不会触发.
+1. **@onpointerclick **事件在按下后 **移动指针** 或 **按下超过 300ms** 同样不会触发.
 1. **@onpointerup** 事件触发后会立即触发 **@onpointerclick** . 此处是已知问题, 但不会影响使用, 只是触发队列不一致, 后面反馈的人多了或有空的话会补上.
 
 ### TODO

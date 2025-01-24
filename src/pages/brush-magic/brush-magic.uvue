@@ -260,8 +260,8 @@ function pointerwheel(e: PointerwheelEvent) {
 
 <template>
 	<view class="brush-magic">
-		<pointer-component
-			class="pointer-component"
+		<u-pointer
+			class="u-pointer"
 			@onpointerclick="pointerclick"
 			@onpointerdown="pointerdown"
 			@onpointermove="pointermove"
@@ -269,7 +269,7 @@ function pointerwheel(e: PointerwheelEvent) {
 			@onpointerwheel="pointerwheel"
 		>
 			<canvas canvas-id="ucanvas" id="ucanvas" class="ucanvas" />
-		</pointer-component>
+		</u-pointer>
 	</view>
 </template>
 
@@ -279,7 +279,7 @@ function pointerwheel(e: PointerwheelEvent) {
 	height: 100%;
 }
 
-.pointer-component {
+.u-pointer {
 	width: 100%;
 	height: 100%;
 }

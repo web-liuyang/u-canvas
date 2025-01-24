@@ -6,41 +6,41 @@ import type {
 	PointermoveEvent,
 	PointercancelEvent,
 	PointerwheelEvent,
-} from "../pointer-component/pointer-events";
-import PointerComponent from "../pointer-component/pointer-component.uvue";
-import { pointerListener } from "../pointer-component/pointer-listener";
+} from "../u-pointer/pointer-events";
+import uPointer from "../u-pointer/u-pointer.uvue";
+import { globalPointer } from "../u-pointer/global-pointer";
 
 defineOptions({
-	name: "RootPointerComponent",
+	name: "u-pointer-root",
 });
 
 function pointerdown(e: PointerdownEvent) {
-	pointerListener.notify("onpointerdown", e);
+	globalPointer.notify("onpointerdown", e);
 }
 
 function pointermove(e: PointermoveEvent) {
-	pointerListener.notify("onpointermove", e);
+	globalPointer.notify("onpointermove", e);
 }
 
 function pointerup(e: PointerupEvent) {
-	pointerListener.notify("onpointerup", e);
+	globalPointer.notify("onpointerup", e);
 }
 
 function pointercancel(e: PointercancelEvent) {
-	pointerListener.notify("onpointercancel", e);
+	globalPointer.notify("onpointercancel", e);
 }
 
 function pointerclick(e: PointerclickEvent) {
-	pointerListener.notify("onpointerclick", e);
+	globalPointer.notify("onpointerclick", e);
 }
 
 function pointerwheel(e: PointerwheelEvent) {
-	pointerListener.notify("onpointerwheel", e);
+	globalPointer.notify("onpointerwheel", e);
 }
 </script>
 
 <template>
-	<PointerComponent
+	<u-pointer
 		style="height: 100%; width: 100%"
 		@onpointerdown="pointerdown"
 		@onpointermove="pointermove"
@@ -50,5 +50,5 @@ function pointerwheel(e: PointerwheelEvent) {
 		@onpointerwheel="pointerwheel"
 	>
 		<slot />
-	</PointerComponent>
+	</u-pointer>
 </template>

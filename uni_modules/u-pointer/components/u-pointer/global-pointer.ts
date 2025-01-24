@@ -1,7 +1,7 @@
 import type { EventTypeMap } from "./pointer-events";
 
 /** 事件监听器 */
-export class PointerListener {
+export class GlobalPointer {
 	private _listeners = new Map<keyof EventTypeMap, ((e: EventTypeMap[keyof EventTypeMap]) => void)[]>();
 
 	/**
@@ -41,4 +41,4 @@ export class PointerListener {
 }
 
 /** 全局事件监听器 */
-export const pointerListener = new PointerListener();
+export const globalPointer = new GlobalPointer();

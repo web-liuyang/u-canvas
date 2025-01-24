@@ -7,7 +7,7 @@ import {
 	PointerdownEvent,
 	PointermoveEvent,
 	PointerupEvent,
-	pointerListener,
+	globalPointer,
 } from "@/uni_modules/u-pointer";
 
 const pointerMap = reactive({
@@ -40,25 +40,25 @@ function pointerwheel(e: PointerwheelEvent) {
 	console.log("pointerwheel", e.pointer.id, e.direction);
 }
 
-pointerListener.addEventListener("onpointerdown", e => {
+globalPointer.addEventListener("onpointerdown", e => {
 	console.log("root pointerdown", e.pointer.id);
 	pointerMap.global.set(e.pointer.id, { ...e.pointer });
 });
 
-pointerListener.addEventListener("onpointermove", e => {
+globalPointer.addEventListener("onpointermove", e => {
 	pointerMap.global.set(e.pointer.id, { ...e.pointer });
 });
 
-pointerListener.addEventListener("onpointerup", async e => {
+globalPointer.addEventListener("onpointerup", async e => {
 	console.log("root pointerup", e.pointer.id);
 	pointerMap.global.delete(e.pointer.id);
 });
 
-pointerListener.addEventListener("onpointerclick", e => {
+globalPointer.addEventListener("onpointerclick", e => {
 	console.log("root pointerclick", e.pointer.id);
 });
 
-pointerListener.addEventListener("onpointerwheel", e => {
+globalPointer.addEventListener("onpointerwheel", e => {
 	console.log("root pointerwheel", e.pointer.id, e.direction);
 });
 
@@ -69,9 +69,9 @@ function normalizeNumber(value: number): string {
 
 <template>
 	<view class="w-100 h-100">
-		<root-pointer-component>
+		<u-pointer-root>
 			<view>
-				<pointer-component
+				<u-pointer
 					class="rect"
 					@onpointerclick="pointerclick"
 					@onpointerdown="pointerdown"
@@ -79,7 +79,7 @@ function normalizeNumber(value: number): string {
 					@onpointerup="pointerup"
 					@onpointerwheel="pointerwheel"
 				>
-				</pointer-component>
+				</u-pointer>
 
 				<view class="info" age="18">
 					<text class="title">矩形指针信息</text>
@@ -107,7 +107,7 @@ function normalizeNumber(value: number): string {
 					</view>
 				</view>
 			</view>
-		</root-pointer-component>
+		</u-pointer-root>
 	</view>
 </template>
 

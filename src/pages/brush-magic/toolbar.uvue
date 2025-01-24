@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ToolButton } from "./toolbar-interface";
 import { nextTick, ref } from "vue";
-import { globalEventTarget } from "./global-event-target";
+import { Pointer, PointercancelEvent, PointerclickEvent, PointerdownEvent, PointermoveEvent, PointerupEvent } from "@/uni_modules/u-pointer";
 
 const props = defineProps<{
 	buttons: ToolButton[];
@@ -19,54 +19,54 @@ const originPosition = ref<{ top: number; left: number }>({
 	top: 0,
 	left: 0,
 });
-const originTouchInfo = ref<TouchInfo>();
+const originTouchInfo = ref<Pointer>();
 
-const onTapCurrentToolButton = (e: FTapEvent) => {
+const onTapCurrentToolButton = (e: PointerclickEvent) => {
 	expanded.value = !expanded.value;
 };
 
-const onTouchstartCurrentToolButton = (e: FTouchstartEvent) => {
-	originTouchInfo.value = e.touchInfo;
-	originPosition.value = position.value;
-	function off() {
-		globalEventTarget.off("touchmove", touchmove);
-		globalEventTarget.off("touchend", touchend);
-		globalEventTarget.off("touchcancel", touchcancel);
-	}
+const onTouchstartCurrentToolButton = (e: PointerdownEvent) => {
+	// originTouchInfo.value = e.pointer;
+	// originPosition.value = position.value;
+	// function off() {
+	// 	globalEventTarget.off("touchmove", touchmove);
+	// 	globalEventTarget.off("touchend", touchend);
+	// 	globalEventTarget.off("touchcancel", touchcancel);
+	// }
 
-	function touchmove(e: FTouchendEvent) {
-		onTouchmoveCurrentToolButton(e);
-	}
+	// function touchmove(e: PointermoveEvent) {
+	// 	onTouchmoveCurrentToolButton(e);
+	// }
 
-	function touchend(e: FTouchendEvent) {
-		onTouchendCurrentToolButton(e);
-		off();
-	}
+	// function touchend(e: PointerupEvent) {
+	// 	onTouchendCurrentToolButton(e);
+	// 	off();
+	// }
 
-	function touchcancel(e: FTouchcancelEvent) {
-		onTouchcancelCurrentToolButton(e);
-		off();
-	}
+	// function touchcancel(e: PointercancelEvent) {
+	// 	onTouchcancelCurrentToolButton(e);
+	// 	off();
+	// }
 
-	globalEventTarget.on("touchmove", touchmove);
-	globalEventTarget.on("touchend", touchend);
-	globalEventTarget.on("touchcancel", touchcancel);
+	// globalEventTarget.on("touchmove", touchmove);
+	// globalEventTarget.on("touchend", touchend);
+	// globalEventTarget.on("touchcancel", touchcancel);
 };
 
-const onTouchmoveCurrentToolButton = (e: FTouchmoveEvent) => {
-	const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
+const onTouchmoveCurrentToolButton = (e: PointermoveEvent) => {
+	// const [deltaX, deltaY] = [e.x - originTouchInfo.value!.x, e.y - originTouchInfo.value!.y];
 
-	position.value = {
-		top: originPosition.value.top + deltaY,
-		left: originPosition.value.left + deltaX,
-	};
+	// position.value = {
+	// 	top: originPosition.value.top + deltaY,
+	// 	left: originPosition.value.left + deltaX,
+	// };
 };
 
-const onTouchendCurrentToolButton = (e: FTouchendEvent) => {
+const onTouchendCurrentToolButton = (e: PointerupEvent) => {
 	originTouchInfo.value = undefined;
 };
 
-const onTouchcancelCurrentToolButton = (e: FTouchcancelEvent) => {
+const onTouchcancelCurrentToolButton = (e: PointercancelEvent) => {
 	originTouchInfo.value = undefined;
 };
 
@@ -122,7 +122,7 @@ const TOOL_BUTTON_SIZE = 40;
 			width: expanded ? px((props.buttons.length + 1) * TOOL_BUTTON_SIZE) : px(TOOL_BUTTON_SIZE),
 		}"
 	>
-		<finger
+		<u-pointer
 			class="toolbar__item current"
 			:title="props.buttons[props.currentIndex].text"
 			:style="{ width: px(TOOL_BUTTON_SIZE), height: px(TOOL_BUTTON_SIZE) }"
@@ -130,8 +130,8 @@ const TOOL_BUTTON_SIZE = 40;
 			@onTouchstart="onTouchstartCurrentToolButton"
 		>
 			{{ props.buttons[props.currentIndex].icon }}
-		</finger>
-		<finger
+		</u-pointer>
+		<u-pointer
 			v-for="item in props.buttons"
 			class="toolbar__item"
 			:style="{ width: px(TOOL_BUTTON_SIZE), height: px(TOOL_BUTTON_SIZE) }"
@@ -139,7 +139,7 @@ const TOOL_BUTTON_SIZE = 40;
 			@onTap="item.onTap"
 		>
 			{{ item.icon }}
-		</finger>
+		</u-pointer>
 	</view>
 </template>
 

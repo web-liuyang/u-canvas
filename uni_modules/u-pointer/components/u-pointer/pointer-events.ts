@@ -21,7 +21,7 @@ export interface Pointer {
 export class BasePointerEvent {
 	/** 事件创建的时间（以毫秒为单位）。 */
 	public readonly timestamp: number;
-	/** 指针数组 */
+	/** 指针 */
 	public readonly pointer: Pointer;
 	/** 原生事件 */
 	public readonly nativeEvent: UniTouchEvent | MouseEvent | WheelEvent;
