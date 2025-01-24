@@ -8,7 +8,7 @@
 
 #### 事件
 
-| **u-pointer事件名** | Uni事件名               | 描述                                   |
+| **u-pointer事件名** | uni事件名               | 描述                                   |
 | ------------------- | ----------------------- | -------------------------------------- |
 | @onpointerclick     | @click\|tap             | 在元素上按下并抬起触发                 |
 | @onpointerdown      | @mousedown\|@touchstart | 在元素上按下触发                       |
@@ -17,19 +17,30 @@
 | @onpointercancel    | @touchcancel            | 在元素上动作被打断，如来电提醒，弹窗等 |
 | @onpointerwheel     | 无                      | 鼠标滚轮                               |
 
+#### 回调类型
+
+| **事件名**       | 类型                            |
+| ---------------- | ------------------------------- |
+| @onpointerclick  | (e: PointerclickEvent) => void  |
+| @onpointerdown   | (e: PointerdownEvent) => void   |
+| @onpointermove   | (e: PointermoveEvent) => void   |
+| @onpointerup     | (e: PointerupEvent) => void     |
+| @onpointercancel | (e: PointercancelEvent) => void |
+| @onpointerwheel  | (e: PointerwheelEvent) => void  |
+
 #### 使用方法
 
 ```vue
 <template>
-  <u-pointer
-      @onpointerclick="pointerclick"
-      @onpointerdown="pointerdown"
-      @onpointermove="pointermove"
-      @onpointerup="pointerup"
-      @onpointerwheel="pointerwheel"
-  >
-      <view>Click Me</view>
-  </u-pointer>
+	<u-pointer
+		@onpointerclick="pointerclick"
+		@onpointerdown="pointerdown"
+		@onpointermove="pointermove"
+		@onpointerup="pointerup"
+		@onpointerwheel="pointerwheel"
+	>
+		<view>Click Me</view>
+	</u-pointer>
 </template>
 ```
 
@@ -48,9 +59,9 @@
 ```vue
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from "vue";
-import { globalPointer } from "@/uni_modules/u-pointer";
+import { PointerdownEvent, globalPointer } from "@/uni_modules/u-pointer";
 function pointerdown(event: PointerdownEvent): void {
-  console.log("pointerdown", event)
+	console.log("pointerdown", event);
 }
 
 onMounted(() => {
@@ -60,24 +71,23 @@ onMounted(() => {
 onUnmounted(() => {
 	globalPointer.removeEventListener("onpointerdown", pointerdown);
 });
-
 </script>
 
 <template>
-  <u-pointer-root>
-      <view>Click Me</view>
-  </u-pointer-root>
+	<u-pointer-root>
+		<view>Click Me</view>
+	</u-pointer-root>
 </template>
 ```
 
 ### 注意事项
 
-1. **@onpointerclick **事件在按下后 **移动指针** 或 **按下超过 300ms** 同样不会触发.
+1. **@onpointerclick **事件在按下后 **移动指针** 或 **按下超过 300ms** 不会触发.
 1. **@onpointerup** 事件触发后会立即触发 **@onpointerclick** . 此处是已知问题, 但不会影响使用, 只是触发队列不一致, 后面反馈的人多了或有空的话会补上.
 
 ### TODO
 
 1. [ ] @onpointerdbclick 双击事件
 2. [ ] @onpointerlongclick 长按事件
-2. [ ] stopPropagation 阻止当前事件的进一步传播
-2. [ ] preventDefault 阻止当前事件的默认行为
+3. [ ] stopPropagation 阻止当前事件的进一步传播
+4. [ ] preventDefault 阻止当前事件的默认行为
