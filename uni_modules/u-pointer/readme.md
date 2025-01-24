@@ -17,7 +17,7 @@
 | @onpointercancel    | @touchcancel            | 在元素上动作被打断，如来电提醒，弹窗等 |
 | @onpointerwheel     | 无                      | 鼠标滚轮                               |
 
-#### 回调类型
+#### 类型
 
 | **事件名**       | 类型                            |
 | ---------------- | ------------------------------- |
@@ -48,7 +48,7 @@
 
 #### 事件
 
-此组件一般放在 **根节点** 下, 组件上无任何事件, 但有一个 **globalPointer** 的全局指针监听器, 回调参数类型与 **u-pointer** 事件保持一致.
+此组件一般放在 **根节点** 下, **组件上无任何事件** 但有一个 **globalPointer** 的全局指针监听器, 回调类型与 **u-pointer** 事件保持一致.
 
 使用方法类似于 **document.addEventListener**, 只不过需要换成 **globalPointer.addEventListener** 来监听事件.
 
