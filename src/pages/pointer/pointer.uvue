@@ -15,16 +15,17 @@ const pointerMap = reactive({
 	global: new Map<number, Pointer>(),
 });
 
-const localPointers = computed(() => pointerMap.local.values());
-const globalPointers = computed(() => pointerMap.global.values());
+const localPointers = computed(() => [...pointerMap.local.values()]);
+const globalPointers = computed(() => [...pointerMap.global.values()]);
 
 function pointerdown(e: PointerdownEvent) {
 	console.log("pointerdown");
-	pointerMap.local.set(e.pointer.id, { ...e.pointer });
+	pointerMap.local.set(e.pointer.id, e.pointer);
 }
 
 function pointermove(e: PointermoveEvent) {
-	pointerMap.local.set(e.pointer.id, { ...e.pointer });
+	console.log("pointermove", e.pointer.id);
+	pointerMap.local.set(e.pointer.id, e.pointer);
 }
 
 function pointerup(e: PointerupEvent) {
@@ -42,11 +43,12 @@ function pointerwheel(e: PointerwheelEvent) {
 
 globalPointer.addEventListener("onpointerdown", e => {
 	console.log("root pointerdown", e.pointer.id);
-	pointerMap.global.set(e.pointer.id, { ...e.pointer });
+	pointerMap.global.set(e.pointer.id, e.pointer);
 });
 
 globalPointer.addEventListener("onpointermove", e => {
-	pointerMap.global.set(e.pointer.id, { ...e.pointer });
+	console.log("root onpointermove", e.pointer.id);
+	pointerMap.global.set(e.pointer.id, e.pointer);
 });
 
 globalPointer.addEventListener("onpointerup", async e => {
@@ -82,7 +84,7 @@ function normalizeNumber(value: number): string {
 				</u-pointer>
 
 				<view class="info" age="18">
-					<text class="title">矩形指针信息</text>
+					<text class="title">矩形指针信息 {{ localPointers.length }}</text>
 					<view v-for="pointer in localPointers" :key="pointer.id">
 						<text>id: {{ pointer.id }}</text>
 						<text>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</text>
@@ -96,13 +98,11 @@ function normalizeNumber(value: number): string {
 				<view class="divider"></view>
 
 				<view class="info">
-					<text class="title">全局指针信息</text>
+					<text class="title">全局指针信息 {{ globalPointers.length }}</text>
 					<view v-for="pointer in globalPointers" :key="pointer.id">
 						<text>id: {{ pointer.id }}</text>
 						<text>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</text>
-						<text
-							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text
-						>
+						<text>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text>
 						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
 					</view>
 				</view>
