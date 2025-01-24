@@ -1,0 +1,114 @@
+<script lang="ts" setup>
+import { computed, reactive } from "vue";
+
+const histories = reactive({
+	wapper: new Map<number, UniTouch>(),
+	red: new Map<number, UniTouch>(),
+});
+
+const wapperPointers = computed(() => histories.wapper.values());
+const redPointers = computed(() => histories.red.values());
+
+const wapperTouchstart = (e: UniTouchEvent) => {
+	const touches = [...e.touches];
+	touches.forEach(item => {
+		histories.wapper.set(item.identifier, item);
+	});
+};
+
+const redTouchstart = (e: UniTouchEvent) => {
+	const touches = [...e.touches];
+	touches.forEach(item => {
+		histories.red.set(item.identifier, item);
+	});
+};
+
+const wapperTouchend = (e: UniTouchEvent) => {
+	const touches = [...e.touches];
+
+	histories.wapper.clear();
+	touches.forEach(item => {
+		histories.wapper.set(item.identifier, item);
+	});
+
+	console.log("wapper", touches.length);
+};
+
+const redTouchend = (e: UniTouchEvent) => {
+	const touches = [...e.touches];
+
+	histories.red.clear();
+	touches.forEach(item => {
+		histories.red.set(item.identifier, item);
+	});
+
+	console.log("red", touches.length);
+};
+
+function normalizeNumber(value: number): string {
+	return value.toFixed(2);
+}
+</script>
+
+<template>
+	<view class="container">
+		<view class="wapper blue" @touchstart="wapperTouchstart" @touchend="wapperTouchend">
+			<view>
+				<view class="rect red" @touchstart="redTouchstart" @touchend="redTouchend"></view>
+
+				<view class="info" age="18">
+					<text class="title">矩形指针信息</text>
+					<view v-for="pointer in redPointers" :key="pointer.identifier">
+						<text>id: {{ pointer.identifier }}</text>
+						<text>x: {{ normalizeNumber(pointer.clientX) }}, y: {{ normalizeNumber(pointer.clientY) }}</text>
+						<text
+							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text
+						>
+						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
+					</view>
+				</view>
+
+				<view class="divider"></view>
+
+				<view class="info">
+					<text class="title">全局指针信息</text>
+					<view v-for="pointer in wapperPointers" :key="pointer.identifier">
+						<text>id: {{ pointer.identifier }}</text>
+						<text>x: {{ normalizeNumber(pointer.clientX) }}, y: {{ normalizeNumber(pointer.clientY) }}</text>
+						<text
+							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text
+						>
+						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<style>
+.container {
+	width: 100%;
+	height: 100%;
+	border: 1px red solid;
+	color: white;
+}
+
+.blue {
+	background-color: blue;
+}
+
+.red {
+	background-color: red;
+}
+
+.wapper {
+	width: 100%;
+	height: 100%;
+}
+
+.rect.red {
+	width: 100px;
+	height: 100px;
+}
+</style>

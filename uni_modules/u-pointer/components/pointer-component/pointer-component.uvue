@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import type { Pointer, EventTypeMap } from "./pointer-events";
 import {
 	PointerclickEvent,
@@ -20,17 +21,9 @@ const emit = defineEmits<{
 	<T extends keyof EventTypeMap>(name: T, event: EventTypeMap[T]): void;
 }>();
 
-// // 其实在 UniEvent 中是有 currentTarget 来表示当前组件的,
-// // 但是有 BUG 实际上并不是当前组件, 所以用此变量打个补丁
-// const pointerComponent = ref<UniViewElement | null>(null);
-
-// onMounted(() => {
-// 	console.log("onMounted");
-// 	pointerListener.addEventListener("onpointerdown", event => {
-// 		const { target } = event.nativeEvent;
-// 		const currentTarget = pointerComponent.value;
-// 	});
-// });
+// 其实在 UniEvent 中是有 currentTarget 来表示当前组件的,
+// 但是有 BUG 实际上并不是当前组件, 所以用此变量打个补丁
+const pointerComponent = ref<UniViewElement | null>(null);
 
 const PRESS_TIMEOUT = 300; // 0ms - 300ms
 const DB_PRESS_TIMEOUT = 500; // 300ms - 500ms
@@ -114,12 +107,23 @@ const onWheel = (e: WheelEvent) => {
 ///////////////                       ///////////////
 /////////////////////////////////////////////////////
 
-function onpointerdown(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
+async function onpointerdown(pointers: Pointer[], e: UniTouchEvent | MouseEvent): Promise<void> {
 	for (const pointer of pointers) {
-		const pointerdown = new PointerdownEvent(pointer, e);
-		if (pressedPointers.has(pointer.id) || preonclickPointers.has(pointer.id)) {
+		const curRect = await pointerComponent.value?.getBoundingClientRectAsync();
+		if (!curRect) continue;
+		// 没有在范围内
+		if (
+			!(
+				pointer.x >= curRect.left &&
+				pointer.x <= curRect.left + curRect.width &&
+				pointer.y >= curRect.top &&
+				pointer.y <= curRect.top + curRect.height
+			)
+		)
 			continue;
-		}
+
+		const pointerdown = new PointerdownEvent(pointer, e);
+		if (pressedPointers.has(pointer.id) || preonclickPointers.has(pointer.id)) continue;
 
 		emit("onpointerdown", pointerdown);
 		pressedPointers.set(pointer.id, pointer);
@@ -155,13 +159,13 @@ function onpointermove(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
 }
 
 function onpointerup(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
-	const _tempPressedPointers = Array.from(pressedPointers.values());
+	const _tempPressedPointers = [...pressedPointers.values()];
 	pressedPointers.clear();
 
 	for (const pointer of _tempPressedPointers) {
 		// 这里与Touch是反的
-		// Mouse会  返回已经抬起的指针
-		// Touch不会返回已经抬起的指针，
+		// Mouse 会返回已经抬起的指针
+		// Touch不会返回已经抬起的指针
 		// 所以需要取反
 		const isPressed = isPC ? pointers.some(t => t.id !== pointer.id) : pointers.some(t => t.id === pointer.id);
 		if (!isPressed) {
@@ -180,7 +184,7 @@ function onpointerup(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
 }
 
 function onpointercancel(pointers: Pointer[], e: UniTouchEvent | MouseEvent) {
-	const _tempPressedPointers = Array.from(pressedPointers.values());
+	const _tempPressedPointers = [...pressedPointers.values()];
 	pressedPointers.clear();
 
 	for (const pointer of _tempPressedPointers) {
@@ -210,6 +214,7 @@ function onpointerwheel(pointers: Pointer[], e: WheelEvent) {
 
 <template>
 	<view
+		ref="pointerComponent"
 		@touchstart="onTouchstart"
 		@touchmove="onTouchmove"
 		@touchcancel="onTouchcancel"

@@ -8,6 +8,15 @@
 				// "navigationStyle": "custom"
 			}
 		},
+
+		{
+			"path": "src/bug/touch",
+			"style": {
+				"navigationBarTitleText": "bug touch"
+				// "navigationStyle": "custom"
+			}
+		},
+
 		{
 			"path": "src/pages/brush-magic/brush-magic",
 			"style": {
@@ -18,7 +27,7 @@
 		{
 			"path": "src/bug/put-image-data",
 			"style": {
-				"navigationBarTitleText": "put-image-data"
+				"navigationBarTitleText": "bug put-image-data"
 				// "navigationStyle": "custom"
 			}
 		},

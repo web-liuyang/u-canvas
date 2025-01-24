@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { computed, reactive } from "vue";
 import {
 	Pointer,
 	PointerclickEvent,
@@ -10,21 +10,26 @@ import {
 	pointerListener,
 } from "@/uni_modules/u-pointer";
 
-const localPointers = ref<Map<number, Pointer>>(new Map());
-const globalPointers = ref<Map<number, Pointer>>(new Map());
+const pointerMap = reactive({
+	local: new Map<number, Pointer>(),
+	global: new Map<number, Pointer>(),
+});
+
+const localPointers = computed(() => pointerMap.local.values());
+const globalPointers = computed(() => pointerMap.global.values());
 
 function pointerdown(e: PointerdownEvent) {
 	console.log("pointerdown");
-	localPointers.value.set(e.pointer.id, e.pointer);
+	pointerMap.local.set(e.pointer.id, { ...e.pointer });
 }
 
 function pointermove(e: PointermoveEvent) {
-	localPointers.value.set(e.pointer.id, e.pointer);
+	pointerMap.local.set(e.pointer.id, { ...e.pointer });
 }
 
 function pointerup(e: PointerupEvent) {
-	console.log("pointerup");
-	localPointers.value.delete(e.pointer.id);
+	console.log("pointerup", e.pointer.id);
+	pointerMap.local.delete(e.pointer.id);
 }
 
 function pointerclick(e: PointerclickEvent) {
@@ -37,15 +42,16 @@ function pointerwheel(e: PointerwheelEvent) {
 
 pointerListener.addEventListener("onpointerdown", e => {
 	console.log("root pointerdown", e.pointer.id);
-	globalPointers.value.set(e.pointer.id, e.pointer);
+	pointerMap.global.set(e.pointer.id, { ...e.pointer });
 });
 
 pointerListener.addEventListener("onpointermove", e => {
-	globalPointers.value.set(e.pointer.id, e.pointer);
+	pointerMap.global.set(e.pointer.id, { ...e.pointer });
 });
 
-pointerListener.addEventListener("onpointerup", e => {
-	globalPointers.value.delete(e.pointer.id);
+pointerListener.addEventListener("onpointerup", async e => {
+	console.log("root pointerup", e.pointer.id);
+	pointerMap.global.delete(e.pointer.id);
 });
 
 pointerListener.addEventListener("onpointerclick", e => {
@@ -74,12 +80,15 @@ function normalizeNumber(value: number): string {
 					@onpointerwheel="pointerwheel"
 				>
 				</pointer-component>
+
 				<view class="info" age="18">
 					<text class="title">矩形指针信息</text>
-					<view v-for="pointer in localPointers.values()" :key="pointer.id">
+					<view v-for="pointer in localPointers" :key="pointer.id">
 						<text>id: {{ pointer.id }}</text>
 						<text>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</text>
-						<text>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text>
+						<text
+							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text
+						>
 						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
 					</view>
 				</view>
@@ -88,10 +97,12 @@ function normalizeNumber(value: number): string {
 
 				<view class="info">
 					<text class="title">全局指针信息</text>
-					<view v-for="pointer in globalPointers.values()" :key="pointer.id">
+					<view v-for="pointer in globalPointers" :key="pointer.id">
 						<text>id: {{ pointer.id }}</text>
 						<text>x: {{ normalizeNumber(pointer.x) }}, y: {{ normalizeNumber(pointer.y) }}</text>
-						<text>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text>
+						<text
+							>screenX: {{ normalizeNumber(pointer.screenX) }}, screenY: {{ normalizeNumber(pointer.screenY) }}</text
+						>
 						<text>pageX: {{ normalizeNumber(pointer.pageX) }}, pageY: {{ normalizeNumber(pointer.pageY) }}</text>
 					</view>
 				</view>
