@@ -117,6 +117,7 @@ export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingC
 	const ys = matrix.d;
 	const { x, y } = matrix.apply(new Point(entity.x, entity.y));
 
+	// TODO 这段在ios模拟器与mp真机调试运行会出现卡顿, mp预览不会卡顿
 	imageData = scaleImageData(imageData, xs, ys);
 	imageData = ctx.createCompatibleImageData(imageData.data, imageData.width, imageData.height);
 	dx *= xs;
