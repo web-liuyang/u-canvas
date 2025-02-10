@@ -65,7 +65,7 @@
 			},
 			"client": {
 				"Vue": {
-					"vue2": "u",
+					"vue2": "n",
 					"vue3": "y"
 				},
 				"App": {
@@ -75,32 +75,32 @@
                     "app-harmony": "u"
                 },
 				"H5-mobile": {
-					"Safari": "u",
-					"Android Browser": "u",
-					"微信浏览器(Android)": "u",
-					"QQ浏览器(Android)": "u"
+					"Safari": "y",
+					"Android Browser": "y",
+					"微信浏览器(Android)": "y",
+					"QQ浏览器(Android)": "y"
 				},
 				"H5-pc": {
 					"Chrome": "y",
-					"IE": "u",
-					"Edge": "u",
-					"Firefox": "u",
+					"IE": "y",
+					"Edge": "y",
+					"Firefox": "y",
 					"Safari": "y"
 				},
 				"小程序": {
 					"微信": "y",
-					"阿里": "u",
-					"百度": "u",
-					"字节跳动": "u",
-					"QQ": "u",
-					"钉钉": "u",
-					"快手": "u",
-					"飞书": "u",
-					"京东": "u"
+					"阿里": "y",
+					"百度": "y",
+					"字节跳动": "y",
+					"QQ": "y",
+					"钉钉": "y",
+					"快手": "y",
+					"飞书": "y",
+					"京东": "y"
 				},
 				"快应用": {
-					"华为": "u",
-					"联盟": "u"
+					"华为": "y",
+					"联盟": "y"
 				}
 			}
 		}
