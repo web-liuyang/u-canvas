@@ -16,13 +16,6 @@ const wapperTouchstart = (e: UniTouchEvent) => {
 	});
 };
 
-const redTouchstart = (e: UniTouchEvent) => {
-	const touches = [...e.touches];
-	touches.forEach(item => {
-		histories.red.set(item.identifier, item);
-	});
-};
-
 const wapperTouchend = (e: UniTouchEvent) => {
 	const touches = [...e.touches];
 
@@ -32,6 +25,14 @@ const wapperTouchend = (e: UniTouchEvent) => {
 	});
 
 	console.log("wapper", touches.length);
+};
+
+const redTouchstart = (e: UniTouchEvent) => {
+	const touches = [...e.touches];
+	console.log("red touchstart ", touches.length);
+	touches.forEach(item => {
+		histories.red.set(item.identifier, item);
+	});
 };
 
 const redTouchend = (e: UniTouchEvent) => {
@@ -57,7 +58,7 @@ function normalizeNumber(value: number): string {
 				<view class="rect red" @touchstart="redTouchstart" @touchend="redTouchend"></view>
 
 				<view class="info" age="18">
-					<text class="title">矩形指针信息</text>
+					<text class="title">红色矩形指针信息</text>
 					<view v-for="pointer in redPointers" :key="pointer.identifier">
 						<text>id: {{ pointer.identifier }}</text>
 						<text>x: {{ normalizeNumber(pointer.clientX) }}, y: {{ normalizeNumber(pointer.clientY) }}</text>
