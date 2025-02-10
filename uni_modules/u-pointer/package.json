@@ -69,7 +69,7 @@
 					"vue3": "y"
 				},
 				"App": {
-                    "app-vue": "u",
+                    "app-vue": "y",
                     "app-nvue": "u",
                     "app-uvue": "y",
                     "app-harmony": "u"
