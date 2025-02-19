@@ -1,5 +1,5 @@
 import type { AllEntity } from "./entity";
-import type { Style, ImageResource } from "../graphics";
+import type { Style, ImageResource, Graphic } from "../graphics";
 import { EntityFactory } from "./entity";
 import { Path } from "./path";
 import { Matrix } from "../transform";
@@ -7,6 +7,7 @@ import { Point } from "../offset";
 
 export interface CanvasOptions {
 	matrix?: Matrix;
+	graphic: Graphic;
 }
 
 export class Canvas {
@@ -16,9 +17,12 @@ export class Canvas {
 
 	private _currentMatrix: Matrix;
 
-	constructor(options?: CanvasOptions) {
+	public readonly graphic: Graphic;
+
+	constructor(options: CanvasOptions) {
 		this.matrix = options?.matrix?.clone() ?? new Matrix();
 		this._currentMatrix = this.matrix.clone();
+		this.graphic = options.graphic;
 	}
 
 	public addCanvas(canvas: Canvas, style?: Style) {

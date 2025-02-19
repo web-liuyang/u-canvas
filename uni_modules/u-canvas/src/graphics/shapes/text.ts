@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import type { Offset } from "../../offset";
+import { Offset } from "../../offset";
 import { Point } from "../../offset";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
@@ -28,13 +28,15 @@ export class Text extends Graphic<TextOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		// const aabb = this.parent?.aabb() ?? Aabb.zero();
-		// const [x, y] = this.matrix.applyVector(this.x, this.y);
-		// const offset = new Offset(x, y);
-		// const newAabb = aabb.offset(offset).grow([this.w, this.h]);
-		// return newAabb;
+		if (!this.uCanvas) throw new Error("uCanvas is not initialized");
+		const ctx = this.uCanvas.ctx;
+		const tm = ctx.measureText(this.text);
+		const { x, y } = this.matrix.apply(new Point(this.x, this.y - tm.actualBoundingBoxAscent));
+		const tw = tm.width;
+		const th = tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent;
+		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(tw, th));
 
-		return Aabb.zero();
+		return aabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
@@ -46,10 +48,10 @@ export class Text extends Graphic<TextOptions> {
 	}
 
 	public override hitTest(point: Point): this | undefined {
-		// const [x, y] = point;
-		const { x, y, text, style } = this;
+		const { x, y } = point;
+		const aabb = this.getGlobalAabb();
 
-		// TODO 这里要计算文本的宽高后才能算命中
+		if (x >= aabb.min.x && x <= aabb.max.x && y >= aabb.min.y && y <= aabb.max.y) return this;
 
 		return undefined;
 	}

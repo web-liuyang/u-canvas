@@ -173,6 +173,18 @@ onMounted(() => {
 			})
 		);
 
+		uCanvas.add(
+			new Composition({
+				x: 10,
+				y: 500,
+				children: [
+					new Text({ x: 0, y: 0, text: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }),
+					//
+					new Text({ x: 0, y: 24, text: "abcdefghijklmnopqrstuvwxyz" }),
+				],
+			})
+		);
+
 		uCanvas.render();
 	});
 });

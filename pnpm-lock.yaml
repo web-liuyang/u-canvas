@@ -51,6 +51,9 @@ importers:
       happy-dom:
         specifier: 15.11.7
         version: 15.11.7
+      u-pointer:
+        specifier: workspace:u-pointer
+        version: link:../u-pointer
 
   uni_modules/u-pointer: {}
 

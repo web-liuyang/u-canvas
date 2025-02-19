@@ -1,8 +1,10 @@
+import type { EventTypeMap } from "u-pointer";
 import type { Hittable, Paintable, Parent } from "../../types";
 import type { Style } from "../styles";
 import type { Point } from "../../offset";
 import type { Canvas } from "../../renderer/canvas";
 import type { Aabb } from "../aabb";
+import type { UCanvas } from "../../u-canvas";
 import { Offset } from "../../offset";
 import { generateUUID } from "../utils";
 import { Transform } from "../../transform";
@@ -26,6 +28,11 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 	public offset: Offset = new Offset(0, 0);
 
 	public style?: Style;
+
+	/**
+	 * 在调用 paint 之前注入
+	 */
+	public uCanvas?: UCanvas;
 
 	public parent?: Graphic;
 
@@ -63,18 +70,32 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions>
 		return point.offset(this.offset);
 	}
 
-	// TODO Event
-	// private readonly listener = new Map<keyof EventTypeMap, ((e: EventTypeMap[keyof EventTypeMap]) => void)[]>();
+	private readonly listener: Map<keyof EventTypeMap, Array<(e: EventTypeMap[keyof EventTypeMap]) => void>> = new Map();
 
-	// public on<K extends keyof EventTypeMap>(evnetName: K, callback: (e: EventTypeMap[K]) => void) {
-	// 	if (!this.listener.has(evnetName)) return;
-	// 	this.listener.get(evnetName)!.push(callback);
-	// }
+	public on<K extends keyof EventTypeMap>(eventName: K, callback: (e: EventTypeMap[K]) => void) {
+		if (!this.listener.has(eventName)) {
+			this.listener.set(eventName, []);
+		}
 
-	// public off<K extends keyof EventTypeMap>(evnetName: K, callback: (e: EventTypeMap[K]) => void) {
-	// 	if (!this.listener.has(evnetName)) return;
-	// 	const index = this.listener.get(evnetName)!.findIndex(cb => cb === callback);
-	// 	if (index < 0) return;
-	// 	this.listener.get(evnetName)!.slice(index, 1);
-	// }
+		// @ts-expect-error TS 类型错误
+		this.listener.get(eventName)!.push(callback);
+	}
+
+	public off<K extends keyof EventTypeMap>(eventName: K, callback: (e: EventTypeMap[K]) => void) {
+		if (!this.listener.has(eventName)) return;
+
+		const callbacks = this.listener.get(eventName)!;
+		const index = callbacks.findIndex(cb => cb === callback);
+		if (index < 0) return;
+		callbacks.splice(index, 1);
+	}
+
+	public emit<K extends keyof EventTypeMap>(eventName: K, event: EventTypeMap[K]) {
+		if (!this.listener.has(eventName)) return;
+
+		const callbacks = this.listener.get(eventName)!;
+		for (const callback of callbacks) {
+			callback(event);
+		}
+	}
 }
