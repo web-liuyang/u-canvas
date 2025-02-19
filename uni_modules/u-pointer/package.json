@@ -13,23 +13,12 @@
         "u-pointer"
     ],
 	"repository": "https://github.com/web-liuyang/u-canvas/tree/master/uni_modules/u-pointer",
-	"files": [
-		"dist",
-		"src"
-	],
 	"type": "module",
-	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"import": "./index.ts",
 			"require": "./index.ts"
 		}
-	},
-	"scripts": {
-		"dev": "tsc --watch",
-		"build": "vite build",
-		"format": "prettier --write src/**/*.ts",
-		"test": "vitest"
 	},
 	"engines": {
 		"HBuilderX": "^3.91"
