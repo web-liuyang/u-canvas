@@ -23,6 +23,8 @@ export interface UCanvasOptions {
 export type Viewbox = [number, number, number, number];
 
 export class UCanvas {
+	public isInitialized: boolean = false;
+
 	public renderer: Renderer = new Renderer(this);
 
 	public canvasContext!: CanvasContext;
@@ -77,6 +79,7 @@ export class UCanvas {
 	}
 
 	public async ensureInitialize() {
+		if (this.isInitialized) return;
 		const canvasContext = await this.getCanvasContext(this.options);
 		this.canvasContext = canvasContext;
 		this.ctx = this.canvasContext.getContext("2d")!;
@@ -85,6 +88,7 @@ export class UCanvas {
 		this.root = new Composition({ x: 0, y: 0 });
 		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
 		this.setViewbox(this.root.matrix);
+		this.isInitialized = true;
 	}
 
 	private mixinCanvasMethod() {
@@ -187,7 +191,6 @@ export class UCanvas {
 
 	public createImageData(options: CreateImageDataOptions): ImageData {
 		const { data, bytesPerScanline, array = [1, 1] } = options;
-
 		const [col, row] = array;
 		const w = bytesPerScanline;
 		const h = data.length;

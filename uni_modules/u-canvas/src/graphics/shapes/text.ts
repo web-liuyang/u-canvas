@@ -29,6 +29,7 @@ export class Text extends Graphic<TextOptions> {
 
 	public override getAabb(): Aabb {
 		if (!this.uCanvas) throw new Error("uCanvas is not initialized");
+		// TODO iOS, Andriod 只能获取到宽度, 所以无法计算 aabb
 		const ctx = this.uCanvas.ctx;
 		const tm = ctx.measureText(this.text);
 		const { x, y } = this.matrix.apply(new Point(this.x, this.y - tm.actualBoundingBoxAscent));
@@ -45,6 +46,8 @@ export class Text extends Graphic<TextOptions> {
 		const { text, style } = this;
 
 		canvas.drawText(text, x, y, style);
+		const aabb = this.getGlobalAabb();
+		canvas.drawRect(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, 0, style);
 	}
 
 	public override hitTest(point: Point): this | undefined {

@@ -5,8 +5,8 @@ import {
 	PointerupEvent,
 	PointercancelEvent,
 	PointerwheelEvent,
-} from "@/uni_modules/u-pointer";
-import type { UCanvas } from "@/uni_modules/u-canvas/src";
+} from "u-pointer";
+import type { UCanvas } from "u-canvas";
 
 export abstract class BaseStateMachine {
 	constructor(protected canvas: UCanvas) {}

@@ -20,7 +20,8 @@
 	"description": "",
 	"dependencies": {
 		"u-canvas": "workspace:*",
-		"u-pointer": "workspace:*"
+		"u-pointer": "workspace:*",
+		"u-canvas-component": "workspace:*"
 	},
 	"devDependencies": {
 		"@dcloudio/uni-app-x": "^0.7.30",

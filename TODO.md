@@ -9,6 +9,7 @@
 [√] AABB. 图片的aabb需要通过某种方法计算，文字暂时无法知道大小, 等unix支持图片请求后通过ArrayBuffer进行计算
 [√] hitTest 图片的aabb需要通过某种方法计算，文字暂时无法知道大小, 等unix支持图片请求后通过ArrayBuffer进行计算
 [ ] Matrix 基点尚未确定，目前图形的基点是在左上角
+[ ] iOS, Andriod 的 Text 只能获取到宽度, 所以无法计算 aabb
 
 [ ] 提 issue: workspace 无法导入组件
 
@@ -22,6 +23,8 @@
 
 [ ] u-pointer 一直手指全局按下,一直手指局部按下, 局部信息会显示全局按下的信息
     复现步骤: 第二根手指按到了 if 或 v-for length = 0 上. 但这应该是正常的, 毕竟dom都没了肯定也就不触发了.
+
+
 
 ### Issue
 

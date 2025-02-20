@@ -2,26 +2,30 @@
 	"pages": [
 		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "src/pages/canvas-component/canvas-component",
+			"style": {
+				"navigationBarTitleText": "canvas component"
+			}
+		},
+		{
+			"path": "src/pages/brush-magic/brush-magic",
+			"style": {
+				"navigationBarTitleText": "brush magic",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "src/pages/pointer/pointer",
 			"style": {
 				"navigationBarTitleText": "pointer"
 				// "navigationStyle": "custom"
 			}
 		},
-
 		{
 			"path": "src/bug/touch",
 			"style": {
 				"navigationBarTitleText": "bug touch"
 				// "navigationStyle": "custom"
-			}
-		},
-
-		{
-			"path": "src/pages/brush-magic/brush-magic",
-			"style": {
-				"navigationBarTitleText": "brush magic",
-				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -31,7 +35,6 @@
 				// "navigationStyle": "custom"
 			}
 		},
-
 		{
 			"path": "src/pages/index/index",
 			"style": {

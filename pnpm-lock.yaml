@@ -11,6 +11,9 @@ importers:
       u-canvas:
         specifier: workspace:*
         version: link:uni_modules/u-canvas
+      u-canvas-component:
+        specifier: workspace:*
+        version: link:uni_modules/u-canvas-component
       u-pointer:
         specifier: workspace:*
         version: link:uni_modules/u-pointer
@@ -51,6 +54,18 @@ importers:
       happy-dom:
         specifier: 15.11.7
         version: 15.11.7
+      u-pointer:
+        specifier: workspace:u-pointer
+        version: link:../u-pointer
+
+  uni_modules/u-canvas-component:
+    devDependencies:
+      happy-dom:
+        specifier: 15.11.7
+        version: 15.11.7
+      u-canvas:
+        specifier: workspace:u-canvas
+        version: link:../u-canvas
       u-pointer:
         specifier: workspace:u-pointer
         version: link:../u-pointer

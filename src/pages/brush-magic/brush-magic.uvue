@@ -27,7 +27,7 @@ import {
 
 import { onMounted, nextTick, ref } from "vue";
 
-import { BrushStateMachine, SelectionStateMachine } from "./state-machine/index";
+import { SelectionStateMachine } from "@/uni_modules/u-canvas-component";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
@@ -211,7 +211,7 @@ const toolButtons: ToolButton[] = [
 		onTap: () => {
 			console.log("A");
 			currentToolIndex.value = 1;
-			stateMachine = new BrushStateMachine(uCanvas);
+			// stateMachine = new BrushStateMachine(uCanvas);
 		},
 	},
 	{
