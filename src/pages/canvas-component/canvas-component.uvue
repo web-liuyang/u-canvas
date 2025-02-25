@@ -184,7 +184,7 @@ function switchToSelection() {
 <template>
 	<view class="canvas-component">
 		<view class="state">
-			<text>Current State: {{ stateMachine.constructor.name }}</text>
+			<text class="text">Current State: {{ stateMachine.constructor.name }}</text>
 		</view>
 		<u-canvas-component ref="ucuRef" class="u-canvas-component" :uCanvas="uCanvas" :stateMachine="stateMachine" />
 		<!-- <canvas :canvas-id="uCanvas.options.canvasId" :id="uCanvas.options.canvasId" class="u-canvas-component" /> -->
@@ -196,6 +196,13 @@ function switchToSelection() {
 </template>
 
 <style>
+/* #ifdef WEB || MP */
+/* 禁止页面的回弹效果, APP 在 pages.json里面设置 */
+body {
+	overflow: hidden;
+}
+/* #endif */
+
 .canvas-component {
 	display: flex;
 	flex-direction: column;
@@ -212,13 +219,14 @@ function switchToSelection() {
 	padding: 8px 0;
 }
 
-.state text {
+.state .text {
 	text-align: center;
 }
+
 .state-list {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
+	justify-content: space-around;
 
 	padding: 12px 0;
 }
