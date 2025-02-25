@@ -1,4 +1,4 @@
-import type { Style } from "../graphics";
+import type { CanvasFontWeight, Style } from "../graphics";
 import type {
 	AllEntity,
 	ArcEntity,
@@ -13,7 +13,7 @@ import type {
 	TextEntity,
 } from "./entity";
 
-import { extractStyle, scaleImageData } from "../graphics";
+import { defaultStyle, extractStyle, scaleImageData } from "../graphics";
 import { EntityType } from "./entity";
 import { Point } from "../offset";
 import { RecordType } from "./recored";
@@ -30,14 +30,21 @@ export function applyStyle(ctx: CanvasRenderingContext2D, style?: Style): void {
 
 	// Text
 	const font = ctx.font.split(" ");
-	const fontSize = style?.text?.fontSize ?? parseFloat(font[0]);
-	const fontFamily = style?.text?.fontFamily ?? font[1];
-	// 注意App平台只支持font-size、font-family、font-weight
-	const fontWeight = style?.text?.fontWeight ?? font[2];
+	if (font.length === 2) font.unshift(defaultStyle.text?.fontWeight ?? "normal");
+	const fontWeight = (() => {
+		const fontWeight = style?.text?.fontWeight ?? (font[0] as CanvasFontWeight);
+		// normal 不需要设置上去, 要不然字体设置无效
+		// 仅支持 bold
+		return fontWeight === "bold" ? fontWeight : "";
+	})();
+	const fontSize = style?.text?.fontSize ?? parseFloat(font[1]);
+	const fontFamily = style?.text?.fontFamily ?? font[2];
+	// 注意App平台只支持font-weight、font-size、font-family
+
 	const letterSpacing = style?.text?.letterSpacing ?? parseFloat(ctx.letterSpacing);
 	const wordSpacing = style?.text?.wordSpacing ?? parseFloat(ctx.wordSpacing);
 
-	ctx.font = `${fontSize}px ${fontWeight} ${fontFamily}`;
+	ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`.trim();
 	ctx.direction = style?.text?.direction ?? ctx.direction;
 	ctx.letterSpacing = `${letterSpacing}px`;
 	ctx.wordSpacing = `${wordSpacing}px`;
