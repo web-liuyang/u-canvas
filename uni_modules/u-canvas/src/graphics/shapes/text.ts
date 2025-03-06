@@ -46,8 +46,8 @@ export class Text extends Graphic<TextOptions> {
 		const { text, style } = this;
 
 		canvas.drawText(text, x, y, style);
-		const aabb = this.getGlobalAabb();
-		canvas.drawRect(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, 0, style);
+		// const aabb = this.getGlobalAabb();
+		// canvas.drawRect(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, 0, style);
 	}
 
 	public override hitTest(point: Point): this | undefined {

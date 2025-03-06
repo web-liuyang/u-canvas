@@ -1,0 +1,75 @@
+<script lang="ts" setup>
+import { Image, ImageResource, UCanvas } from "@/uni_modules/u-canvas/src";
+import { computed, nextTick, ref } from "vue";
+import { BaseStateMachine, NoneStateMachine, SelectionStateMachine } from "../pages/canvas-component/state-machine";
+import {
+	PointerdownEvent,
+	PointermoveEvent,
+	PointerupEvent,
+	PointerclickEvent,
+	PointerwheelEvent,
+} from "@/uni_modules/u-pointer";
+
+const uCanvas = new UCanvas({ canvasId: "canvas" });
+
+onReady(() => {
+	nextTick(async () => {
+		await uCanvas.ensureInitialize();
+
+		const image = await uCanvas.createImage("/static/logo.png");
+		uCanvas.add(new Image({ image, sx: 0, sy: 0 }));
+		uCanvas.render();
+	});
+});
+
+const stateMachine = computed(() => {
+	console.log("computed stateMachine");
+	return new SelectionStateMachine(uCanvas);
+});
+
+// MP 真机模式, 使用Ref报错,可能是因为ref的机制问题
+// const stateMachine = ref(new SelectionStateMachine(uCanvas));
+
+function pointerdown(e: PointerdownEvent) {
+	stateMachine.value.onpointerdown(e);
+}
+
+function pointermove(e: PointermoveEvent) {
+	stateMachine.value.onpointermove(e);
+}
+
+function pointerup(e: PointerupEvent) {
+	stateMachine.value.onpointerup(e);
+}
+
+function pointerclick(e: PointerclickEvent) {
+	stateMachine.value.onpointerclick(e);
+}
+
+function pointerwheel(e: PointerwheelEvent) {
+	stateMachine.value.onpointerwheel(e);
+}
+</script>
+
+<template>
+	<view class="container">
+		<u-pointer
+			style="width: 100%; height: 100%"
+			@onpointerclick="pointerclick"
+			@onpointerdown="pointerdown"
+			@onpointermove="pointermove"
+			@onpointerup="pointerup"
+			@onpointerwheel="pointerwheel"
+		>
+			<canvas canvas-id="canvas" id="canvas" />
+		</u-pointer>
+	</view>
+</template>
+
+<style>
+.container {
+	width: 100%;
+	height: 100%;
+	border: 1px red solid;
+}
+</style>

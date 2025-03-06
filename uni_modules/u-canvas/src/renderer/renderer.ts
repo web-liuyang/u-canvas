@@ -15,7 +15,6 @@ export class Renderer {
 		const offset = new Offset(0, 0);
 		const canvas = new Canvas({
 			matrix: this.canvas.root.worldMatrix,
-			graphic: this.canvas.root,
 		});
 
 		this.canvas.root.uCanvas = this.canvas;

@@ -27,7 +27,7 @@ import {
 
 import { onMounted, nextTick, ref } from "vue";
 
-import { SelectionStateMachine } from "@/uni_modules/u-canvas-component";
+import { SelectionStateMachine } from "../canvas-component/state-machine";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 

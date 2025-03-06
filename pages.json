@@ -10,6 +10,13 @@
 			}
 		},
 		{
+			"path": "src/bug/draw-image",
+			"style": {
+				"navigationBarTitleText": "draw image"
+			}
+		},
+
+		{
 			"path": "src/pages/brush-magic/brush-magic",
 			"style": {
 				"navigationBarTitleText": "brush magic",

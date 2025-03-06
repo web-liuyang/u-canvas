@@ -7,7 +7,6 @@ import { Point } from "../offset";
 
 export interface CanvasOptions {
 	matrix?: Matrix;
-	graphic: Graphic;
 }
 
 export class Canvas {
@@ -17,12 +16,9 @@ export class Canvas {
 
 	private _currentMatrix: Matrix;
 
-	public readonly graphic: Graphic;
-
 	constructor(options: CanvasOptions) {
 		this.matrix = options?.matrix?.clone() ?? new Matrix();
 		this._currentMatrix = this.matrix.clone();
-		this.graphic = options.graphic;
 	}
 
 	public addCanvas(canvas: Canvas, style?: Style) {

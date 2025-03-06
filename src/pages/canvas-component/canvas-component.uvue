@@ -14,19 +14,15 @@ import {
 	Point,
 	// } from "@/uni_modules/u-canvas/src";
 } from "u-canvas";
-import { ref } from "vue";
-import { BaseStateMachine, NoneStateMachine, SelectionStateMachine } from "u-canvas-component";
+import { computed, ref } from "vue";
+import { BaseStateMachine, NoneStateMachine, SelectionStateMachine } from "./state-machine";
+import { PointerdownEvent, PointermoveEvent, PointerupEvent, PointerclickEvent, PointerwheelEvent } from "u-pointer";
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
 const ucuRef = ref<UniViewElement | null>(null);
+
 onReady(async () => {
-	// @ts-expect-error 可以正常访问, 目前还没有写类型
-	const ins = ucuRef.value.getInstance();
-	// 为了兼容小程序, 小程序只能获取到当前组件的canvas
-	// 所以只能把内部的实例暴露出来
-	// 也不知道是 BUG 还是 正常行为
-	uCanvas.options.componentInstance = ins.proxy;
 	await uCanvas.ensureInitialize();
 
 	uCanvas.add(
@@ -141,6 +137,7 @@ onReady(async () => {
 			],
 		})
 	);
+	// 试试本地图片
 	const image = await uCanvas.createImage("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
 	uCanvas.add(
 		new Composition({
@@ -170,24 +167,73 @@ onReady(async () => {
 	);
 	uCanvas.render();
 });
-const stateMachine = ref<BaseStateMachine>(new SelectionStateMachine(uCanvas));
+
+const stateMachineFactory = ref<new (canvas: UCanvas) => BaseStateMachine>(SelectionStateMachine);
+
+// 其实是可以直接用
+// stateMachine = ref<BaseStateMachine>(new SelectionStateMachine(uCanvas))
+// 但是在小程序的真机模式中, 第二次绘制图片的时候,也就是drawImage方法调用会报错
+// n.isSkiaCanvas 的错误, 所以目前只能暂时使用计算属性了
+const stateMachine = computed<BaseStateMachine>(() => new stateMachineFactory.value(uCanvas));
+
+const stateMachineName = computed<string>(() => {
+	switch (stateMachineFactory.value) {
+		case NoneStateMachine:
+			return "NoneStateMachine";
+		case SelectionStateMachine:
+			return "SelectionStateMachine";
+	}
+
+	return "Unknow";
+});
 
 function switchToNone() {
-	stateMachine.value = new NoneStateMachine(uCanvas);
+	stateMachineFactory.value = NoneStateMachine;
 }
 
 function switchToSelection() {
-	stateMachine.value = new SelectionStateMachine(uCanvas);
+	stateMachineFactory.value = SelectionStateMachine;
+}
+
+function pointerdown(e: PointerdownEvent) {
+	stateMachine.value.onpointerdown(e);
+}
+
+function pointermove(e: PointermoveEvent) {
+	stateMachine.value.onpointermove(e);
+}
+
+function pointerup(e: PointerupEvent) {
+	stateMachine.value.onpointerup(e);
+}
+
+function pointerclick(e: PointerclickEvent) {
+	stateMachine.value.onpointerclick(e);
+}
+
+function pointerwheel(e: PointerwheelEvent) {
+	stateMachine.value.onpointerwheel(e);
 }
 </script>
 
 <template>
 	<view class="canvas-component">
 		<view class="state">
-			<text class="text">Current State: {{ stateMachine.constructor.name }}</text>
+			<text class="text">Current State: {{ stateMachineName }}</text>
 		</view>
-		<u-canvas-component ref="ucuRef" class="u-canvas-component" :uCanvas="uCanvas" :stateMachine="stateMachine" />
-		<!-- <canvas :canvas-id="uCanvas.options.canvasId" :id="uCanvas.options.canvasId" class="u-canvas-component" /> -->
+		<!-- <u-canvas-component ref="ucuRef" class="u-canvas-component" :uCanvas="uCanvas" :stateMachine="stateMachine" /> -->
+		<view class="canvas-area">
+			<u-pointer
+				style="width: 100%; height: 100%"
+				@onpointerclick="pointerclick"
+				@onpointerdown="pointerdown"
+				@onpointermove="pointermove"
+				@onpointerup="pointerup"
+				@onpointerwheel="pointerwheel"
+			>
+				<canvas canvas-id="ucanvas" id="ucanvas" class="canvas" />
+			</u-pointer>
+		</view>
 		<view class="state-list">
 			<button @click="switchToNone">None</button>
 			<button @click="switchToSelection">Selection</button>
@@ -229,5 +275,16 @@ body {
 	justify-content: space-around;
 
 	padding: 12px 0;
+}
+
+.canvas-area {
+	flex: 1;
+}
+
+.canvas {
+	width: 100%;
+	height: 100%;
+
+	border: 1px solid red;
 }
 </style>

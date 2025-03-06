@@ -52,9 +52,9 @@ export const defaultStyle: Style = {
 		color: "black",
 	},
 	text: {
-		fontSize: 24,
-		fontFamily: "serif",
-		fontWeight: "bold",
+		fontSize: 14,
+		fontFamily: "sans-serif",
+		fontWeight: "normal",
 		direction: "ltr",
 		letterSpacing: 0,
 		wordSpacing: 0,
