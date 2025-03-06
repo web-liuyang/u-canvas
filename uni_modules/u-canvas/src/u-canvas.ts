@@ -70,15 +70,18 @@ export class UCanvas {
 		});
 	}
 
-	// 处理高清屏逻辑
-	private hidpi(ctx: CanvasRenderingContext2D, dpr: number) {
+	/** 处理高清屏逻辑 */
+	private hidpi(ctx: CanvasRenderingContext2D, dpr: number): void {
 		// 兼容小程序
 		ctx.canvas.width = ctx.canvas.offsetWidth * dpr;
 		ctx.canvas.height = ctx.canvas.offsetHeight * dpr;
 		ctx.scale(this.dpr, this.dpr);
 	}
 
-	public async ensureInitialize() {
+	/**
+	 * 初始化 Canvas
+	 */
+	public async ensureInitialize(): Promise<void> {
 		if (this.isInitialized) return;
 		const canvasContext = await this.getCanvasContext(this.options);
 		this.canvasContext = canvasContext;
@@ -91,7 +94,8 @@ export class UCanvas {
 		this.isInitialized = true;
 	}
 
-	private mixinCanvasMethod() {
+	/** 混入 canvas 方法 */
+	private mixinCanvasMethod(): void {
 		// uniapp-x 并沒有提供 getTransform 方法
 		// 注入 set/getMatrix
 		this.ctx.getMatrix = () => this.root.matrix.clone();
@@ -107,7 +111,7 @@ export class UCanvas {
 			// #endif
 
 			// #ifdef WEB || MP
-			// 有Android/iOS不支持
+			// Android/iOS不支持 createImageData
 			// @ts-expect-error Uni 条件编译
 			const imageData: ImageData = this.ctx.createImageData(w, h);
 			// #endif
@@ -134,19 +138,19 @@ export class UCanvas {
 		return new Point(startX + (point.x * this.dpr) / a, startY + (point.y * this.dpr) / d);
 	}
 
-	public add(p: Graphic) {
-		this.root.addChild(p);
+	public addGraphic(g: Graphic): void {
+		return this.root.addChild(g);
 	}
 
-	public remove(p: Graphic) {
-		this.root.removeChild(p);
+	public removeGraphic(p: Graphic): void {
+		return this.root.removeChild(p);
 	}
 
-	public clearChildren() {
-		this.root.clearChildren();
+	public cleanGraphic(): void {
+		return this.root.clearChildren();
 	}
 
-	public clearCanvas() {
+	public cleanCanvas(): void {
 		this.ctx.clearRect(...this._viewbox);
 	}
 
@@ -162,22 +166,17 @@ export class UCanvas {
 	// 	this.ctx.stroke(path);
 	// }
 
-	public clear() {
-		this.ctx.clearRect(...this._viewbox);
-		// this.paintOrigin();
-	}
-
-	public render() {
+	public render(): void {
 		const matrix = this.root.matrix;
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
 		this.setViewbox(matrix);
-		this.clear();
+		this.cleanCanvas();
 		applyStyle(this.ctx, this.style);
 
 		this.renderer.renderRoot();
 	}
 
-	public createImage(src: string): Promise<ImageResource> {
+	public createImageResource(src: string): Promise<ImageResource> {
 		return new Promise<any>((resolve, reject) => {
 			// TODO 后面会换成请求不用等待 onload , 直接就可以渲染做成同步处理
 			// 目前图片路径是不能有问题的, 要不然就会卡住
@@ -189,7 +188,7 @@ export class UCanvas {
 		});
 	}
 
-	public createImageData(options: CreateImageDataOptions): ImageData {
+	public makeImageData(options: CreateImageDataOptions): ImageData {
 		const { data, bytesPerScanline, array = [1, 1] } = options;
 		const [col, row] = array;
 		const w = bytesPerScanline;
@@ -216,6 +215,45 @@ export class UCanvas {
 		const repeatedPixels = repeatArray(pixels, row);
 		const imageData = this.ctx.createCompatibleImageData(repeatedPixels, w * col, h * row);
 		return imageData;
+	}
+
+	/**
+	 * 返回一个包含图片展示的 data URI
+	 * @param type 类型
+	 * @param quality 质量
+	 */
+	public async toBlob(type?: string, quality?: number): Promise<Blob> {
+		return new Promise<Blob>((resolve, reject) => {
+			try {
+				this.canvasContext.toBlob(resolve, type, quality);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	/**
+	 * 返回当前画布可视区域部分的byse64图片
+	 */
+	public toDataURL(): string {
+		return this.canvasContext.toDataURL();
+	}
+
+	/**
+	 * 在下一次重绘之前，调用用户提供的回调函数
+	 * @param callback 回调函数
+	 * @returns
+	 */
+	public requestAnimationFrame(callback: RequestAnimationFrameCallback): number {
+		return this.canvasContext.requestAnimationFrame(callback);
+	}
+
+	/**
+	 * 取消一个先前通过调用 uni.requestAnimationFrame() 方法添加到计划中的动画帧请求
+	 * @param taskId
+	 */
+	public cancelAnimationFrame(taskId: number): void {
+		this.canvasContext.cancelAnimationFrame(taskId);
 	}
 }
 

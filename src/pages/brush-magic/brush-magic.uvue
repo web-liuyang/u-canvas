@@ -35,7 +35,7 @@ onMounted(() => {
 	nextTick(async () => {
 		await uCanvas.ensureInitialize();
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 10,
 				y: 10,
@@ -47,7 +47,7 @@ onMounted(() => {
 			})
 		);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 140,
 				y: 10,
@@ -61,7 +61,7 @@ onMounted(() => {
 			})
 		);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 270,
 				y: 10,
@@ -75,7 +75,7 @@ onMounted(() => {
 			})
 		);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 10,
 				y: 160,
@@ -93,7 +93,7 @@ onMounted(() => {
 			})
 		);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 140,
 				y: 160,
@@ -109,7 +109,7 @@ onMounted(() => {
 			})
 		);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 270,
 				y: 160,
@@ -139,13 +139,13 @@ onMounted(() => {
 			parseInt("00000001", 2),
 		]);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 10,
 				y: 300,
 				children: [
 					new ImagePixel({
-						imageData: uCanvas.createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+						imageData: uCanvas.makeImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
 						x: 0,
 						y: 0,
 					}),
@@ -155,9 +155,9 @@ onMounted(() => {
 			})
 		);
 
-		const image = await uCanvas.createImage("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
+		const image = await uCanvas.createImageResource("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 160,
 				y: 300,
@@ -173,7 +173,7 @@ onMounted(() => {
 			})
 		);
 
-		uCanvas.add(
+		uCanvas.addGraphic(
 			new Composition({
 				x: 10,
 				y: 500,

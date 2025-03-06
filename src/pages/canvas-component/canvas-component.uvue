@@ -20,12 +20,10 @@ import { PointerdownEvent, PointermoveEvent, PointerupEvent, PointerclickEvent, 
 
 const uCanvas = new UCanvas({ canvasId: "ucanvas" });
 
-const ucuRef = ref<UniViewElement | null>(null);
-
 onReady(async () => {
 	await uCanvas.ensureInitialize();
 
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 10,
 			y: 10,
@@ -36,7 +34,7 @@ onReady(async () => {
 			],
 		})
 	);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 140,
 			y: 10,
@@ -49,7 +47,7 @@ onReady(async () => {
 			],
 		})
 	);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 270,
 			y: 10,
@@ -62,7 +60,7 @@ onReady(async () => {
 			],
 		})
 	);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 10,
 			y: 160,
@@ -79,7 +77,7 @@ onReady(async () => {
 			],
 		})
 	);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 140,
 			y: 160,
@@ -94,7 +92,7 @@ onReady(async () => {
 			],
 		})
 	);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 270,
 			y: 160,
@@ -122,13 +120,13 @@ onReady(async () => {
 		parseInt("00000010", 2),
 		parseInt("00000001", 2),
 	]);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 10,
 			y: 300,
 			children: [
 				new ImagePixel({
-					imageData: uCanvas.createImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
+					imageData: uCanvas.makeImageData({ data, bytesPerScanline: 8, array: [12, 12] }),
 					x: 0,
 					y: 0,
 				}),
@@ -138,8 +136,9 @@ onReady(async () => {
 		})
 	);
 	// 试试本地图片
-	const image = await uCanvas.createImage("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
-	uCanvas.add(
+	const image = await uCanvas.createImageResource("/static/logo.png");
+	// const image = await uCanvas.createImageResource("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
+	uCanvas.addGraphic(
 		new Composition({
 			x: 160,
 			y: 300,
@@ -154,7 +153,7 @@ onReady(async () => {
 			],
 		})
 	);
-	uCanvas.add(
+	uCanvas.addGraphic(
 		new Composition({
 			x: 10,
 			y: 500,
@@ -214,6 +213,19 @@ function pointerclick(e: PointerclickEvent) {
 function pointerwheel(e: PointerwheelEvent) {
 	stateMachine.value.onpointerwheel(e);
 }
+
+async function toBlob() {
+	const blob = await uCanvas.toBlob();
+	console.log("toBlob", blob);
+}
+
+async function toDataURL() {
+	const url = uCanvas.toDataURL();
+	console.log("toDataURL", url);
+	const image = await uCanvas.createImageResource(url);
+	uCanvas.addGraphic(new Image({ image, sx: 0, sy: 600 }));
+	uCanvas.render();
+}
 </script>
 
 <template>
@@ -237,6 +249,8 @@ function pointerwheel(e: PointerwheelEvent) {
 		<view class="state-list">
 			<button @click="switchToNone">None</button>
 			<button @click="switchToSelection">Selection</button>
+			<button @click="toBlob">toBlob</button>
+			<button @click="toDataURL">toDataURL</button>
 		</view>
 	</view>
 </template>

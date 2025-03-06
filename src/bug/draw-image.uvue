@@ -16,8 +16,8 @@ onReady(() => {
 	nextTick(async () => {
 		await uCanvas.ensureInitialize();
 
-		const image = await uCanvas.createImage("/static/logo.png");
-		uCanvas.add(new Image({ image, sx: 0, sy: 0 }));
+		const image = await uCanvas.createImageResource("/static/logo.png");
+		uCanvas.addGraphic(new Image({ image, sx: 0, sy: 0 }));
 		uCanvas.render();
 	});
 });

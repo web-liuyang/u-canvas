@@ -5,11 +5,7 @@ import { renderCanvas } from "./entity-renderer";
 import { EntityFactory } from "./entity";
 
 export class Renderer {
-	private canvas: UCanvas;
-
-	constructor(canvas: UCanvas) {
-		this.canvas = canvas;
-	}
+	constructor(private canvas: UCanvas) {}
 
 	public renderRoot(): void {
 		const offset = new Offset(0, 0);
