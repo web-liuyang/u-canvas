@@ -28,15 +28,21 @@ export class Composition extends Graphic<CompositionOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		const newAabb = this.children.reduce((aabb, item) => {
-			const itemAabb = item.getAabb();
-			const minX = aabb.min.x < itemAabb.min.x ? aabb.min.x : itemAabb.min.x;
-			const minY = aabb.min.y < itemAabb.min.y ? aabb.min.y : itemAabb.min.y;
-			const maxX = aabb.max.x > itemAabb.max.x ? aabb.max.x : itemAabb.max.x;
-			const maxY = aabb.max.y > itemAabb.max.y ? aabb.max.y : itemAabb.max.y;
+		if (this.children.length === 0) return Aabb.zero();
 
-			return new Aabb(new Point(minX, minY), new Point(maxX, maxY));
-		}, Aabb.world().swap());
+		const position = this.matrix.apply(new Point(this.x, this.y));
+
+		const newAabb = this.children
+			.reduce((aabb, item) => {
+				const itemAabb = item.getAabb();
+				const minX = aabb.min.x < itemAabb.min.x ? aabb.min.x : itemAabb.min.x;
+				const minY = aabb.min.y < itemAabb.min.y ? aabb.min.y : itemAabb.min.y;
+				const maxX = aabb.max.x > itemAabb.max.x ? aabb.max.x : itemAabb.max.x;
+				const maxY = aabb.max.y > itemAabb.max.y ? aabb.max.y : itemAabb.max.y;
+
+				return new Aabb(new Point(minX, minY), new Point(maxX, maxY));
+			}, Aabb.world().swap())
+			.offset(position.toOffset());
 
 		return newAabb;
 	}
@@ -45,9 +51,12 @@ export class Composition extends Graphic<CompositionOptions> {
 		super.paint(canvas, offset);
 		const offsetSelf = new Offset(this.x, this.y).add(offset);
 		this.children.forEach(child => {
-			const childCanvas = new Canvas({ matrix: child.worldMatrix, graphic: child });
+			const childCanvas = new Canvas({ matrix: child.worldMatrix });
 			child.uCanvas = this.uCanvas;
 			child.paint(childCanvas, offsetSelf);
+			// AABB Test
+			// const aabb = child.getGlobalAabb();
+			// childCanvas.drawRect(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, 0);
 			canvas.addCanvas(childCanvas);
 		});
 	}

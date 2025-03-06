@@ -10,7 +10,10 @@ export interface ImagePixelPureOptions extends GraphicOptions {
 	y: number;
 }
 
-export interface ImagePixelWithDirtyOptions extends ImagePixelPureOptions {
+export interface ImagePixelWithDirtyOptions extends GraphicOptions {
+	imageData: ImageData;
+	x: number;
+	y: number;
 	dx: number;
 	dy: number;
 	dw: number;

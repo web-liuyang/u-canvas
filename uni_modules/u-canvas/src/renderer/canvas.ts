@@ -86,8 +86,18 @@ export class Canvas {
 		this.entities.push(EntityFactory.createArcEntity(cx, cy, radius, startAngle, endAngle, counterclockwise, style));
 	}
 
-	public drawImage(image: ImageResource, x: number, y: number): void {
-		this.entities.push(EntityFactory.createImageEntity(image, x, y));
+	public drawImage(
+		image: ImageResource,
+		x: number,
+		y: number,
+		w?: number,
+		h?: number,
+		sx?: number,
+		sy?: number,
+		sw?: number,
+		sh?: number
+	): void {
+		this.entities.push(EntityFactory.createImageEntity(image, x, y, w, h, sx, sy, sw, sh));
 	}
 
 	public drawImagePixel(imageData: ImageData, x: number, y: number, dx: number, dy: number, dw: number, dh: number) {

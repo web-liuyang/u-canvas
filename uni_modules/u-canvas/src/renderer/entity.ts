@@ -66,6 +66,12 @@ export interface ImageEntity extends Entity {
 	image: ImageResource;
 	x: number;
 	y: number;
+	w?: number;
+	h?: number;
+	sx?: number;
+	sy?: number;
+	sw?: number;
+	sh?: number;
 }
 
 export interface ImagePixelEntity extends Entity {
@@ -168,11 +174,27 @@ export class EntityFactory {
 		};
 	}
 
-	public static createImageEntity(image: ImageResource, x: number, y: number): ImageEntity {
+	public static createImageEntity(
+		image: ImageResource,
+		x: number,
+		y: number,
+		w?: number,
+		h?: number,
+		sx?: number,
+		sy?: number,
+		sw?: number,
+		sh?: number
+	): ImageEntity {
 		return {
 			type: EntityType.image,
 			x,
 			y,
+			w,
+			h,
+			sx,
+			sy,
+			sw,
+			sh,
 			image,
 		};
 	}

@@ -34,6 +34,7 @@ onReady(async () => {
 			],
 		})
 	);
+
 	uCanvas.addGraphic(
 		new Composition({
 			x: 140,
@@ -140,13 +141,15 @@ onReady(async () => {
 	// const image = await uCanvas.createImageResource("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
 	uCanvas.addGraphic(
 		new Composition({
-			x: 160,
+			x: 140,
 			y: 300,
 			children: [
 				new Image({
 					image: image,
-					sx: 0,
-					sy: 0,
+					x: 0,
+					y: 0,
+					w: 100,
+					h: 100,
 				}),
 				//
 				new Text({ x: 0, y: 120, text: "Image" }),
@@ -223,7 +226,7 @@ async function toDataURL() {
 	const url = uCanvas.toDataURL();
 	console.log("toDataURL", url);
 	const image = await uCanvas.createImageResource(url);
-	uCanvas.addGraphic(new Image({ image, sx: 0, sy: 600 }));
+	uCanvas.addGraphic(new Image({ image, x: 0, y: 600 }));
 	uCanvas.render();
 }
 </script>

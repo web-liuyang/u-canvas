@@ -44,7 +44,7 @@ export class Ring extends Graphic<RingOptions> {
 	}
 
 	public override getAabb(): Aabb {
-		const { x, y } = this.matrix.apply(new Point(this.cx / 2, this.cy / 2));
+		const { x, y } = this.matrix.apply(new Point(0, 0));
 		const aabb = Aabb.zero()
 			.offset(new Offset(x, y))
 			.grow(new Offset(this.outerRadius * 2, this.outerRadius * 2));

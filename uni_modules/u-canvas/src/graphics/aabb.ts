@@ -37,4 +37,8 @@ export class Aabb {
 	public swap(): Aabb {
 		return new Aabb(this.max, this.min);
 	}
+
+	public contains(point: Point): boolean {
+		return point.x >= this.min.x && point.x <= this.max.x && point.y >= this.min.y && point.y <= this.max.y;
+	}
 }

@@ -1,5 +1,6 @@
 import { PointBase } from "./point-base";
 import { OffsetBase } from "./offset-base";
+import { Offset } from "./offset";
 
 export class Point extends PointBase {
 	public static origin(): Point {
@@ -32,5 +33,9 @@ export class Point extends PointBase {
 
 	public divide(value: number): Point {
 		return new Point(this.x / value, this.y / value);
+	}
+
+	public toOffset(): Offset {
+		return new Offset(this.x, this.y);
 	}
 }

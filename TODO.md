@@ -6,18 +6,15 @@
 [√] Renderer
 [√] 图形结构调整
 [√] 样式, 继承
-[√] AABB. 图片的aabb需要通过某种方法计算，文字暂时无法知道大小, 等uni-x支持图片请求后通过ArrayBuffer进行计算
-[√] hitTest 图片的aabb需要通过某种方法计算，文字暂时无法知道大小, 等uni-x支持图片请求后通过ArrayBuffer进行计算
-[ ] Matrix 基点尚未确定，目前图形的基点是在左上角
-[ ] iOS, Andriod 的 Text 只能获取到宽度, 所以无法计算 aabb
-
-[ ] 提 issue: workspace 无法导入组件
+[√] AABB/hitTest. 图片的aabb需要通过某种方法计算, 等uni-x支持图片请求后通过ArrayBuffer进行计算.
+[ ] iOS, Andriod 的 Text 只能获取到宽度, 所以无法计算 aabb, 等支持
 
 记：
 
 1. 当前坐标系是屏幕坐标系，即 0,0 在左上角. 矩形遵守顺时针原则
 2. 所有图形的方法应该都获取的是基于自身（local）的数据，如果想要转化成全局（global）的数据，应该通过某种方法。
 3. 在paint前,会注入uCanvas的实例
+4 .Matrix 基点尚未确定，目前图形的基点是在左上角
 
 u-canvas-component 没啥必要, 内部也没有什么好简化的部分, 而且反而还复杂了许多
 
@@ -41,5 +38,6 @@ u-canvas-component 没啥必要, 内部也没有什么好简化的部分, 而且
 [ ] h5 无法触发 tap事件
 [ ] @/u-canvas 可以访问类型与值，@u-canvas不可以访问类型，但可以访问值
 [ ] .uvue 后缀只能导出Type，导出Interface不可以用
+[ ] workspace 无法导入组件
 
 roundRect/strokeText/createPath2D 文档错误

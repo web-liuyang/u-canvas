@@ -43,7 +43,7 @@ export type CanvasFontWeight = "bold" | "normal";
 
 export const defaultStyle: Style = {
 	stroke: {
-		color: "blue",
+		color: "black",
 		width: 1,
 		cap: StrokeCap.butt,
 		join: StrokeJoin.miter,

@@ -30,7 +30,7 @@ export function applyStyle(ctx: CanvasRenderingContext2D, style?: Style): void {
 
 	// Text
 	const font = ctx.font.split(" ");
-	if (font.length === 2) font.unshift(defaultStyle.text?.fontWeight ?? "normal");
+	if (font.length === 2) font.unshift("normal");
 	const fontWeight = (() => {
 		const fontWeight = style?.text?.fontWeight ?? (font[0] as CanvasFontWeight);
 		// normal 不需要设置上去, 要不然字体设置无效
@@ -99,19 +99,27 @@ export function renderText(entity: TextEntity, ctx: CanvasRenderingContext2D): v
 	if (style?.fill !== undefined && style?.stroke !== undefined) {
 		ctx.fillText(text, x, y);
 		ctx.strokeText(text, x, y);
-	} else if (style?.fill !== undefined) {
-		ctx.fillText(text, x, y);
-	} else {
+	} else if (style?.stroke !== undefined) {
 		ctx.strokeText(text, x, y);
+	} else {
+		ctx.fillText(text, x, y);
 	}
 }
 
 export function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D): void {
-	const { x, y, image, style } = entity;
+	const { x, y, w, h, sx, sy, sw, sh, image, style } = entity;
 	applyStyle(ctx, style);
 
-	// @ts-expect-error uniapp api
-	ctx.drawImage(image, x, y);
+	if (sx && sy && sw && sh && x && y && w && h) {
+		// @ts-expect-error uniapp api
+		ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
+	} else if (x && y && w && h) {
+		// @ts-expect-error uniapp api
+		ctx.drawImage(image, x, y, w, h);
+	} else {
+		// @ts-expect-error uniapp api
+		ctx.drawImage(image, x, y);
+	}
 }
 
 export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingContext2D): void {

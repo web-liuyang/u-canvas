@@ -32,9 +32,10 @@ export class Text extends Graphic<TextOptions> {
 		// TODO iOS, Andriod 只能获取到宽度, 所以无法计算 aabb
 		const ctx = this.uCanvas.ctx;
 		const tm = ctx.measureText(this.text);
-		const { x, y } = this.matrix.apply(new Point(this.x, this.y - tm.actualBoundingBoxAscent));
+		// MP只能获取到 width, fontBoundingBoxAscent, fontBoundingBoxDescent
+		const { x, y } = this.matrix.apply(new Point(this.x, this.y - tm.fontBoundingBoxAscent));
 		const tw = tm.width;
-		const th = tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent;
+		const th = tm.fontBoundingBoxAscent + tm.fontBoundingBoxDescent;
 		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(tw, th));
 
 		return aabb;
@@ -46,8 +47,6 @@ export class Text extends Graphic<TextOptions> {
 		const { text, style } = this;
 
 		canvas.drawText(text, x, y, style);
-		// const aabb = this.getGlobalAabb();
-		// canvas.drawRect(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, 0, style);
 	}
 
 	public override hitTest(point: Point): this | undefined {
