@@ -120,7 +120,7 @@ export class UCanvas {
 			return imageData;
 		};
 	}
-
+	
 	private setViewbox(matrix: Matrix): void {
 		const { width, height } = this.ctx.canvas;
 		this._viewbox = [-matrix.e / matrix.a, -matrix.f / matrix.d, width / matrix.a, height / matrix.d];
