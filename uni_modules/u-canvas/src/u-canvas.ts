@@ -29,7 +29,7 @@ export class UCanvas {
 
 	public canvasContext!: CanvasContext;
 
-	public readonly dpr: number = uni.getDeviceInfo().devicePixelRatio || 1;
+	public readonly dpr: number = uni.getWindowInfo().pixelRatio;
 
 	public style: Style = defaultStyle;
 
