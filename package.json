@@ -6,7 +6,6 @@
 	"scripts": {
 		"dev": "pnpm dev:u-canvas & pnpm dev:u-pointer",
 		"dev:u-canvas": "pnpm --dir=./uni_modules/u-canvas dev",
-		"dev:u-pointer": "pnpm --dir=./uni_modules/u-pointer dev",
 		"format": "prettier --write uni_modules/**/*.ts",
 		"test": "pnpm --dir=./uni_modules/u-canvas vitest"
 	},
@@ -18,11 +17,7 @@
 	],
 	"author": "web-liuyang",
 	"description": "",
-	"dependencies": {
-		"u-canvas": "workspace:*",
-		"u-pointer": "workspace:*",
-		"u-canvas-component": "workspace:*"
-	},
+	"dependencies": {},
 	"devDependencies": {
 		"@dcloudio/uni-app-x": "^0.7.30",
 		"@types/node": "^22.5.5",

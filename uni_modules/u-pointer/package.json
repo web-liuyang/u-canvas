@@ -12,7 +12,7 @@
         "typescript",
         "u-pointer"
     ],
-	"repository": "https://github.com/web-liuyang/u-canvas/tree/master/uni_modules/u-pointer",
+	"repository": "https://github.com/web-liuyang/u-pointer",
 	"type": "module",
 	"exports": {
 		".": {
@@ -20,8 +20,7 @@
 			"require": "./index.ts"
 		}
 	},
-	"engines": {
-		"HBuilderX": "^3.91"
+    "engines": {
 	},
 	"dcloudext": {
 		"type": "component-vue",

@@ -9,45 +9,12 @@
 				"bounce": "none" // 禁用回弹效果
 			}
 		},
-		{
-			"path": "src/bug/draw-image",
-			"style": {
-				"navigationBarTitleText": "draw image"
-			}
-		},
 
 		{
 			"path": "src/pages/brush-magic/brush-magic",
 			"style": {
 				"navigationBarTitleText": "brush magic",
 				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "src/pages/pointer/pointer",
-			"style": {
-				"navigationBarTitleText": "pointer"
-				// "navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "src/bug/touch",
-			"style": {
-				"navigationBarTitleText": "bug touch"
-				// "navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "src/bug/put-image-data",
-			"style": {
-				"navigationBarTitleText": "bug put-image-data"
-				// "navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "src/pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app x"
 			}
 		}
 	],
