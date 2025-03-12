@@ -5,18 +5,36 @@ import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
 export interface CompositionOptions extends GraphicOptions {
+	/**
+	 * 基点 x 坐标
+	 */
 	x: number;
+	/**
+	 * 基点 y 坐标
+	 */
 	y: number;
+	/**
+	 * 子图形列表
+	 */
 	children?: Graphic[];
 }
 
 export class Composition extends Graphic<CompositionOptions> {
 	public override readonly type = "Composition";
 
+	/**
+	 * 基点 x 坐标
+	 */
 	public x: number;
 
+	/**
+	 * 基点 y 坐标
+	 */
 	public y: number;
 
+	/**
+	 * 子图形列表
+	 */
 	public children: Graphic[];
 
 	constructor(options: CompositionOptions) {
@@ -54,9 +72,6 @@ export class Composition extends Graphic<CompositionOptions> {
 			const childCanvas = new Canvas({ matrix: child.worldMatrix });
 			child.uCanvas = this.uCanvas;
 			child.paint(childCanvas, offsetSelf);
-			// AABB Test
-			// const aabb = child.getGlobalAabb();
-			// childCanvas.drawRect(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, 0);
 			canvas.addCanvas(childCanvas);
 		});
 	}
@@ -71,11 +86,19 @@ export class Composition extends Graphic<CompositionOptions> {
 		return undefined;
 	}
 
+	/**
+	 * 添加子图形
+	 * @param child 图形
+	 */
 	public addChild(child: Graphic): void {
 		child.parent = this;
 		this.children.push(child);
 	}
 
+	/**
+	 * 移除子图形
+	 * @param child 图形
+	 */
 	public removeChild(child: Graphic): void {
 		const index = this.children.indexOf(child);
 		if (index !== -1) {
@@ -84,6 +107,9 @@ export class Composition extends Graphic<CompositionOptions> {
 		}
 	}
 
+	/**
+	 * 清空子图形
+	 */
 	public clearChildren(): void {
 		this.children.forEach(child => (child.parent = undefined));
 		this.children.length = 0;

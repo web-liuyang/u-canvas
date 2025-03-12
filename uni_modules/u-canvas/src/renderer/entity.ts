@@ -68,10 +68,10 @@ export interface ImageEntity extends Entity {
 	y: number;
 	w?: number;
 	h?: number;
-	sx?: number;
-	sy?: number;
-	sw?: number;
-	sh?: number;
+	dx?: number;
+	dy?: number;
+	dw?: number;
+	dh?: number;
 }
 
 export interface ImagePixelEntity extends Entity {
@@ -180,10 +180,10 @@ export class EntityFactory {
 		y: number,
 		w?: number,
 		h?: number,
-		sx?: number,
-		sy?: number,
-		sw?: number,
-		sh?: number
+		dx?: number,
+		dy?: number,
+		dw?: number,
+		dh?: number
 	): ImageEntity {
 		return {
 			type: EntityType.image,
@@ -191,10 +191,10 @@ export class EntityFactory {
 			y,
 			w,
 			h,
-			sx,
-			sy,
-			sw,
-			sh,
+			dx,
+			dy,
+			dw,
+			dh,
 			image,
 		};
 	}

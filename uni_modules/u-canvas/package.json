@@ -24,8 +24,7 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
-		"happy-dom": "15.11.7",
-		"u-pointer": "workspace:u-pointer"
+		"happy-dom": "15.11.7"
 	},
 	"engines": {
 		"HBuilderX": "^3.1.0"
@@ -51,9 +50,7 @@
 		"npmurl": ""
 	},
 	"uni_modules": {
-		"dependencies": [
-			"u-pointer"
-		],
+		"dependencies": [],
 		"encrypt": [],
 		"platforms": {
 			"cloud": {

@@ -13,10 +13,19 @@ export interface CircleOptions extends GraphicOptions {
 export class Circle extends Graphic<CircleOptions> {
 	public override readonly type = "Circle";
 
+	/**
+	 * 圆心 x 坐标
+	 */
 	public cx: number;
 
+	/**
+	 * 圆心 y 坐标
+	 */
 	public cy: number;
 
+	/**
+	 * 半径
+	 */
 	public radius: number;
 
 	constructor(options: CircleOptions) {

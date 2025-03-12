@@ -92,12 +92,12 @@ export class Canvas {
 		y: number,
 		w?: number,
 		h?: number,
-		sx?: number,
-		sy?: number,
-		sw?: number,
-		sh?: number
+		dx?: number,
+		dy?: number,
+		dw?: number,
+		dh?: number
 	): void {
-		this.entities.push(EntityFactory.createImageEntity(image, x, y, w, h, sx, sy, sw, sh));
+		this.entities.push(EntityFactory.createImageEntity(image, x, y, w, h, dx, dy, dw, dh));
 	}
 
 	public drawImagePixel(imageData: ImageData, x: number, y: number, dx: number, dy: number, dw: number, dh: number) {

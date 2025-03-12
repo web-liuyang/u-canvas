@@ -107,12 +107,12 @@ export function renderText(entity: TextEntity, ctx: CanvasRenderingContext2D): v
 }
 
 export function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D): void {
-	const { x, y, w, h, sx, sy, sw, sh, image, style } = entity;
+	const { x, y, w, h, dx, dy, dw, dh, image, style } = entity;
 	applyStyle(ctx, style);
 
-	if (sx && sy && sw && sh && x && y && w && h) {
+	if (dx && dy && dw && dh && x && y && w && h) {
 		// @ts-expect-error uniapp api
-		ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
+		ctx.drawImage(image, dx, dy, dw, dh, x, y, w, h);
 	} else if (x && y && w && h) {
 		// @ts-expect-error uniapp api
 		ctx.drawImage(image, x, y, w, h);

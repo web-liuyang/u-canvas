@@ -25,18 +25,39 @@ export type ImagePixelOptions = ImagePixelPureOptions & Partial<ImagePixelWithDi
 export class ImagePixel extends Graphic<ImagePixelOptions> {
 	public override readonly type = "ImagePixel";
 
+	/**
+	 * 图像数据
+	 */
 	public imageData: ImageData;
 
+	/**
+	 * 基点 x 坐标
+	 */
 	public x: number;
 
+	/**
+	 * 基点 y 坐标
+	 */
 	public y: number;
 
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（x 坐标）
+	 */
 	public dx: number;
 
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（y 坐标）
+	 */
 	public dy: number;
 
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的宽度
+	 */
 	public dw: number;
 
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的高度
+	 */
 	public dh: number;
 
 	constructor(options: ImagePixelWithDirtyOptions);

@@ -30,10 +30,10 @@ export interface ImageWithShearOptions extends GraphicOptions {
 	y: number;
 	w: number;
 	h: number;
-	sx: number;
-	sy: number;
-	sw: number;
-	sh: number;
+	dx: number;
+	dy: number;
+	dw: number;
+	dh: number;
 }
 
 export type ImageOptions = ImagePureOptions & ImageWithSizeOptions & ImageWithShearOptions;
@@ -41,23 +41,50 @@ export type ImageOptions = ImagePureOptions & ImageWithSizeOptions & ImageWithSh
 export class Image extends Graphic<ImageOptions> {
 	public override readonly type = "Image";
 
+	/**
+	 * 图像资源
+	 */
 	public image: ImageResource;
 
+	/**
+	 * 基点 x 坐标
+	 */
 	public x: number;
 
+	/**
+	 * 基点 y 坐标
+	 */
 	public y: number;
 
+	/**
+	 * 宽度
+	 */
 	public w?: number;
 
+	/**
+	 * 高度
+	 */
 	public h?: number;
 
-	public sx?: number;
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（x 坐标）
+	 */
+	public dx?: number;
 
-	public sy?: number;
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（y 坐标）
+	 */
+	public dy?: number;
 
-	public sw?: number;
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的宽度
+	 */
+	public dw?: number;
 
-	public sh?: number;
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的高度
+	 */
+	public dh?: number;
 
 	constructor(options: ImagePureOptions);
 	constructor(options: ImageWithSizeOptions);
@@ -70,10 +97,10 @@ export class Image extends Graphic<ImageOptions> {
 		this.y = options.y;
 		this.w = options.w;
 		this.h = options.h;
-		this.sx = options.sx;
-		this.sy = options.sy;
-		this.sw = options.sw;
-		this.sh = options.sh;
+		this.dx = options.dx;
+		this.dy = options.dy;
+		this.dw = options.dw;
+		this.dh = options.dh;
 	}
 
 	public override getAabb(): Aabb {
@@ -92,10 +119,10 @@ export class Image extends Graphic<ImageOptions> {
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
-		const { image, w, h, sx, sy, sw, sh, style } = this;
+		const { image, w, h, dx, dy, dw, dh, style } = this;
 		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
 
-		canvas.drawImage(image, x, y, w, h, sx, sy, sw, sh);
+		canvas.drawImage(image, x, y, w, h, dx, dy, dw, dh);
 	}
 
 	public override hitTest(point: Point): this | undefined {
@@ -105,7 +132,7 @@ export class Image extends Graphic<ImageOptions> {
 		}
 
 		// TODO 没有传宽高就需要自己计算了
-		// if (x >= sx && x <= sx + sw && y >= sy && y <= sy + sh) return this;
+		// if (x >= dx && x <= dx + dw && y >= dy && y <= dy + dh) return this;
 
 		return undefined;
 	}

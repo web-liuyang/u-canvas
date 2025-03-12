@@ -4,7 +4,7 @@ import { Composition, defaultStyle, repeatArray } from "./graphics";
 import { applyStyle, Renderer } from "./renderer";
 import { Matrix } from "./transform";
 
-export interface CreateImageDataOptions {
+export interface MakeImageDataOptions {
 	data: Uint8ClampedArray;
 	bytesPerScanline: number;
 	// TODO
@@ -23,39 +23,87 @@ export interface UCanvasOptions {
 export type Viewbox = [number, number, number, number];
 
 export class UCanvas {
-	public isInitialized: boolean = false;
-
-	public renderer: Renderer = new Renderer(this);
-
+	/**
+	 * Canvas 上下文
+	 */
 	public canvasContext!: CanvasContext;
 
+	/**
+	 * 原生绘制属性
+	 */
+	public ctx!: CanvasRenderingContext2D;
+
+	/**
+	 * 屏幕像素比
+	 */
 	public readonly dpr: number = uni.getWindowInfo().pixelRatio;
 
-	public style: Style = defaultStyle;
+	/**
+	 * 初始化状态
+	 */
+	public isInitialized: boolean = false;
 
-	public ctx!: CanvasRenderingContext2D;
+	/**
+	 * 构造参数
+	 */
+	public options: UCanvasOptions;
+
+	/**
+	 * 渲染类
+	 */
+	public renderer: Renderer = new Renderer(this);
+
+	/**
+	 * 根图形
+	 */
+	public readonly root: Composition = new Composition({ x: 0, y: 0 });
+
+	/**
+	 * 绘制样式
+	 */
+	public style: Style = defaultStyle;
 
 	private _viewbox: Viewbox = [0, 0, 0, 0];
 
+	/**
+	 * 可视区域
+	 */
 	public get viewbox(): Viewbox {
 		return [...this._viewbox];
 	}
 
+	/**
+	 * 获取当前画布矩阵
+	 */
 	public get matrix(): Matrix {
 		return this.root.matrix;
 	}
 
+	/**
+	 * 设置当前画布矩阵
+	 */
 	public set matrix(matrix: Matrix) {
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
 		this.root.matrix = matrix;
 	}
 
-	public root!: Composition;
-
-	public options: UCanvasOptions;
-
 	constructor(options: UCanvasOptions) {
 		this.options = options;
+	}
+
+	/**
+	 * 初始化 Canvas
+	 */
+	public async ensureInitialize(): Promise<void> {
+		if (this.isInitialized) return;
+		const canvasContext = await this.getCanvasContext(this.options);
+		this.canvasContext = canvasContext;
+		this.ctx = this.canvasContext.getContext("2d")!;
+		this.mixinCanvasMethod();
+		this.hidpi(this.ctx, this.dpr);
+		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
+		this.setViewbox(this.root.matrix);
+		this.isInitialized = true;
 	}
 
 	private async getCanvasContext(options: UCanvasOptions): Promise<CanvasContext> {
@@ -79,22 +127,8 @@ export class UCanvas {
 	}
 
 	/**
-	 * 初始化 Canvas
+	 * 混入 canvas 方法
 	 */
-	public async ensureInitialize(): Promise<void> {
-		if (this.isInitialized) return;
-		const canvasContext = await this.getCanvasContext(this.options);
-		this.canvasContext = canvasContext;
-		this.ctx = this.canvasContext.getContext("2d")!;
-		this.mixinCanvasMethod();
-		this.hidpi(this.ctx, this.dpr);
-		this.root = new Composition({ x: 0, y: 0 });
-		this.root.matrix = new Matrix([this.dpr, 0, 0, this.dpr, 0, 0]);
-		this.setViewbox(this.root.matrix);
-		this.isInitialized = true;
-	}
-
-	/** 混入 canvas 方法 */
 	private mixinCanvasMethod(): void {
 		// uniapp-x 并沒有提供 getTransform 方法
 		// 注入 set/getMatrix
@@ -121,14 +155,19 @@ export class UCanvas {
 		};
 	}
 
+	/**
+	 * 设置当前可视区域
+	 * @param matrix Matrix
+	 * @returns
+	 */
 	private setViewbox(matrix: Matrix): void {
 		const { width, height } = this.ctx.canvas;
 		this._viewbox = [-matrix.e / matrix.a, -matrix.f / matrix.d, width / matrix.a, height / matrix.d];
 	}
 
 	/**
-	 * 窗口坐标转成 Canvas 中的坐标
-	 * @param point 窗口坐标
+	 * 屏幕坐标转成 Canvas 中的坐标
+	 * @param point 屏幕坐标
 	 * @returns Canvas 中的坐标
 	 */
 	public toCanvasPoint(point: Point): Point {
@@ -138,18 +177,34 @@ export class UCanvas {
 		return new Point(startX + (point.x * this.dpr) / a, startY + (point.y * this.dpr) / d);
 	}
 
-	public addGraphic(g: Graphic): void {
-		return this.root.addChild(g);
+	/**
+	 * 添加图形
+	 * @param graphic 图形
+	 * @returns
+	 */
+	public addGraphic(graphic: Graphic): void {
+		return this.root.addChild(graphic);
 	}
 
-	public removeGraphic(p: Graphic): void {
-		return this.root.removeChild(p);
+	/**
+	 * 删除图形
+	 * @param graphic 图形
+	 * @returns
+	 */
+	public removeGraphic(graphic: Graphic): void {
+		return this.root.removeChild(graphic);
 	}
 
+	/**
+	 * 清除所有图形
+	 */
 	public cleanGraphic(): void {
 		return this.root.clearChildren();
 	}
 
+	/**
+	 * 清除当前画布内容
+	 */
 	public cleanCanvas(): void {
 		this.ctx.clearRect(...this._viewbox);
 	}
@@ -166,6 +221,9 @@ export class UCanvas {
 	// 	this.ctx.stroke(path);
 	// }
 
+	/**
+	 * 渲染
+	 */
 	public render(): void {
 		const matrix = this.root.matrix;
 		this.ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
@@ -176,6 +234,11 @@ export class UCanvas {
 		this.renderer.renderRoot();
 	}
 
+	/**
+	 * 创建 ImageResource
+	 * @param src 路径
+	 * @returns
+	 */
 	public createImageResource(src: string): Promise<ImageResource> {
 		return new Promise<any>((resolve, reject) => {
 			// TODO 后面会换成请求不用等待 onload , 直接就可以渲染做成同步处理
@@ -188,7 +251,12 @@ export class UCanvas {
 		});
 	}
 
-	public makeImageData(options: CreateImageDataOptions): ImageData {
+	/**
+	 * 制作 ImageData
+	 * @param options 参数
+	 * @returns
+	 */
+	public makeImageData(options: MakeImageDataOptions): ImageData {
 		const { data, bytesPerScanline, array = [1, 1] } = options;
 		const [col, row] = array;
 		const w = bytesPerScanline;
@@ -233,7 +301,7 @@ export class UCanvas {
 	}
 
 	/**
-	 * 返回当前画布可视区域部分的byse64图片
+	 * 返回当前画布可视区域的 base64 图片
 	 */
 	public toDataURL(): string {
 		return this.canvasContext.toDataURL();
