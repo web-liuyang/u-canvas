@@ -8,14 +8,6 @@
 				"disableScroll": true, // 禁用页面滚动
 				"bounce": "none" // 禁用回弹效果
 			}
-		},
-
-		{
-			"path": "src/pages/brush-magic/brush-magic",
-			"style": {
-				"navigationBarTitleText": "brush magic",
-				"navigationStyle": "custom"
-			}
 		}
 	],
 	"globalStyle": {
