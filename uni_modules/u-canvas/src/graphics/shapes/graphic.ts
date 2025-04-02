@@ -1,12 +1,11 @@
-import type { Hittable, Paintable, Parent } from "../../types";
 import type { Style } from "../styles";
-import type { Point } from "../../offset";
+import type { Point } from "../../coords";
 import type { Canvas } from "../../renderer/canvas";
 import type { Aabb } from "../aabb";
 import type { UCanvas } from "../../u-canvas";
-import { Offset } from "../../offset";
+import { Offset } from "../../coords";
 import { generateUUID } from "../utils";
-import { Transform } from "../../transform";
+import { Matrix, multiply } from "../../transform";
 
 export type GraphicId = string;
 
@@ -16,8 +15,9 @@ export interface GraphicOptions {
 	parent?: Graphic;
 }
 
-export abstract class Graphic<T extends GraphicOptions = GraphicOptions> extends Transform implements Parent<Graphic> {
+export abstract class Graphic<T extends GraphicOptions = GraphicOptions> {
 	public abstract readonly type: string;
+
 	/**
 	 * id
 	 */
@@ -42,8 +42,21 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions> extends
 	 */
 	public parent?: Graphic;
 
+	/**
+	 * 局部矩阵
+	 */
+	public matrix: Matrix = new Matrix();
+
+	/**
+	 * 全局矩阵
+	 */
+	get worldMatrix() {
+		const parentWorldMatrix = this.parent?.worldMatrix ?? new Matrix();
+		const worldMatrix = multiply(parentWorldMatrix, this.matrix);
+		return worldMatrix;
+	}
+
 	constructor(options: T) {
-		super();
 		this.id = options.id ?? generateUUID();
 		this.style = options.style;
 		this.parent = options?.parent;
@@ -60,7 +73,7 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions> extends
 	 * @returns
 	 */
 	public getGlobalAabb(): Aabb {
-		return this.getAabb().offset(this.offset);
+		return this.getAabb().offseted(this.offset);
 	}
 
 	/**
@@ -85,6 +98,6 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions> extends
 	 * @returns
 	 */
 	public toGlobalPoint(point: Point): Point {
-		return point.offset(this.offset);
+		return point.offseted(this.offset);
 	}
 }

@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Line, Offset, Point } from "../../offset";
+import { Line, Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { isPointOnLineSegment } from "../utils";
 import { Aabb } from "../aabb";
@@ -12,6 +12,9 @@ export interface PolylineOptions extends GraphicOptions {
 export class Polyline extends Graphic<PolylineOptions> {
 	public override readonly type = "Polyline";
 
+	/**
+	 * 点集合
+	 */
 	public points: Point[];
 
 	constructor(options: PolylineOptions) {
@@ -38,8 +41,8 @@ export class Polyline extends Graphic<PolylineOptions> {
 
 		const { x, y } = this.matrix.apply(new Point(minX, minY));
 		const aabb = Aabb.zero()
-			.offset(new Offset(x, y))
-			.grow(new Offset(maxX - minX, maxY - minY));
+			.offseted(new Offset(x, y))
+			.grew(new Offset(maxX - minX, maxY - minY));
 
 		return aabb;
 	}

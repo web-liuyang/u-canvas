@@ -1,5 +1,5 @@
 // import { v4 as uuid } from "uuid";
-import { Point, Line } from "../offset";
+import { Point, Line } from "../coords";
 import type { Style, CanvasFontWeight } from "./styles";
 import { StrokeCap, StrokeJoin } from "./styles";
 

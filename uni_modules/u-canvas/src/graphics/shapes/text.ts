@@ -1,30 +1,39 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
-import { Point } from "../../offset";
+import { Offset } from "../../coords";
+import { Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
 export interface TextOptions extends GraphicOptions {
-	text: string;
 	x: number;
 	y: number;
+	text: string;
 }
 
 export class Text extends Graphic<TextOptions> {
 	public override readonly type = "Text";
 
-	public text: string;
-
+	/**
+	 * 基点 x 坐标
+	 */
 	public x: number;
 
+	/**
+	 * 基点 y 坐标
+	 */
 	public y: number;
+
+	/**
+	 * 文本
+	 */
+	public text: string;
 
 	constructor(options: TextOptions) {
 		super(options);
-		this.text = options.text;
 		this.x = options.x;
 		this.y = options.y;
+		this.text = options.text;
 	}
 
 	public override getAabb(): Aabb {
@@ -36,7 +45,7 @@ export class Text extends Graphic<TextOptions> {
 		const { x, y } = this.matrix.apply(new Point(this.x, this.y - tm.fontBoundingBoxAscent));
 		const tw = tm.width;
 		const th = tm.fontBoundingBoxAscent + tm.fontBoundingBoxDescent;
-		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(tw, th));
+		const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(tw, th));
 
 		return aabb;
 	}

@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset, Point } from "../../offset";
+import { Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -38,8 +38,8 @@ export class Circle extends Graphic<CircleOptions> {
 	public override getAabb(): Aabb {
 		const { x, y } = this.matrix.apply(new Point(0, 0));
 		const aabb = Aabb.zero()
-			.offset(new Offset(x, y))
-			.grow(new Offset(this.radius * 2, this.radius * 2));
+			.offseted(new Offset(x, y))
+			.grew(new Offset(this.radius * 2, this.radius * 2));
 
 		return aabb;
 	}

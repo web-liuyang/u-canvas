@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset, Point } from "../../offset";
+import { Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -12,8 +12,14 @@ export interface PolygonOptions extends GraphicOptions {
 export class Polygon extends Graphic<PolygonOptions> {
 	public override readonly type = "Polygon";
 
+	/**
+	 * 点集合
+	 */
 	public points: Point[];
 
+	/**
+	 * 闭合
+	 */
 	public close: boolean;
 
 	constructor(options: PolygonOptions) {
@@ -42,8 +48,8 @@ export class Polygon extends Graphic<PolygonOptions> {
 
 		const { x, y } = this.matrix.apply(new Point(minX, minY));
 		const aabb = Aabb.zero()
-			.offset(new Offset(x, y))
-			.grow(new Offset(maxX - minX, maxY - minY));
+			.offseted(new Offset(x, y))
+			.grew(new Offset(maxX - minX, maxY - minY));
 
 		return aabb;
 	}

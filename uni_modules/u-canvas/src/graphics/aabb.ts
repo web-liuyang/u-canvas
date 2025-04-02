@@ -1,4 +1,4 @@
-import { Offset, Point } from "../offset";
+import { Offset, Point } from "../coords";
 
 /**
  * 轴对齐包围盒
@@ -63,8 +63,8 @@ export class Aabb {
 	 * @param offset 偏移量
 	 * @returns
 	 */
-	public grow(offset: Offset): Aabb {
-		return new Aabb(this.min, this.max.offset(offset));
+	public grew(offset: Offset): Aabb {
+		return new Aabb(this.min, this.max.offseted(offset));
 	}
 
 	/**
@@ -72,15 +72,15 @@ export class Aabb {
 	 * @param offset 偏移量
 	 * @returns
 	 */
-	public offset(offset: Offset): Aabb {
-		return new Aabb(this.min.offset(offset), this.max.offset(offset));
+	public offseted(offset: Offset): Aabb {
+		return new Aabb(this.min.offseted(offset), this.max.offseted(offset));
 	}
 
 	/**
 	 * 最大坐标点与最小坐标点交换
 	 * @returns
 	 */
-	public swap(): Aabb {
+	public swapped(): Aabb {
 		return new Aabb(this.max, this.min);
 	}
 }

@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset, Point } from "../../offset";
+import { Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Path } from "../../renderer";
 import { Aabb } from "../aabb";
@@ -17,16 +17,34 @@ export interface PieOptions extends GraphicOptions {
 export class Pie extends Graphic<PieOptions> {
 	public override readonly type = "Pie";
 
+	/**
+	 * 中心点 x 坐标
+	 */
 	public cx: number;
 
+	/**
+	 * 中心点 y 坐标
+	 */
 	public cy: number;
 
+	/**
+	 * 半径
+	 */
 	public radius: number;
 
+	/**
+	 * 起始弧度
+	 */
 	public startAngle: number;
 
+	/**
+	 * 结束弧度
+	 */
 	public endAngle: number;
 
+	/**
+	 * 绘制方向, true 逆时针, false 顺时针. 默认false
+	 */
 	public counterclockwise: boolean;
 
 	constructor(options: PieOptions) {
@@ -42,8 +60,8 @@ export class Pie extends Graphic<PieOptions> {
 	public override getAabb(): Aabb {
 		const { x, y } = this.matrix.apply(new Point(0, 0));
 		const aabb = Aabb.zero()
-			.offset(new Offset(x, y))
-			.grow(new Offset(this.radius * 2, this.radius * 2));
+			.offseted(new Offset(x, y))
+			.grew(new Offset(this.radius * 2, this.radius * 2));
 
 		return aabb;
 	}
@@ -62,7 +80,7 @@ export class Pie extends Graphic<PieOptions> {
 
 	public override hitTest(point: Point): this | undefined {
 		const { radius, startAngle, endAngle } = this;
-		const { x: dx, y: dy } = point.subtract(this.toGlobalPoint(new Point(this.cx, this.cy)));
+		const { x: dx, y: dy } = point.subtracted(this.toGlobalPoint(new Point(this.cx, this.cy)));
 		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
 		if (distance <= radius) {

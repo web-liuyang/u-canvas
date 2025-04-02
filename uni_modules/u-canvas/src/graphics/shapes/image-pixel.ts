@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset, Point } from "../../offset";
+import { Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -76,7 +76,7 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 
 	public override getAabb(): Aabb {
 		const { x, y } = this.matrix.apply(new Point(this.x, this.y));
-		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(this.dw, this.dh));
+		const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(this.dw, this.dh));
 
 		return aabb;
 	}

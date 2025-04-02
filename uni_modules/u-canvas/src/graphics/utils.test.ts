@@ -4,7 +4,7 @@ import { describe, it, expect } from "vitest";
 import { extractStyle, isPointOnLineSegment, scaleImageData } from "./utils";
 // import { Style, Stroke, StrokeCap, StrokeJoin, Fill, TextStyle } from "./styles";
 import { CanvasRenderingContext2D } from "@dcloudio/uni-app-x/types/native";
-import { Line, Point } from "../offset";
+import { Line, Point } from "../coords";
 // import { Line, Point } from "../types";
 
 describe("extractStyle", () => {

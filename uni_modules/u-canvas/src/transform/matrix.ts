@@ -1,4 +1,4 @@
-import { Point } from "../offset";
+import { Point } from "../coords";
 import { multiply, rotate, scale, setTranslate, translate } from "./utils";
 
 /**
@@ -20,6 +20,9 @@ export class Matrix {
 
 	public f: number;
 
+	/**
+	 * 当前矩阵数组
+	 */
 	get matrixArray(): MatrixArray {
 		return [this.a, this.b, this.c, this.d, this.e, this.f];
 	}
@@ -34,14 +37,9 @@ export class Matrix {
 	}
 
 	/**
-	 * Matrix multiplication matrix
-	 */
-	public multiply(other: Matrix): Matrix {
-		return this.replace(multiply(other, this));
-	}
-
-	/**
-	 * Matrix multiplication vector
+	 * 应用于坐标点
+	 * @param point 坐标点
+	 * @returns
 	 */
 	public apply(point: Point): Point {
 		const x1 = this.a * point.x + this.c * point.y + this.e;
@@ -50,31 +48,19 @@ export class Matrix {
 		return new Point(x1, y1);
 	}
 
-	public translate(tx: number, ty: number): Matrix {
-		return this.replace(translate(this, tx, ty));
-	}
-
-	public rotate(xt: number, yt: number): Matrix {
-		return this.replace(rotate(this, xt, yt));
-	}
-
-	public setTranslate(tx: number, ty: number): Matrix {
-		return this.replace(setTranslate(this, tx, ty));
-	}
-
 	/**
-	 * Scale
-	 *
-	 * At locate [point] scale, if the [point] exist.
+	 * 克隆当前矩阵
+	 * @returns
 	 */
-	public scale(x: number, y: number, point?: Point): Matrix {
-		return this.replace(scale(this, x, y, point));
-	}
-
 	public clone(): Matrix {
 		return new Matrix(this.matrixArray);
 	}
 
+	/**
+	 * 替换当前矩阵
+	 * @param matrix 矩阵
+	 * @returns
+	 */
 	public replace(matrix: Matrix): Matrix {
 		this.a = matrix.a;
 		this.b = matrix.b;
@@ -84,5 +70,55 @@ export class Matrix {
 		this.f = matrix.f;
 
 		return this;
+	}
+
+	/**
+	 * 矩阵乘法
+	 * @param matrix 矩阵
+	 * @returns
+	 */
+	public multiply(matrix: Matrix): Matrix {
+		return this.replace(multiply(matrix, this));
+	}
+
+	/**
+	 * 平移
+	 * @param tx x 偏移量
+	 * @param ty y 偏移量
+	 * @returns
+	 */
+	public translate(tx: number, ty: number): Matrix {
+		return this.replace(translate(this, tx, ty));
+	}
+
+	/**
+	 * 旋转
+	 * @param xt x 弧度
+	 * @param yt y 弧度
+	 * @returns
+	 */
+	public rotate(xt: number, yt: number): Matrix {
+		return this.replace(rotate(this, xt, yt));
+	}
+
+	/**
+	 * 设置平移
+	 * @param tx x 偏移量
+	 * @param ty y 偏移量
+	 * @returns
+	 */
+	public setTranslate(tx: number, ty: number): Matrix {
+		return this.replace(setTranslate(this, tx, ty));
+	}
+
+	/**
+	 * 缩放
+	 * @param x x 倍率
+	 * @param y y 倍率
+	 * @param point 根据此坐标点进行缩放
+	 * @returns
+	 */
+	public scale(x: number, y: number, point?: Point): Matrix {
+		return this.replace(scale(this, x, y, point));
 	}
 }

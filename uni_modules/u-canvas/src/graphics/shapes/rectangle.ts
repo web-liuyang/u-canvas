@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset, Point } from "../../offset";
+import { Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -13,8 +13,8 @@ export interface RectangleOptions extends GraphicOptions {
 }
 
 export interface RectangleFromCenterOptions extends GraphicOptions {
-	x: number;
-	y: number;
+	cx: number;
+	cy: number;
 	w: number;
 	h: number;
 	radii?: number;
@@ -23,30 +23,56 @@ export interface RectangleFromCenterOptions extends GraphicOptions {
 export class Rectangle extends Graphic<RectangleOptions> {
 	public override readonly type = "Rectangle";
 
+	/**
+	 * 基点 x 坐标
+	 */
 	public x: number;
 
+	/**
+	 * 基点 y 坐标
+	 */
 	public y: number;
 
+	/**
+	 * 宽度
+	 */
 	public w: number;
 
+	/**
+	 * 高度
+	 */
 	public h: number;
 
+	/**
+	 * 圆角
+	 */
 	public radii: number;
 
+	/**
+	 * 中心点 x 坐标
+	 */
 	public get cx(): number {
 		return this.x + this.w / 2;
 	}
 
+	/**
+	 * 中心点 y 坐标
+	 */
 	public get cy(): number {
 		return this.y + this.h / 2;
 	}
 
+	/**
+	 * 通过中心点创建
+	 * @param options
+	 * @returns
+	 */
 	public static fromCenter(options: RectangleFromCenterOptions): Rectangle {
-		const { x, y, w, h, radii, style } = options;
+		const { cx, cy, w, h, radii, style } = options;
 		return new Rectangle({
 			id: options.id,
-			x: x - w / 2,
-			y: y - h / 2,
+			x: cx - w / 2,
+			y: cy - h / 2,
 			w: w,
 			h: h,
 			radii: radii,
@@ -65,7 +91,7 @@ export class Rectangle extends Graphic<RectangleOptions> {
 
 	public override getAabb(): Aabb {
 		const { x, y } = this.matrix.apply(new Point(this.x, this.y));
-		const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(this.w, this.h));
+		const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(this.w, this.h));
 
 		return aabb;
 	}

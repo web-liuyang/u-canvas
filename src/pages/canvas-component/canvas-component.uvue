@@ -12,7 +12,6 @@ import {
 	Image,
 	ImagePixel,
 	Point,
-	// } from "@/uni_modules/u-canvas/src";
 } from "u-canvas";
 import { computed, ref } from "vue";
 import { BaseStateMachine, NoneStateMachine, SelectionStateMachine } from "./state-machine";

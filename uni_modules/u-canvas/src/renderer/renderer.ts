@@ -1,11 +1,11 @@
 import type { UCanvas } from "../u-canvas";
-import { Offset } from "../offset";
+import { Offset } from "../coords";
 import { Canvas } from "./canvas";
 import { renderCanvas } from "./entity-renderer";
 import { EntityFactory } from "./entity";
 
 export class Renderer {
-	constructor(private canvas: UCanvas) {}
+	constructor(public canvas: UCanvas) {}
 
 	public renderRoot(): void {
 		const offset = new Offset(0, 0);

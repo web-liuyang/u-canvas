@@ -2,7 +2,7 @@ import type { Canvas } from "./canvas";
 import type { Style, ImageResource } from "../graphics";
 import type { Path } from "./path";
 import type { Matrix } from "../transform";
-import type { Point } from "../offset";
+import type { Point } from "../coords";
 
 export enum EntityType {
 	matrix,
@@ -79,10 +79,10 @@ export interface ImagePixelEntity extends Entity {
 	imageData: ImageData;
 	x: number;
 	y: number;
-	dx: number;
-	dy: number;
-	dw: number;
-	dh: number;
+	dx?: number;
+	dy?: number;
+	dw?: number;
+	dh?: number;
 }
 
 export interface TextEntity extends Entity {
@@ -203,10 +203,10 @@ export class EntityFactory {
 		imageData: ImageData,
 		x: number,
 		y: number,
-		dx: number,
-		dy: number,
-		dw: number,
-		dh: number
+		dx?: number,
+		dy?: number,
+		dw?: number,
+		dh?: number
 	): ImagePixelEntity {
 		return {
 			type: EntityType.imagePixel,

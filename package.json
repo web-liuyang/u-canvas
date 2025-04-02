@@ -4,8 +4,8 @@
 	"main": "main.uts",
 	"private": true,
 	"scripts": {
-		"dev": "pnpm dev:u-canvas & pnpm dev:u-pointer",
-		"dev:u-canvas": "pnpm --dir=./uni_modules/u-canvas dev",
+		"start": "pnpm dev:u-canvas",
+		"start:u-canvas": "pnpm --dir=./uni_modules/u-canvas dev",
 		"format": "prettier --write uni_modules/**/*.ts",
 		"test": "pnpm --dir=./uni_modules/u-canvas vitest"
 	},

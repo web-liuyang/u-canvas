@@ -15,7 +15,7 @@ import type {
 
 import { defaultStyle, extractStyle, scaleImageData } from "../graphics";
 import { EntityType } from "./entity";
-import { Point } from "../offset";
+import { Point } from "../coords";
 import { RecordType } from "./recored";
 
 export function applyStyle(ctx: CanvasRenderingContext2D, style?: Style): void {
@@ -124,7 +124,7 @@ export function renderImage(entity: ImageEntity, ctx: CanvasRenderingContext2D):
 
 export function renderImagePixel(entity: ImagePixelEntity, ctx: CanvasRenderingContext2D): void {
 	// 应该会有一个参数给用户选择 用方法一还是二进行渲染
-	let { imageData, dx, dy, dw, dh } = entity;
+	let { imageData, dx = 0, dy = 0, dw = imageData.width, dh = imageData.height } = entity;
 	// 方法一：保证绘制的图片数据跟随 Matrix 不会模糊，但如果不是整数倍的缩放就会有一些像素失真。
 	const matrix = ctx.getMatrix();
 	const xs = matrix.a;

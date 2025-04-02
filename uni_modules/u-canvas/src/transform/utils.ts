@@ -1,5 +1,5 @@
 import type { MatrixArray } from "./matrix";
-import type { Point } from "../offset";
+import type { Point } from "../coords";
 import { Matrix } from "./matrix";
 
 /**

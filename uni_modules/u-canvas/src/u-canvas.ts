@@ -1,5 +1,5 @@
 import type { Graphic, ImageResource, Style } from "./graphics";
-import { Point } from "./offset";
+import { Point } from "./coords";
 import { Composition, defaultStyle, repeatArray } from "./graphics";
 import { applyStyle, Renderer } from "./renderer";
 import { Matrix } from "./transform";
@@ -36,7 +36,7 @@ export class UCanvas {
 	/**
 	 * 屏幕像素比
 	 */
-	public readonly dpr: number = uni.getWindowInfo().pixelRatio;
+	public dpr: number = uni.getWindowInfo().pixelRatio;
 
 	/**
 	 * 初始化状态

@@ -1,6 +1,6 @@
 import type { GraphicOptions } from "./graphic";
 import { Canvas } from "../../renderer";
-import { Offset, Point } from "../../offset";
+import { Offset, Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -59,15 +59,15 @@ export class Composition extends Graphic<CompositionOptions> {
 				const maxY = aabb.max.y > itemAabb.max.y ? aabb.max.y : itemAabb.max.y;
 
 				return new Aabb(new Point(minX, minY), new Point(maxX, maxY));
-			}, Aabb.world().swap())
-			.offset(position.toOffset());
+			}, Aabb.world().swapped())
+			.offseted(position.toOffset());
 
 		return newAabb;
 	}
 
 	public override paint(canvas: Canvas, offset: Offset): void {
 		super.paint(canvas, offset);
-		const offsetSelf = new Offset(this.x, this.y).add(offset);
+		const offsetSelf = new Offset(this.x, this.y).offseted(offset);
 		this.children.forEach(child => {
 			const childCanvas = new Canvas({ matrix: child.worldMatrix });
 			child.uCanvas = this.uCanvas;

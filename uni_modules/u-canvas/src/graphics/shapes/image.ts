@@ -1,7 +1,7 @@
 import type { GraphicOptions } from "./graphic";
 import type { Canvas } from "../../renderer";
-import { Offset } from "../../offset";
-import { Point } from "../../offset";
+import { Offset } from "../../coords";
+import { Point } from "../../coords";
 import { Graphic } from "./graphic";
 import { Aabb } from "../aabb";
 
@@ -107,7 +107,7 @@ export class Image extends Graphic<ImageOptions> {
 		// 指定了图片宽高直接计算
 		if (this.w && this.h) {
 			const { x, y } = this.matrix.apply(new Point(this.x, this.y));
-			const aabb = Aabb.zero().offset(new Offset(x, y)).grow(new Offset(this.w, this.h));
+			const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(this.w, this.h));
 
 			return aabb;
 		} else {
