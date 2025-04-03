@@ -8,7 +8,7 @@ const uCanvasPlugin = (): PluginOption => {
 		enforce: "pre",
 		transform(code, id, options) {
 			const newCode = code
-				.replace(/from "u-canvas"/g, `from "@/uni_modules/u-canvas/src/index"`)
+				.replace(/from "u-canvas"/g, `from "@/uni_modules/u-canvas/index"`)
 				.replace(/from "u-pointer"/g, `from "@/uni_modules/u-pointer/index"`);
 
 			return newCode;

@@ -2,8 +2,8 @@
 	"id": "u-pointer",
 	"name": "u-pointer",
 	"displayName": "u-pointer 消除各个平台事件的差异性 实现更好的交互体验",
-	"version": "1.0.0",
 	"description": "u-pointer 消除各个平台事件的差异性 实现更好的交互体验",
+	"version": "1.0.0",
 	"author": "LiuYang",
 	"keywords": [
 		"ui",
