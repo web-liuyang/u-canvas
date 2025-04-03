@@ -1,1 +1,1 @@
-export * from "./src/index";
+export * from "./js_sdk/index";

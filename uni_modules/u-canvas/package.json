@@ -1,30 +1,24 @@
 {
 	"id": "u-canvas",
 	"name": "u-canvas",
-	"displayName": "u-canvas 一款图形绘制工具",
-	"description": "u-canvas",
+	"displayName": "u-canvas 一款快速灵活开源支持UniappX的Canvas基础图形绘制引擎",
+	"description": "u-canvas 一款快速灵活开源支持UniappX的Canvas基础图形绘制引擎",
 	"version": "1.0.0",
 	"author": "LiuYang",
-	"repository": "https://github.com/web-liuyang/u-canvas",
 	"keywords": [
-		"uvue",
-		"uniapp-x",
-		"typescript",
-		"canvas",
-		"engine"
-	],
-	"type": "module",
-	"exports": {
-		".": {
-			"import": "./index.ts",
-			"require": "./index.ts"
-		}
-	},
+        "uvue",
+        "uniapp-x",
+        "typescript",
+        "canvas",
+        "engine"
+    ],
+	"repository": "https://github.com/web-liuyang/u-canvas",
 	"engines": {
-		"HBuilderX": "^3.1.0"
+		"HBuilderX": "^4.0"
 	},
 	"dcloudext": {
-		"type": "component-vue",
+    "type": "sdk-js",
+		"npmurl": "",
 		"sale": {
 			"regular": {
 				"price": "0.00"
@@ -40,8 +34,7 @@
 			"ads": "无",
 			"data": "无",
 			"permissions": "无"
-		},
-		"npmurl": ""
+		}
 	},
 	"uni_modules": {
 		"dependencies": [],
@@ -54,15 +47,15 @@
 			},
 			"client": {
 				"Vue": {
-					"vue2": "n",
+					"vue2": "y",
 					"vue3": "y"
 				},
 				"App": {
-					"app-vue": "y",
-					"app-nvue": "u",
-					"app-uvue": "y",
-					"app-harmony": "u"
-				},
+                    "app-vue": "u",
+                    "app-nvue": "u",
+                    "app-uvue": "y",
+                    "app-harmony": "u"
+                },
 				"H5-mobile": {
 					"Safari": "y",
 					"Android Browser": "y",
