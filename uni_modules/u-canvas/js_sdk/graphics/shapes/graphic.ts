@@ -50,8 +50,8 @@ export abstract class Graphic<T extends GraphicOptions = GraphicOptions> {
 	/**
 	 * 全局矩阵
 	 */
-	get worldMatrix() {
-		const parentWorldMatrix = this.parent?.worldMatrix ?? new Matrix();
+	public getWorldMatrix(): Matrix {
+		const parentWorldMatrix = this.parent?.getWorldMatrix() ?? new Matrix();
 		const worldMatrix = multiply(parentWorldMatrix, this.matrix);
 		return worldMatrix;
 	}

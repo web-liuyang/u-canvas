@@ -41,9 +41,12 @@ export default {
 </script>
 
 <style>
+/* #ifndef APP */
 #app {
 	overflow: hidden;
 }
+/* #endif */
+
 /*每个页面公共css */
 .uni-row {
 	flex-direction: row;

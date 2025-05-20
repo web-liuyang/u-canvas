@@ -69,7 +69,7 @@ export class Composition extends Graphic<CompositionOptions> {
 		super.paint(canvas, offset);
 		const offsetSelf = new Offset(this.x, this.y).offseted(offset);
 		this.children.forEach(child => {
-			const childCanvas = new Canvas({ matrix: child.worldMatrix });
+			const childCanvas = new Canvas({ matrix: child.getWorldMatrix() });
 			child.uCanvas = this.uCanvas;
 			child.paint(childCanvas, offsetSelf);
 			canvas.addCanvas(childCanvas);

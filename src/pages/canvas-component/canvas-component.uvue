@@ -137,6 +137,20 @@ onReady(async () => {
 	);
 	// 试试本地图片
 	const image = await uCanvas.createImageResource("/static/logo.png");
+	// uni.request({
+	// 	url: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png",
+	// 	responseType: "arraybuffer",
+	// 	success: res => {			
+	// 		// console.log(res);
+	// 		// console.log(uni.arrayBufferToBase64(res.data));
+	// 		ss.value = `data:image/png;base64,${uni.arrayBufferToBase64(res.data)}`;
+	// 		console.log(ss);
+	// 	},
+	// 	fail: err => {
+	// 		console.log(err);
+	// 	},
+	// });
+
 	// const image = await uCanvas.createImageResource("https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni-app.png");
 	uCanvas.addGraphic(
 		new Composition({
@@ -228,10 +242,15 @@ async function toDataURL() {
 	uCanvas.addGraphic(new Image({ image, x: 0, y: 600 }));
 	uCanvas.render();
 }
+
+const ss = ref("");
+
+
 </script>
 
 <template>
 	<view class="canvas-component">
+		<img :src="ss" />
 		<view class="state">
 			<text class="text">Current State: {{ stateMachineName }}</text>
 		</view>

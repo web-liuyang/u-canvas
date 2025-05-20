@@ -36,7 +36,18 @@ export interface ImageWithShearOptions extends GraphicOptions {
 	dh: number;
 }
 
-export type ImageOptions = ImagePureOptions & ImageWithSizeOptions & ImageWithShearOptions;
+// export type ImageOptions = ImagePureOptions & ImageWithSizeOptions & ImageWithShearOptions;
+export interface ImageOptions extends GraphicOptions{
+	image: ImageResource;
+	x: number;
+	y: number;
+	w?: number;
+	h?: number;
+	dx?: number;
+	dy?: number;
+	dw?: number;
+	dh?: number;
+}
 
 export class Image extends Graphic<ImageOptions> {
 	public override readonly type = "Image";
@@ -86,9 +97,9 @@ export class Image extends Graphic<ImageOptions> {
 	 */
 	public dh?: number;
 
-	constructor(options: ImagePureOptions);
-	constructor(options: ImageWithSizeOptions);
-	constructor(options: ImageWithShearOptions);
+	// constructor(options: ImagePureOptions);
+	// constructor(options: ImageWithSizeOptions);
+	// constructor(options: ImageWithShearOptions);
 	constructor(options: ImageOptions) {
 		super(options);
 

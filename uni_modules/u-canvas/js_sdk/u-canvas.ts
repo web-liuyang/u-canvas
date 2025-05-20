@@ -20,6 +20,9 @@ export interface UCanvasOptions {
 	componentInstance?: any;
 }
 
+/**
+ * Viewbox = [x, y, w, h]
+ */
 export type Viewbox = [number, number, number, number];
 
 export class UCanvas {

@@ -17,6 +17,16 @@ export interface Pointer {
 	target: UniElement | EventTarget;
 }
 
+/** 偏移量 */
+export interface Delta {
+	/** x 方向偏移量 */
+	x: number;
+	/** y 方向偏移量 */
+	y: number;
+}
+
+export interface MovePointer extends Pointer, Delta { }
+
 /** 基础指针事件 */
 export class BasePointerEvent {
 	/** 事件创建的时间（以毫秒为单位）。 */
@@ -31,14 +41,6 @@ export class BasePointerEvent {
 		this.pointer = pointer;
 		this.nativeEvent = nativeEvent;
 	}
-}
-
-/** 偏移量 */
-export interface Delta {
-	/** x 方向偏移量 */
-	x: number;
-	/** y 方向偏移量 */
-	y: number;
 }
 
 /** 点击事件 */
@@ -57,9 +59,9 @@ export class PointerdownEvent extends BasePointerEvent {
 
 /** 移动事件 */
 export class PointermoveEvent extends BasePointerEvent {
-	public pointer: Pointer & { delta: Delta };
+	public pointer: MovePointer;
 
-	constructor(pointer: BasePointerEvent["pointer"] & { delta: Delta }, nativeEvent: BasePointerEvent["nativeEvent"]) {
+	constructor(pointer: MovePointer, nativeEvent: BasePointerEvent["nativeEvent"]) {
 		super(pointer, nativeEvent);
 		this.pointer = pointer;
 	}

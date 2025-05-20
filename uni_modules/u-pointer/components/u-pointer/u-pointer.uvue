@@ -13,9 +13,9 @@ import { getPointersByMouse, getPointersByTouch, getPointersByWheel } from "./ut
 
 const isPC = uni.getSystemInfoSync().deviceType === "pc";
 
-defineOptions({
-	name: "u-pointer",
-});
+// defineOptions({
+// 	name: "u-pointer",
+// });
 
 const emit = defineEmits<{
 	<T extends keyof EventTypeMap>(name: T, event: EventTypeMap[T]): void;

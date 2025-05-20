@@ -20,7 +20,16 @@ export interface ImagePixelWithDirtyOptions extends GraphicOptions {
 	dh: number;
 }
 
-export type ImagePixelOptions = ImagePixelPureOptions & Partial<ImagePixelWithDirtyOptions>;
+// export type ImagePixelOptions = ImagePixelPureOptions & Partial<ImagePixelWithDirtyOptions>;
+export interface ImagePixelOptions extends GraphicOptions {
+	imageData: ImageData;
+	x: number;
+	y: number;
+	dx?: number;
+	dy?: number;
+	dw?: number;
+	dh?: number;
+}
 
 export class ImagePixel extends Graphic<ImagePixelOptions> {
 	public override readonly type = "ImagePixel";
@@ -60,8 +69,8 @@ export class ImagePixel extends Graphic<ImagePixelOptions> {
 	 */
 	public dh: number;
 
-	constructor(options: ImagePixelWithDirtyOptions);
-	constructor(options: ImagePixelPureOptions);
+	// constructor(options: ImagePixelWithDirtyOptions);
+	// constructor(options: ImagePixelPureOptions);
 	constructor(options: ImagePixelOptions) {
 		super(options);
 

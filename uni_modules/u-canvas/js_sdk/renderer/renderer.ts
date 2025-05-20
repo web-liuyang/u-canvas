@@ -10,7 +10,7 @@ export class Renderer {
 	public renderRoot(): void {
 		const offset = new Offset(0, 0);
 		const canvas = new Canvas({
-			matrix: this.canvas.root.worldMatrix,
+			matrix: this.canvas.root.getWorldMatrix(),
 		});
 
 		this.canvas.root.uCanvas = this.canvas;
