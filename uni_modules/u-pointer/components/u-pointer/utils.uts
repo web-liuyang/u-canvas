@@ -1,0 +1,66 @@
+import { Pointer } from "./pointer-events.uts";
+
+export function getPointersByTouch(e : UniTouchEvent) : Pointer[] {
+	const touches = Array.from<UniTouch>(e.touches);
+	const pointers : Array<Pointer> = touches.map(t => {
+		if (e.target == null) {
+			// 目前还没有出现过target不存在的情况, 出现此情况再来看如何处理
+			throw new Error("no target");
+		}
+
+		return new Pointer(
+			t.identifier,
+			t.clientX,
+			t.clientY,
+			t.pageX,
+			t.pageY,
+			t.screenX,
+			t.screenY,
+			e.target!,
+		)
+	});
+
+	return pointers;
+}
+
+export function getPointersByMouse(e : MouseEvent) : Pointer[] {
+	if (e.target == null) {
+		// 目前还没有出现过target不存在的情况, 出现此情况再来看如何处理
+		throw new Error("no target");
+	}
+
+	const pointers : Pointer[] = [
+		new Pointer(0,
+			e.x,
+			e.y,
+			e.pageX,
+			e.pageY,
+			e.screenX,
+			e.screenY,
+			e.target!,
+		)
+	];
+
+	return pointers;
+}
+
+export function getPointersByWheel(e : WheelEvent) : Pointer[] {
+	if (e.target == null) {
+		// 目前还没有出现过target不存在的情况, 出现此情况再来看如何处理
+		throw new Error("no target");
+	}
+
+	const pointers : Pointer[] = [
+		new Pointer(0,
+			e.x,
+			e.y,
+			e.pageX,
+			e.pageY,
+			e.screenX,
+			e.screenY,
+			e.target!,
+		)
+	];
+
+	return pointers;
+}
