@@ -2,7 +2,7 @@
 	"pages": [
 		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "src/pages/canvas-component/canvas-component",
+			"path": "pages/canvas-component/canvas-component",
 			"style": {
 				"navigationBarTitleText": "canvas component",
 				"disableScroll": true, // 禁用页面滚动
