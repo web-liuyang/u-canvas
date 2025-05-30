@@ -37,8 +37,6 @@
 		// "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
 		"types": [
 			"@dcloudio/uni-app-x",
-			"./uni_modules/u-canvas",
-			"./uni_modules/u-pointer"
 			// "@types/uni-app"
 		] /* Specify type package names to be included without being referenced in a source file. */,
 		// "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
@@ -113,9 +111,9 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
-	"include": ["src/**/*"],
+	"include": ["src", "src/**/*.uts"],
 	"exclude": ["node_modules/", "unpackage/"],
 	"vueCompilerOptions": {
-		"extensions": [".vue", ".uvue"]
+		"extensions": [".vue", ".uvue", ".uts"]
 	}
 }

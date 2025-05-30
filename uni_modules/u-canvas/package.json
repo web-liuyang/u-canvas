@@ -3,7 +3,7 @@
 	"name": "u-canvas",
 	"displayName": "u-canvas 一款快速灵活开源支持UniappX的Canvas基础图形绘制引擎",
 	"description": "u-canvas 一款快速灵活开源支持UniappX的Canvas基础图形绘制引擎",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"author": "LiuYang",
 	"keywords": [
         "uvue",
@@ -13,6 +13,13 @@
         "engine"
     ],
 	"repository": "https://github.com/web-liuyang/u-canvas",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./index.uts",
+			"require": "./index.uts"
+		}
+	},
 	"engines": {
 		"HBuilderX": "^4.0"
 	},
@@ -51,7 +58,7 @@
 					"vue3": "y"
 				},
 				"App": {
-                    "app-vue": "u",
+                    "app-vue": "y",
                     "app-nvue": "u",
                     "app-uvue": "y",
                     "app-harmony": "u"

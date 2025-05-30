@@ -1,0 +1,70 @@
+import { Canvas } from "../../renderer";
+import { Offset, Point } from "../../coords";
+import { Graphic } from "./graphic";
+import { TextOptions } from "./options";
+import { Aabb } from "../aabb";
+import { toGraphicOptions } from "../utils";
+
+export class Text extends Graphic {
+	public override readonly type = "Text";
+
+	/**
+	 * 基点 x 坐标
+	 */
+	public x : number;
+
+	/**
+	 * 基点 y 坐标
+	 */
+	public y : number;
+
+	/**
+	 * 文本
+	 */
+	public text : string;
+
+	public constructor(options : TextOptions) {
+		super(toGraphicOptions(options));
+
+		this.x = options.x;
+		this.y = options.y;
+		this.text = options.text;
+	}
+
+	public override getAabb() : Aabb {
+		if (this.uCanvas == null) throw new Error("uCanvas is not initialized");
+
+		// TODO iOS, Andriod 只能获取到宽度, 所以无法计算 aabb
+		// #ifdef APP 
+		return Aabb.zero();
+		// #endif
+
+		// #ifndef APP
+		const ctx = this.uCanvas.ctx;
+		const tm = ctx.measureText(this.text);
+		// MP只能获取到 width, fontBoundingBoxAscent, fontBoundingBoxDescent
+		const { x, y } = this.matrix.apply(new Point(this.x, this.y - tm.fontBoundingBoxAscent));
+		const tw = tm.width;
+		const th = tm.fontBoundingBoxAscent + tm.fontBoundingBoxDescent;
+		const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(tw, th));
+		return aabb;
+		// #endif
+	}
+
+	public override paint(canvas : Canvas, offset : Offset) : void {
+		super.paint(canvas, offset);
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
+		const { text, style } = this;
+
+		canvas.drawText(text, x, y, style);
+	}
+
+	public override hitTest(point : Point) : this | null | undefined {
+		const { x, y } = point;
+		const aabb = this.getGlobalAabb();
+
+		if (x >= aabb.min.x && x <= aabb.max.x && y >= aabb.min.y && y <= aabb.max.y) return this;
+
+		return null;
+	}
+}

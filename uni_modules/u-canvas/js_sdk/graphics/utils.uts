@@ -1,0 +1,199 @@
+// import { v4 as uuid } from "uuid";
+import { Point, Line } from "../coords";
+import { UImageData } from "../types";
+import {
+	CircleOptions, CompositionOptions, ImagePixelOptions,
+	PictureOptions, PieOptions, PolygonOptions, PolylineOptions,
+	RectangleOptions, RingOptions, TextOptions, GraphicOptions
+} from "./shapes";
+
+export function generateUUID() : string {
+	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (match : string, _offset : number, _string : string) => {
+		const r = (Math.random() * 16) | 0;
+		const v = match == "x" ? r : (r & 0x3) | 0x8;
+		return v.toString(16);
+	});
+}
+
+// 投影法
+export function isPointOnLineSegment(point : Point, line : Line, tolerance : number = 0) : boolean {
+	const dx = line.end.x - line.start.x;
+	const dy = line.end.y - line.start.y;
+
+	const lengthSquared = dx * dx + dy * dy;
+	const t = ((point.x - line.start.x) * dx + (point.y - line.start.y) * dy) / lengthSquared;
+
+	if (t < 0) {
+		return Math.hypot(point.x - line.start.x, point.y - line.start.y) <= tolerance;
+	} else if (t > 1) {
+		return Math.hypot(point.x - line.end.x, point.y - line.end.y) <= tolerance;
+	}
+
+	const projectionX = line.start.x + t * dx;
+	const projectionY = line.start.y + t * dy;
+
+	return Math.hypot(point.x - projectionX, point.y - projectionY) <= tolerance;
+}
+
+export function repeatArray(array : Uint8ClampedArray, count : number) : Uint8ClampedArray {
+	const length = array.length; // 获取原数组长度
+	const result = new Uint8ClampedArray(length * count); // 创建结果数组
+
+	// 将原数组和目标数组转换为 Uint32Array 以提高复制效率
+	const srcData = new Uint32Array(array.buffer as ArrayBuffer);
+	const dstData = new Uint32Array(result.buffer as ArrayBuffer);
+
+	// 计算需要复制的 32 位元素数量
+	const uint32Count = length / 4;
+	// 批量复制数据
+	for (let i = 0; i < count; i++) {
+		// #ifdef APP-ANDROID
+		const offset = (i * uint32Count).toInt(); // 计算目标数组的偏移量
+		// #endif
+		// #ifndef APP-ANDROID
+		const offset = Math.round(i * uint32Count); // 计算目标数组的偏移量
+		// #endif
+		dstData.set(srcData, offset); // 复制数据
+	}
+
+	return result;
+}
+
+export function scaleImageData(imageData : ImageData, xs : number, ys : number) : UImageData {
+	if (xs === 1 && ys === 1) return {
+		data: imageData.data,
+		width: imageData.width,
+		height: imageData.height,
+	} as UImageData;
+
+	const { width, height, data } = imageData;
+
+	// 检查缩放因子是否合法
+	if (xs <= 0 || ys <= 0) {
+		throw new Error("Scale factors must be greater than 0");
+	}
+
+	if (width <= 0 || height <= 0) {
+		throw new Error("width and height must be greater than 0");
+	}
+
+	// 计算新尺寸
+	const newWidth = Math.round(width * xs);
+	const newHeight = Math.round(height * ys);
+
+	// 创建新的 Uint8ClampedArray 存储缩放后的数据
+	const scaledData = new Uint8ClampedArray(newWidth * newHeight * 4);
+
+	// 将原数据转换为 Uint32Array 以提高复制效率
+	const srcData = new Uint32Array(data.buffer as ArrayBuffer);
+	const dstData = new Uint32Array(scaledData.buffer as ArrayBuffer);
+
+	// 遍历新图像的每个像素
+	for (let y = 0; y < newHeight; y++) {
+		const originalY = Math.floor(y / ys); // 计算原图像中的 Y 坐标
+		const srcRowStart = originalY * width; // 原图像中当前行的起始索引
+
+		for (let x = 0; x < newWidth; x++) {
+			const originalX = Math.floor(x / xs); // 计算原图像中的 X 坐标
+			const srcIndex = srcRowStart + originalX; // 原图像中的像素索引
+			const dstIndex = y * newWidth + x; // 新图像中的像素索引
+
+			// 复制像素数据（32 位复制，一次复制 4 个字节）
+			dstData[dstIndex] = srcData[srcIndex];
+		}
+	}
+
+	return {
+		data: scaledData,
+		width: newWidth,
+		height: newHeight,
+	} as UImageData;
+}
+
+
+export function toGraphicOptions(
+	_options : CircleOptions | CompositionOptions | ImagePixelOptions
+		| PictureOptions | PieOptions | PolygonOptions | PolylineOptions
+		| RectangleOptions | RingOptions | TextOptions
+) : GraphicOptions {
+
+	// return {
+	// 	id: _options.id,
+	// 	style: _options.style,
+	// 	parent: _options.parent,
+	// } as GraphicOptions;
+
+	if (_options instanceof CircleOptions) {
+		const options = _options as CircleOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof CompositionOptions) {
+		const options = _options as CompositionOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof ImagePixelOptions) {
+		const options = _options as ImagePixelOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof PictureOptions) {
+		const options = _options as PictureOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof PieOptions) {
+		const options = _options as PieOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof PolygonOptions) {
+		const options = _options as PolygonOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof PolylineOptions) {
+		const options = _options as PolylineOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof RectangleOptions) {
+		const options = _options as RectangleOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof RingOptions) {
+		const options = _options as RingOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else if (_options instanceof TextOptions) {
+		const options = _options as TextOptions;
+		return {
+			id: options.id,
+			style: options.style,
+			parent: options.parent,
+		} as GraphicOptions;
+	} else {
+		throw new Error(`Unknown type: ${_options}`)
+	}
+}

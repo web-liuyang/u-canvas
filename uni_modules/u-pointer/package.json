@@ -2,28 +2,30 @@
 	"id": "u-pointer",
 	"name": "u-pointer",
 	"displayName": "u-pointer 消除各个平台事件的差异性 实现更好的交互体验",
+	"version": "1.1.0",
 	"description": "u-pointer 消除各个平台事件的差异性 实现更好的交互体验",
-	"version": "1.0.0",
 	"author": "LiuYang",
 	"keywords": [
-		"ui",
-		"uvue",
-		"uniapp-x",
-		"typescript",
-		"u-pointer"
-	],
-	"repository": "https://github.com/web-liuyang/u-pointer",
+        "ui",
+        "uvue",
+        "uniapp-x",
+        "typescript",
+        "u-pointer"
+    ],
+	"repository": "https://github.com/web-liuyang/u-canvas/tree/master/uni_modules/u-pointer",
 	"type": "module",
 	"exports": {
 		".": {
-			"import": "./index.ts",
-			"require": "./index.ts"
+			"import": "./index.uts",
+			"require": "./index.uts"
 		}
 	},
-	"engines": {},
+	"engines": {
+		"HBuilderX": "^3.91"
+	},
 	"dcloudext": {
 		"type": "component-vue",
-		"npmurl": "",
+        "npmurl": "",
 		"sale": {
 			"regular": {
 				"price": "0.00"
@@ -56,11 +58,11 @@
 					"vue3": "y"
 				},
 				"App": {
-					"app-vue": "y",
-					"app-nvue": "u",
-					"app-uvue": "y",
-					"app-harmony": "u"
-				},
+                    "app-vue": "y",
+                    "app-nvue": "u",
+                    "app-uvue": "y",
+                    "app-harmony": "u"
+                },
 				"H5-mobile": {
 					"Safari": "y",
 					"Android Browser": "y",

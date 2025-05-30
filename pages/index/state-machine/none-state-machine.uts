@@ -1,0 +1,8 @@
+import { UCanvas } from "@/uni_modules/u-canvas";
+import { BaseStateMachine } from "./base-state-machine";
+
+export class NoneStateMachine extends BaseStateMachine {
+	constructor(canvas : UCanvas) {
+		super(canvas);
+	}
+}

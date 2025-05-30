@@ -8,14 +8,14 @@
 
 #### 事件
 
-| **u-pointer事件名** | uni事件名               | 描述                                   |
-| ------------------- | ----------------------- | -------------------------------------- |
-| @onpointerclick     | @click\|tap             | 在元素上按下并抬起触发                 |
-| @onpointerdown      | @mousedown\|@touchstart | 在元素上按下触发                       |
-| @onpointermove      | @mousemove\|@touchmove  | 在元素上按下并移动时触发               |
-| @onpointerup        | @mouseup\|touchend      | 在元素上按下并抬起时触发               |
-| @onpointercancel    | @touchcancel            | 在元素上动作被打断，如来电提醒，弹窗等 |
-| @onpointerwheel     | 无                      | 鼠标滚轮                               |
+| **u-pointer 事件名** | uni 事件名              | 描述                                   |
+| -------------------- | ----------------------- | -------------------------------------- |
+| @onpointerclick      | @click\|tap             | 在元素上按下并抬起触发                 |
+| @onpointerdown       | @mousedown\|@touchstart | 在元素上按下触发                       |
+| @onpointermove       | @mousemove\|@touchmove  | 在元素上按下并移动时触发               |
+| @onpointerup         | @mouseup\|touchend      | 在元素上按下并抬起时触发               |
+| @onpointercancel     | @touchcancel            | 在元素上动作被打断，如来电提醒，弹窗等 |
+| @onpointerwheel      | 无                      | 鼠标滚轮                               |
 
 #### 类型
 
@@ -30,7 +30,7 @@
 
 #### 使用方法
 
-```vue
+```uvue
 <template>
 	<u-pointer
 		@onpointerclick="pointerclick"
@@ -52,12 +52,10 @@
 
 使用方法类似于 **document.addEventListener**, 只不过需要换成 **globalPointer.addEventListener** 来监听事件.
 
-### 使用方法
+#### 使用方法
 
-#### u-pointer-root
-
-```vue
-<script lang="ts" setup>
+```uvue
+<script lang="uts" setup>
 import { onMounted, onUnmounted } from "vue";
 import { PointerdownEvent, globalPointer } from "@/uni_modules/u-pointer";
 function pointerdown(event: PointerdownEvent): void {
@@ -65,11 +63,11 @@ function pointerdown(event: PointerdownEvent): void {
 }
 
 onMounted(() => {
-	globalPointer.addEventListener("onpointerdown", pointerdown);
+	globalPointer.addEventListener<PointerdownEvent>("onpointerdown", pointerdown);
 });
 
 onUnmounted(() => {
-	globalPointer.removeEventListener("onpointerdown", pointerdown);
+	globalPointer.removeEventListener<PointerdownEvent>("onpointerdown", pointerdown);
 });
 </script>
 
@@ -82,7 +80,7 @@ onUnmounted(() => {
 
 ### 注意事项
 
-1. **@onpointerclick **事件在按下后 **移动指针** 或 **按下超过 300ms** 不会触发.
+1. **@onpointerclick** 事件在按下后 **移动指针** 或 **按下超过 300ms** 不会触发.
 1. **@onpointerup** 事件触发后会立即触发 **@onpointerclick** . 此处是已知问题, 但不会影响使用, 只是触发队列不一致, 后面反馈的人多了或有空的话会补上.
 
 ### TODO

@@ -1,0 +1,83 @@
+import { Canvas } from "../../renderer";
+import { Offset, Point } from "../../coords";
+import { Graphic } from "./graphic";
+import { ImagePixelOptions } from "./options";
+import { Aabb } from "../aabb";
+import { toGraphicOptions } from "../utils";
+
+export class ImagePixel extends Graphic {
+	public override readonly type = "ImagePixel";
+
+	/**
+	 * 图像数据
+	 */
+	public imageData : ImageData;
+
+	/**
+	 * 基点 x 坐标
+	 */
+	public x : number;
+
+	/**
+	 * 基点 y 坐标
+	 */
+	public y : number;
+
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（x 坐标）
+	 */
+	public dx : number;
+
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（y 坐标）
+	 */
+	public dy : number;
+
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的宽度
+	 */
+	public dw : number;
+
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的高度
+	 */
+	public dh : number;
+
+	public constructor(options : ImagePixelOptions) {
+		super(toGraphicOptions(options));
+
+		this.imageData = options.imageData;
+		this.x = options.x;
+		this.y = options.y;
+		this.dx = options.dx ?? 0;
+		this.dy = options.dy ?? 0;
+		this.dw = options.dw ?? this.imageData.width;
+		this.dh = options.dh ?? this.imageData.height;
+	}
+
+	public override getAabb() : Aabb {
+		const { x, y } = this.matrix.apply(new Point(this.x, this.y));
+		const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(this.dw, this.dh));
+
+		return aabb;
+	}
+
+	public override paint(canvas : Canvas, offset : Offset) : void {
+		super.paint(canvas, offset);
+		const { imageData, dx, dy, dw, dh } = this;
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
+
+		canvas.drawImagePixel(imageData, x, y, dx, dy, dw, dh);
+	}
+
+	public override hitTest(point : Point) : this | null | undefined {
+		const {
+			imageData: { width, height },
+		} = this;
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
+
+		if (point.x >= x && point.x <= x + width && point.y >= y && point.y <= y + height) return this;
+
+		return null;
+	}
+}

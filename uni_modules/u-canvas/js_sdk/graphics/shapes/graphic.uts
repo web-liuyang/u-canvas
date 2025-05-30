@@ -1,0 +1,96 @@
+import { Style } from "../styles";
+import { Canvas } from "../../renderer";
+import { Aabb } from "../aabb";
+import { UCanvas } from "../../u-canvas";
+import { Point, Offset } from "../../coords";
+import { generateUUID } from "../utils";
+import { Matrix, multiply } from "../../transform";
+import { GraphicId, GraphicOptions } from "./options";
+
+export abstract class Graphic {
+	public abstract readonly type : string;
+
+	/**
+	 * id
+	 */
+	public readonly id : GraphicId;
+
+	/**
+	 * 全局偏移量
+	 */
+	public offset : Offset = new Offset(0, 0);
+
+	/**
+	 * 样式
+	 */
+	public style ?: Style | null = null;
+
+	/**
+	 * 在调用 paint 之前注入的 uCanvas 实例
+	 */
+	public uCanvas ?: UCanvas | null = null;
+
+	/**
+	 * 父图形
+	 */
+	public parent ?: Graphic | null = null;
+
+	/**
+	 * 局部矩阵
+	 */
+	public matrix : Matrix = new Matrix();
+
+	public constructor(options? : GraphicOptions |  null) {
+		this.id = options?.id ?? generateUUID();
+		this.style = options?.style;
+		this.parent = options?.parent;
+	}
+
+	/**
+	 * 全局矩阵
+	 */
+	public getWorldMatrix() : Matrix {
+		const parentWorldMatrix = this.parent?.getWorldMatrix() ?? new Matrix();
+		const worldMatrix = multiply(parentWorldMatrix, this.matrix);
+		return worldMatrix;
+	}
+
+	/**
+	 * 自身 aabb
+	 * @returns
+	 */
+	public abstract getAabb() : Aabb;
+
+	/**
+	 * 全局 aabb
+	 * @returns
+	 */
+	public getGlobalAabb() : Aabb {
+		return this.getAabb().offseted(this.offset);
+	}
+
+	/**
+	 * 绘制
+	 * @param canvas 画布
+	 * @param offset 全局偏移量
+	 */
+	public paint(canvas : Canvas, offset : Offset) : void {
+		this.offset = offset;
+	}
+
+	/**
+	 * 命中测试
+	 * @param point 全局坐标点
+	 * @returns
+	 */
+	public abstract hitTest(point : Point) : Graphic | undefined | null;
+
+	/**
+	 * 将局部坐标点转化为全局坐标点
+	 * @param point 局部坐标点
+	 * @returns
+	 */
+	public toGlobalPoint(point : Point) : Point {
+		return point.offseted(this.offset);
+	}
+}

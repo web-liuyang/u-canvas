@@ -1,0 +1,58 @@
+import { Canvas } from "../../renderer";
+import { Offset, Point } from "../../coords";
+import { Graphic } from "./graphic";
+import { CircleOptions } from "./options";
+import { Aabb } from "../aabb";
+import { toGraphicOptions } from "../utils";
+
+export class Circle extends Graphic {
+	public override readonly type = "Circle";
+
+	/**
+	 * 圆心 x 坐标
+	 */
+	public cx : number;
+
+	/**
+	 * 圆心 y 坐标
+	 */
+	public cy : number;
+
+	/**
+	 * 半径
+	 */
+	public radius : number;
+
+	public constructor(options : CircleOptions) {
+		super(toGraphicOptions(options));
+
+		this.cx = options.cx;
+		this.cy = options.cy;
+		this.radius = options.radius;
+	}
+
+	public override getAabb() : Aabb {
+		const { x, y } = this.matrix.apply(new Point(0, 0));
+		const aabb = Aabb.zero()
+			.offseted(new Offset(x, y))
+			.grew(new Offset(this.radius * 2, this.radius * 2));
+
+		return aabb;
+	}
+
+	public override paint(canvas : Canvas, offset : Offset) : void {
+		super.paint(canvas, offset);
+		const { radius, style } = this;
+		const { x: cx, y: cy } = this.toGlobalPoint(new Point(this.cx, this.cy));
+		canvas.drawCircle(cx, cy, radius, style);
+	}
+
+	public override hitTest(point : Point) : this | null | undefined {
+		const { radius } = this;
+		const { x: cx, y: cy } = this.toGlobalPoint(new Point(this.cx, this.cy));
+
+		if (Math.pow(point.x - cx, 2) + Math.pow(point.y - cy, 2) <= Math.pow(radius, 2)) return this;
+
+		return null;
+	}
+}

@@ -1,4 +1,4 @@
-// 参考链接 https://doc.dcloud.net.cn/uni-app-x/tutorial/ls-plugin.html#setting
+// 参考链接 https://hx.dcloud.net.cn/Tutorial/Language/vscodeUseHxLs?id=target%e9%85%8d%e7%bd%ae%e8%af%b4%e6%98%8e
 {
-	"targets": ["APP-ANDROID", "APP-IOS", "WEB", "MP"]
+	"targets": ["APP-ANDROID", "APP-IOS", "APP-HARMONY", "WEB", "MP-WEIXIN"]
 }

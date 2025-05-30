@@ -1,0 +1,100 @@
+export enum RecordType {
+	moveTo,
+	lineTo,
+	rect,
+	arc,
+	arcTo,
+	closePath,
+}
+
+export abstract class Record {
+	constructor(
+		public readonly type : RecordType,
+	) { }
+}
+
+
+export class MoveToRecord extends Record {
+	constructor(
+		public readonly x : number,
+		public readonly y : number,
+	) { super(RecordType.moveTo) }
+}
+
+export class LineToRecord extends Record {
+	constructor(
+		public readonly x : number,
+		public readonly y : number,
+	) { super(RecordType.lineTo) }
+}
+
+export class RectRecord extends Record {
+	constructor(
+		public readonly x : number,
+		public readonly y : number,
+		public readonly w : number,
+		public readonly h : number,
+		public readonly radii : number,
+	) { super(RecordType.rect) }
+}
+
+export class ArcRecord extends Record {
+	constructor(
+		public readonly cx : number,
+		public readonly cy : number,
+		public readonly radius : number,
+		public readonly startAngle : number,
+		public readonly endAngle : number,
+		public readonly counterclockwise : boolean,
+	) { super(RecordType.arc) }
+}
+
+export class ArcToRecord extends Record {
+	constructor(
+		public readonly x1 : number,
+		public readonly y1 : number,
+		public readonly x2 : number,
+		public readonly y2 : number,
+		public readonly radius : number,
+	) { super(RecordType.arcTo) }
+}
+
+export class ClosePathRecord extends Record {
+	constructor() { super(RecordType.closePath) }
+}
+
+export type AllRecord = MoveToRecord | LineToRecord | RectRecord | ArcRecord | ArcToRecord | ClosePathRecord;
+
+export class RecordFactory {
+	public static createMoveToRecord(x : number, y : number) : MoveToRecord {
+		return new MoveToRecord(x, y);
+	}
+
+	public static createLineToRecord(x : number, y : number) : LineToRecord {
+		return new LineToRecord(x, y);
+	}
+
+	public static createRectRecord(x : number, y : number, w : number, h : number, radii : number = 0) : RectRecord {
+		return new RectRecord(x, y, w, h, radii);
+
+	}
+
+	public static createArcRecord(
+		cx : number,
+		cy : number,
+		radius : number,
+		startAngle : number,
+		endAngle : number,
+		counterclockwise : boolean
+	) : ArcRecord {
+		return new ArcRecord(cx, cy, radius, startAngle, endAngle, counterclockwise);
+	}
+
+	public static createArcToRecord(x1 : number, y1 : number, x2 : number, y2 : number, radius : number) : ArcToRecord {
+		return new ArcToRecord(x1, y1, x2, y2, radius,);
+	}
+
+	public static createClosePathRecord() : ClosePathRecord {
+		return new ClosePathRecord();
+	}
+}

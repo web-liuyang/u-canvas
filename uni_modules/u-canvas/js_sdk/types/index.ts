@@ -1,5 +1,0 @@
-export type ValueSetter<T> = (value: T) => void;
-
-export type ValueGetter<T> = () => T;
-
-export type VoidCallback = () => void;

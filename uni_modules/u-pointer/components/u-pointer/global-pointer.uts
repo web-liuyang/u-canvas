@@ -1,0 +1,47 @@
+import { EventType, BasePointerEvent, } from "./pointer-events.uts";
+
+export type Listener<T> = (e : T) => void;
+
+/** 事件监听器 */
+export class GlobalPointer {
+	private _listeners = new Map<EventType, Array<Listener<BasePointerEvent>>>();
+
+	/**
+	 * 添加事件监听器
+	 * @param type 事件类型
+	 * @param listener 回调函数
+	 */
+	public addEventListener<T extends BasePointerEvent>(type : EventType, listener : Listener<T>) {
+		if (!this._listeners.has(type)) this._listeners.set(type, []);
+		const listeners = this._listeners.get(type)! as Array<Listener<T>>;
+		listeners.push(listener);
+	}
+
+	/**
+	 * 移除事件监听器
+	 * @param type 事件类型
+	 * @param listener 回调函数
+	 */
+	public removeEventListener<T extends BasePointerEvent>(type : EventType, listener : Listener<T>) {
+		if (!this._listeners.has(type)) return;
+		const index = this._listeners.get(type)?.findIndex(cb => cb === listener) ?? -1;
+		if (index < 0) return;
+		this._listeners.get(type)!.splice(index, 1);
+	}
+
+	/**
+	 * 通知事件
+	 * @param type 事件类型
+	 * @param event 事件对象
+	 */
+	public notify<T extends BasePointerEvent>(type : EventType, event : T) {
+		if (!this._listeners.has(type)) return;
+
+		this._listeners.get(type)?.forEach((listener) => {
+			listener(event);
+		})
+	}
+}
+
+/** 全局事件监听器 */
+export const globalPointer = new GlobalPointer();

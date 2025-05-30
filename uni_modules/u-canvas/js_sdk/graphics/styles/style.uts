@@ -1,0 +1,166 @@
+export type Style = {
+	stroke ?: StrokeStyle;
+	fill ?: FillStyle;
+	text ?: TextStyle;
+}
+
+export type StrokeStyle = {
+	color ?: string;
+	width ?: number;
+	cap ?: StrokeCap;
+	join ?: StrokeJoin;
+}
+
+export type StrokeCap = "butt" | "round" | "square";
+
+export type StrokeJoin = "miter" | "round" | "bevel";
+
+export type FillStyle = {
+	color ?: string;
+}
+
+export type UCanvasDirection = "inherit" | "ltr" | "rtl";
+
+export type UCanvasFontWeight = "bold" | "normal";
+
+export type UCanvasTextAlign = "center" | "end" | "left" | "right" | "start";
+
+export type UCanvasTextBaseline = "alphabetic" | "bottom" | "hanging" | "ideographic" | "middle" | "top";
+
+export type UCanvasTextRendering = "auto" | "geometricPrecision" | "optimizeLegibility" | "optimizeSpeed";
+
+export type TextStyle = {
+	fontSize ?: number;
+	fontFamily ?: string;
+	fontWeight ?: UCanvasFontWeight;
+	direction ?: UCanvasDirection;
+	letterSpacing ?: number;
+	wordSpacing ?: number;
+	textAlign ?: UCanvasTextAlign;
+	textBaseline ?: UCanvasTextBaseline;
+	textRendering ?: UCanvasTextRendering;
+}
+
+export const defaultStyle : Style = {
+	stroke: {
+		color: "black",
+		width: 1,
+		cap: "butt",
+		join: "miter",
+	},
+	fill: {
+		color: "black"
+	},
+	text: {
+		fontSize: 14,
+		fontFamily: "sans-serif",
+		fontWeight: "normal",
+		direction: "ltr",
+		letterSpacing: 0,
+		wordSpacing: 0,
+		textAlign: "start",
+		textBaseline: "alphabetic",
+		textRendering: "auto",
+	},
+} as Style;
+
+/**
+ * extract font = [fontSize, fontFamily, fontWeight];
+ */
+export function extractFont(font: string): Array<string> {
+	const fontArray = font.split(" ");
+	const [fontSize, fontFamily, fontWeight] = fontArray.length > 2 ? fontArray : [...fontArray, "normal"];
+	return [fontSize, fontFamily, fontWeight];
+}
+
+export function extractStyle(options : CanvasRenderingContext2D, defaultStyle : Style) : Style {
+	const [fontSize, fontFamily, fontWeight] = extractFont(options.font);
+
+	return {
+		stroke: {
+			color: options.strokeStyle as string,
+			width: options.lineWidth,
+			cap: options.lineCap as StrokeCap,
+			join: options.lineJoin as StrokeJoin,
+		},
+		fill: { color: options.fillStyle as string },
+		text: {
+			fontSize: parseFloat(fontSize),
+			fontFamily: fontFamily,
+			fontWeight: fontWeight as UCanvasFontWeight,
+			textAlign: options.textAlign,
+			textBaseline: options.textBaseline,
+			// #ifdef APP
+			letterSpacing: defaultStyle.text?.letterSpacing ?? 0,
+			wordSpacing: defaultStyle.text?.wordSpacing ?? 0,
+			direction: defaultStyle.text?.direction ?? "inherit",
+			textRendering: defaultStyle.text?.textRendering ?? "auto";
+			// #endif
+			// #ifndef APP
+			letterSpacing: parseFloat(options.letterSpacing) ?? defaultStyle.text?.letterSpacing ?? 0,
+			wordSpacing: parseFloat(options.wordSpacing) ?? defaultStyle.text?.wordSpacing ?? 0,
+			direction: options.direction ?? defaultStyle.text?.direction ?? "inherit",
+			textRendering: options.textRendering ?? defaultStyle.text?.textRendering ?? "auto",
+			// #endif
+		},
+	} as Style;
+}
+
+export function applyStyle(ctx : CanvasRenderingContext2D, style ?: Style | null) : void {
+	// Stroke
+	const strokeStyle = style?.stroke?.color;
+	const lineWidth = style?.stroke?.width;
+	const lineCap = style?.stroke?.cap;
+	const lineJoin = style?.stroke?.join;
+
+	// Fill
+	const fillStyle = style?.fill?.color;
+
+	// Text
+	// 注意App平台只支持font-weight、font-size、font-family
+	const font = (() => {
+		// const font = ctx.font.split(" ");
+		// if (font.length === 2) font.unshift("normal");
+		// const fontWeight = (() => {
+		// 	const fontWeight = style?.text?.fontWeight ?? (font[0] as UCanvasFontWeight);
+		// 	// normal 不需要设置上去, 要不然字体设置无效
+		// 	// 仅支持 bold
+		// 	return fontWeight === "bold" ? fontWeight : "";
+		// })();
+		// const fontSize = style?.text?.fontSize ?? parseFloat(font[1]);
+		// const fontFamily = style?.text?.fontFamily ?? font[2];
+		const fontWeight = (() => {
+			const fontWeight = style?.text?.fontWeight;
+			// 仅支持 bold, normal 不需要设置上去, 要不然字体设置无效
+			return fontWeight === "bold" ? fontWeight : "";
+		})();
+		const fontSize = style?.text?.fontSize;
+		const fontFamily = style?.text?.fontFamily;
+
+		return `${fontWeight} ${fontSize}px ${fontFamily}`.trim();
+	})();
+	const textAlign = style?.text?.textAlign;
+	const textBaseline = style?.text?.textBaseline;
+
+	if (strokeStyle != null) ctx.strokeStyle = strokeStyle;
+	if (lineWidth != null) ctx.lineWidth = lineWidth;
+	if (lineCap != null) ctx.lineCap = lineCap;
+	if (lineJoin != null) ctx.lineJoin = lineJoin;
+
+	if (fillStyle != null) ctx.fillStyle = fillStyle;
+
+	ctx.font = font;
+	if (textAlign != null) ctx.textAlign = textAlign;
+	if (textBaseline != null) ctx.textBaseline = textBaseline;
+
+	// #ifndef APP
+	const letterSpacing = style?.text?.letterSpacing;
+	const wordSpacing = style?.text?.wordSpacing;
+	const direction = style?.text?.direction;
+	const textRendering = style?.text?.textRendering;
+	if (letterSpacing != null) ctx.letterSpacing = `${letterSpacing}px`;
+	if (wordSpacing != null) ctx.wordSpacing = `${wordSpacing}px`;
+	if (direction != null) ctx.direction = direction;
+	if (textRendering != null) ctx.textRendering = textRendering;
+	// #endif
+}
