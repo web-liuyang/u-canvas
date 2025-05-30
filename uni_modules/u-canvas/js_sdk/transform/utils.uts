@@ -1,0 +1,65 @@
+import { Point } from "../coords";
+import { MatrixArray, Matrix } from "./matrix";
+
+/**
+ * Matrix multiplication
+ * a * b
+ *
+ * A * B : 左乘的效果是先用 A 对 B 进行变换，然后再将 A 应用于变换后的结果。
+ *
+ * B * A : 右乘的效果是先用 B 对 A 进行变换，然后再将 B 应用于变换后的结果。
+ *
+ *
+ * 例如 A * B
+ *
+ * 先把 A 的 a b c d 应用给 B 的 tx 与 ty，然后 A 与 B 的 a b c d 相乘，最后与 A 的 tx 与 ty 相加
+ *
+ * ace ace
+ * bdf bdf
+ * 001 001
+ */
+export function multiply(mA: Matrix, mB: Matrix): Matrix {
+	const a = mA.a * mB.a + mA.c * mB.b + mA.e * 0;
+	const b = mA.b * mB.a + mA.d * mB.b + mA.f * 0;
+	const c = mA.a * mB.c + mA.c * mB.d + mA.e * 0;
+	const d = mA.b * mB.c + mA.d * mB.d + mA.f * 0;
+	const tx = mA.a * mB.e + mA.c * mB.f + mA.e * 1;
+	const ty = mA.b * mB.e + mA.d * mB.f + mA.f * 1;
+
+	const matrixArray: MatrixArray = [a, b, c, d, tx, ty];
+
+	return new Matrix(matrixArray);
+}
+
+export function translate(m: Matrix, tx: number, ty: number): Matrix {
+	const translationMatrix = new Matrix([1, 0, 0, 1, tx, ty]);
+	const matrix = multiply(translationMatrix, m);
+	return matrix;
+}
+
+export function setTranslate(m: Matrix, tx: number, ty: number): Matrix {
+	const matrix = new Matrix([m.a, m.b, m.c, m.d, tx, ty]);
+	return matrix;
+}
+
+export function rotate(m: Matrix, xt: number, yt: number): Matrix {
+	const cos = Math.cos(xt);
+	const sin = Math.sin(yt);
+	const rotationMatrix = new Matrix([cos, -sin, sin, cos, 0, 0]);
+	const matrix = multiply(rotationMatrix, m);
+	return matrix;
+}
+
+export function scale(m: Matrix, xs: number, ys: number, point?: Point | null): Matrix {
+	let matrix: Matrix = m;
+
+	if (point != null) {
+		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, point.x, point.y]));
+		matrix = multiply(matrix, new Matrix([xs, 0, 0, ys, 0, 0]));
+		matrix = multiply(matrix, new Matrix([1, 0, 0, 1, -point.x, -point.y]));
+	} else {
+		matrix = multiply(new Matrix([xs, 0, 0, ys, 0, 0]), m);
+	}
+
+	return matrix;
+}

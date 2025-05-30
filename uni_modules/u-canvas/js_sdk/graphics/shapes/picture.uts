@@ -1,0 +1,144 @@
+import { Canvas } from "../../renderer";
+import { Offset, Point } from "../../coords";
+import { Graphic } from "./graphic";
+import { PictureOptions, PictureSimpleOptions, PictureSizeOptions, PictureShearOptions } from "./options";
+import { Aabb } from "../aabb";
+import { toGraphicOptions } from "../utils";
+
+export class Picture extends Graphic {
+	public override readonly type = "Picture";
+
+	/**
+	 * 图像资源
+	 */
+	public readonly image : Image;
+
+	/**
+	 * 基点 x 坐标
+	 */
+	public x : number;
+
+	/**
+	 * 基点 y 坐标
+	 */
+	public y : number;
+
+	/**
+	 * 宽度
+	 */
+	public w ?: number | null = null;
+
+	/**
+	 * 高度
+	 */
+	public h ?: number | null = null;
+
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（x 坐标）
+	 */
+	public dx ?: number | null = null;
+
+	/**
+	 * 裁剪图像数据的偏移量, 默认是整个图像数据的左上角（y 坐标）
+	 */
+	public dy ?: number | null = null;
+
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的宽度
+	 */
+	public dw ?: number | null = null;
+
+	/**
+	 * 裁剪图像数据的宽度, 默认是整个图像数据的高度
+	 */
+	public dh ?: number | null = null;
+
+	public static fromSimple(options : PictureSimpleOptions) : Picture {
+		const image = options.image;
+		const x = options.x;
+		const y = options.y;
+		const id = options.id;
+		const style = options.style;
+		const parent = options.parent;
+
+		return new Picture({ image, x, y, id, style, parent });
+	}
+
+	public static fromSize(options : PictureSizeOptions) : Picture {
+		const image = options.image;
+		const x = options.x;
+		const y = options.y;
+		const w = options.w;
+		const h = options.h;
+		const id = options.id;
+		const style = options.style;
+		const parent = options.parent;
+
+		return new Picture({ image, x, y, w, h, id, style, parent });
+	}
+
+	public static fromShear(options : PictureShearOptions) : Picture {
+		const image = options.image;
+		const x = options.x;
+		const y = options.y;
+		const w = options.w;
+		const h = options.h;
+		const dx = options.dx;
+		const dy = options.dy;
+		const dw = options.dw;
+		const dh = options.dh;
+		const id = options.id;
+		const style = options.style;
+		const parent = options.parent;
+
+		return new Picture({ image, x, y, w, h, dx, dy, dw, dh, id, style, parent });
+	}
+
+	public constructor(options : PictureOptions) {
+		super(toGraphicOptions(options));
+
+		this.image = options.image;
+		this.x = options.x;
+		this.y = options.y;
+		this.w = options.w;
+		this.h = options.h;
+		this.dx = options.dx;
+		this.dy = options.dy;
+		this.dw = options.dw;
+		this.dh = options.dh;
+	}
+
+	public override getAabb() : Aabb {
+		// 指定了图片宽高直接计算
+		if (this.w != null && this.h != null) {
+			const { x, y } = this.matrix.apply(new Point(this.x, this.y));
+			const aabb = Aabb.zero().offseted(new Offset(x, y)).grew(new Offset(this.w!, this.h!));
+
+			return aabb;
+		} else {
+			// 需要知道图片大小, 可以通过请求来计算, 但目前uniappx暂时不支持图片请求
+		}
+
+		return Aabb.zero();
+	}
+
+	public override paint(canvas : Canvas, offset : Offset) : void {
+		super.paint(canvas, offset);
+		const { image, w, h, dx, dy, dw, dh } = this;
+		const { x, y } = this.toGlobalPoint(new Point(this.x, this.y));
+
+		canvas.drawPicture(image, x, y, w, h, dx, dy, dw, dh);
+	}
+
+	public override hitTest(point : Point) : this | null | undefined {
+		if (this.w != null && this.h != null) {
+			const aabb = this.getGlobalAabb();
+			if (aabb.contains(point)) return this;
+		}
+
+		// TODO 没有传宽高就需要自己计算了
+		// if (x >= dx && x <= dx + dw && y >= dy && y <= dy + dh) return this;
+
+		return null;
+	}
+}

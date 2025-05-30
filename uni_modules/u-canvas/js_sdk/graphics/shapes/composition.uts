@@ -1,0 +1,108 @@
+import { Canvas, CanvasOptions } from "../../renderer";
+import { Offset, Point } from "../../coords";
+import { Graphic } from "./graphic";
+import { CompositionOptions } from "./options";
+import { Aabb } from "../aabb";
+import { toGraphicOptions } from "../utils";
+
+export class Composition extends Graphic {
+	public override readonly type = "Composition";
+
+	/**
+	 * 基点 x 坐标
+	 */
+	public x : number;
+
+	/**
+	 * 基点 y 坐标
+	 */
+	public y : number;
+
+	/**
+	 * 子图形列表
+	 */
+	public children : Graphic[];
+
+	public constructor(options : CompositionOptions) {
+		super(toGraphicOptions(options));
+
+		this.x = options.x;
+		this.y = options.y;
+		this.children = options.children ?? [];
+		this.children.forEach((child) : void => {
+			child.parent = (this as Graphic);
+		});
+	}
+
+	public override getAabb() : Aabb {
+		if (this.children.length === 0) return Aabb.zero();
+
+		const position = this.matrix.apply(new Point(this.x, this.y));
+
+		const newAabb = this.children
+			.reduce((aabb, item) => {
+				const itemAabb = item.getAabb();
+				const minX = aabb.min.x < itemAabb.min.x ? aabb.min.x : itemAabb.min.x;
+				const minY = aabb.min.y < itemAabb.min.y ? aabb.min.y : itemAabb.min.y;
+				const maxX = aabb.max.x > itemAabb.max.x ? aabb.max.x : itemAabb.max.x;
+				const maxY = aabb.max.y > itemAabb.max.y ? aabb.max.y : itemAabb.max.y;
+
+				return new Aabb(new Point(minX, minY), new Point(maxX, maxY));
+			}, Aabb.world().swapped())
+			.offseted(position.toOffset());
+
+		return newAabb;
+	}
+
+	public override paint(canvas : Canvas, offset : Offset) : void {
+		super.paint(canvas, offset);
+		const offsetSelf = new Offset(this.x, this.y).offseted(offset);
+		this.children.forEach(child => {
+			const childCanvas = new Canvas({ matrix: child.getWorldMatrix() } as CanvasOptions);
+			child.uCanvas = this.uCanvas;
+			child.paint(childCanvas, offsetSelf);
+			canvas.addCanvas(childCanvas, null);
+		});
+	}
+
+	public override hitTest(point : Point) : Graphic | undefined | null {
+		if (this.children.length === 0) return null;
+		for (let i = this.children.length - 1; i >= 0; i--) {
+			const child = this.children[i];
+			const hitTarget = child.hitTest(point);
+			if (hitTarget != null) return hitTarget;
+		}
+		return null;
+	}
+
+	/**
+	 * 添加子图形
+	 * @param child 图形
+	 */
+	public addChild(child : Graphic) : void {
+		child.parent = (this as Graphic);
+		this.children.push(child);
+	}
+
+	/**
+	 * 移除子图形
+	 * @param child 图形
+	 */
+	public removeChild(child : Graphic) : void {
+		const index = this.children.indexOf(child);
+		if (index !== -1) {
+			child.parent = null;
+			this.children.splice(index, 1);
+		}
+	}
+
+	/**
+	 * 清空子图形
+	 */
+	public clearChildren() : void {
+		this.children.forEach((child) => {
+			child.parent = null;
+		});
+		this.children.length = 0;
+	}
+}

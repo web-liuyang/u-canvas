@@ -2,7 +2,6 @@
 	// #ifdef WEB
 	import { PointerwheelEvent } from "../u-pointer/pointer-events.uts";
 	// #endif
-
 	import {
 		PointerclickEvent,
 		PointerdownEvent,
@@ -37,7 +36,7 @@
 		globalPointer.notify("onpointerclick", e);
 	}
 
-	// #ifndef APP-ANDROID
+	// #ifdef WEB
 	function pointerwheel(e : PointerwheelEvent) {
 		globalPointer.notify("onpointerwheel", e);
 	}

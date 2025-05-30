@@ -1,0 +1,188 @@
+/**
+ * 只能单独把类型写在这个文件, 本来是跟随相应的类一起存放,
+ * 但是 MP 端报错继承问题, 所以就只能这样咯
+ */
+import { Point } from "../../coords";
+import { Graphic } from "./graphic";
+import { Style } from "../styles";
+
+export type GraphicId = string;
+
+export type GraphicOptions = {
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type CircleOptions = {
+	/**
+	 * 圆心 x 坐标
+	 */
+	cx : number,
+	/**
+	 * 圆心 y 坐标
+	 */
+	cy : number,
+	/**
+	 * 半径
+	 */
+	radius : number,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type CompositionOptions = {
+	/**
+	 * 基点 x 坐标
+	 */
+	x : number,
+	/**
+	 * 基点 y 坐标
+	 */
+	y : number,
+	/**
+	 * 子图形列表
+	 */
+	children ?: Graphic[] | null,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+
+
+export type ImagePixelOptions = {
+	imageData : ImageData,
+	x : number,
+	y : number,
+	dx ?: number | null,
+	dy ?: number | null,
+	dw ?: number | null,
+	dh ?: number | null,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PictureOptions = {
+	image : Image,
+	x : number,
+	y : number,
+	w ?: number | null,
+	h ?: number | null,
+	dx ?: number | null,
+	dy ?: number | null,
+	dw ?: number | null,
+	dh ?: number | null,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PictureSimpleOptions = {
+	image : Image,
+	x : number,
+	y : number,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PictureSizeOptions = {
+	image : Image,
+	x : number,
+	y : number,
+	w : number,
+	h : number,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PictureShearOptions = {
+	image : Image,
+	x : number,
+	y : number,
+	w : number,
+	h : number,
+	dx : number,
+	dy : number,
+	dw : number,
+	dh : number,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PieOptions = {
+	cx : number,
+	cy : number,
+	radius : number,
+	startAngle : number,
+	endAngle : number,
+	counterclockwise ?: boolean | null,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PolygonOptions = {
+	points : Point[],
+	close ?: boolean | null,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type PolylineOptions = {
+	points : Point[],
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type RectangleOptions = {
+	x : number,
+	y : number,
+	w : number,
+	h : number,
+	radii ?: number,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type RectangleCenterOptions = {
+	cx : number,
+	cy : number,
+	w : number,
+	h : number,
+	radii ?: number,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+export type RingOptions = {
+	cx : number,
+	cy : number,
+	innerRadius : number,
+	outerRadius : number,
+	startAngle : number,
+	endAngle : number,
+	counterclockwise ?: boolean | null,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}
+
+
+export type TextOptions = {
+	x : number,
+	y : number,
+	text : string,
+	id ?: GraphicId | null,
+	style ?: Style | null,
+	parent ?: Graphic | null,
+}

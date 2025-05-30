@@ -148,14 +148,12 @@
 	}
 
 	// #ifdef WEB
-
 	function onpointerwheel(pointers : Pointer[], e : WheelEvent) {
 		for (const pointer of pointers) {
 			const pointerwheel = new PointerwheelEvent(pointer, e);
 			emit("onpointerwheel", pointerwheel);
 		}
 	}
-
 	// #endif
 
 

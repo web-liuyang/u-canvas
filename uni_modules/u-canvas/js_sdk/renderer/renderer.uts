@@ -1,0 +1,298 @@
+import { UCanvas } from "../u-canvas";
+import { Point, Offset } from "../coords";
+import { Canvas, CanvasOptions } from "./canvas";
+import {
+	Entity,
+	AllEntity,
+	ArcEntity,
+	CanvasEntity,
+	PictureEntity,
+	ImagePixelEntity,
+	MatrixEntity,
+	PathEntity,
+	PolygonEntity,
+	PolylineEntity,
+	RectEntity,
+	TextEntity,
+	EntityType,
+	EntityFactory,
+} from "./entity";
+import { Style, extractStyle, applyStyle, scaleImageData } from "../graphics";
+import { AllRecord, Record, MoveToRecord, RecordType, LineToRecord, ArcRecord, ArcToRecord, RectRecord } from "./recored";
+
+export class Renderer {
+	constructor(public canvas : UCanvas) { }
+
+	/**
+	 * 获取上下文
+	 */
+	public getContext() : CanvasRenderingContext2D {
+		return this.canvas.ctx;
+	}
+
+	/**
+	 * 渲染 根结点
+	 */
+	public renderRoot() : void {
+		const offset = new Offset(0, 0);
+		const canvas = new Canvas({
+			matrix: this.canvas.root.getWorldMatrix(),
+		} as CanvasOptions);
+
+		this.canvas.root.uCanvas = this.canvas;
+		this.canvas.root.paint(canvas, offset);
+		const entity = EntityFactory.createCanvasEntity(canvas, null);
+		this.renderCanvas(entity);
+	}
+
+	/**
+	 * 渲染 Canvas
+	 */
+	public renderCanvas(entity : CanvasEntity) : void {
+		let matrix = entity.canvas.matrix;
+		const entities : Array<AllEntity> = entity.canvas.entities;
+		const ctx = this.getContext();
+		const handleEntity = (entity : AllEntity, _index : number, _array : Array<AllEntity>) : void => {
+			ctx.save();
+			ctx.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f);
+			const oldStyle = extractStyle(ctx, this.canvas.style);
+			ctx.beginPath();
+			entity as Entity;
+			switch (entity.type) {
+				case EntityType.arc:
+					this.renderArc(entity as ArcEntity);
+					break;
+				case EntityType.canvas:
+					this.renderCanvas(entity as CanvasEntity);
+					break;
+				case EntityType.image:
+					this.renderPicture(entity as PictureEntity);
+					break;
+				case EntityType.imagePixel:
+					this.renderImagePixel(entity as ImagePixelEntity);
+					break;
+				case EntityType.matrix:
+					matrix = (entity as MatrixEntity).matrix;
+					break;
+				case EntityType.polygon:
+					this.renderPolygon(entity as PolygonEntity);
+					break;
+				case EntityType.polyline:
+					this.renderPolyline(entity as PolylineEntity);
+					break;
+				case EntityType.rect:
+					this.renderRect(entity as RectEntity);
+					break;
+				case EntityType.text:
+					this.renderText(entity as TextEntity);
+					break;
+				case EntityType.path:
+					this.renderPath(entity as PathEntity);
+					break;
+			}
+			applyStyle(ctx, oldStyle);
+			ctx.restore();
+		}
+		entities.forEach(handleEntity);
+	}
+
+
+	/**
+	 * 渲染 Rectangle
+	 */
+	public renderRect(entity : RectEntity) : void {
+		const ctx = this.getContext();
+		const { x, y, w, h, radii, style } = entity;
+		this.drawRoundedRectPath(new SimpleRect(x, y, w, h, radii));
+		colorize(ctx, style);
+	}
+
+	/**
+	 * 渲染 Text
+	 */
+	public renderText(entity : TextEntity) : void {
+		const ctx = this.getContext();
+		const { x, y, text, style } = entity;
+
+		applyStyle(ctx, style);
+
+		if (style?.fill != null && style?.stroke != null) {
+			ctx.fillText(text, x, y);
+			ctx.strokeText(text, x, y);
+		} else if (style?.stroke != null) {
+			ctx.strokeText(text, x, y);
+		} else {
+			ctx.fillText(text, x, y);
+		}
+	}
+
+	/**
+	 * 渲染 Picture
+	 */
+	public renderPicture(entity : PictureEntity) : void {
+		const ctx = this.getContext();
+		const { image, x, y, w, h, dx, dy, dw, dh, style } = entity;
+		applyStyle(ctx, style);
+
+		if (dx != null && dy != null && dw != null && dh != null && w != null && h != null) {
+			ctx.drawImage(image, dx, dy, dw, dh, x, y, w, h);
+		} else if (w != null && h != null) {
+			ctx.drawImage(image, x, y, w, h);
+		} else {
+			ctx.drawImage(image, x, y);
+		}
+	}
+
+	public renderImagePixel(entity : ImagePixelEntity) : void {
+		const ctx = this.getContext();
+		// 应该会有一个参数给用户选择 用方法一还是二进行渲染
+		// 方法一：保证绘制的图片数据跟随 Matrix 不会模糊，但如果不是整数倍的缩放就会有一些像素失真。
+		const matrix = this.canvas.matrix;
+		const xs = matrix.a;
+		const ys = matrix.d;
+		const { x, y } = matrix.apply(new Point(entity.x, entity.y));
+
+		// TODO 这段在 Android/iOS 与 MP真机调试运行会出现卡顿, mp预览不会卡顿
+		const uImageData = scaleImageData(entity.imageData, xs, ys);
+		const newImageData = this.canvas.createCompatibleImageData(uImageData.data, uImageData.width, uImageData.height);
+
+		const dx = (entity.dx ?? 0) * xs;
+		const dy = (entity.dy ?? 0) * ys;
+		const dw = (entity.dw ?? entity.imageData.width) * xs;
+		const dh = (entity.dh ?? entity.imageData.height) * ys;
+
+		ctx.putImageData(newImageData, x, y, dx, dy, dw, dh);
+
+		// 方法二：保证绘制的图片数据跟随 Matrix 会模糊，但不会像素失真。
+		// createImageBitmap(imageData).then(res => {
+		// 	ctx.drawImage(res, x, y);
+		// });
+	}
+
+	public renderArc(entity : ArcEntity) : void {
+		const ctx = this.getContext();
+		const { cx, cy, radius, startAngle, endAngle, counterclockwise, style } = entity;
+
+		ctx.arc(cx, cy, radius, startAngle, endAngle, counterclockwise);
+		colorize(ctx, style);
+	}
+
+	public renderPolyline(entity : PolylineEntity) : void {
+		const ctx = this.getContext();
+		const { points, style } = entity;
+		const [first, ...remaining] = points;
+		ctx.moveTo(first.x, first.y);
+
+		for (const { x, y } of remaining) {
+			ctx.lineTo(x, y);
+		}
+
+		colorize(ctx, style);
+	}
+
+	public renderPolygon(entity : PolygonEntity) : void {
+		const ctx = this.getContext();
+		const { points, style } = entity;
+		const [first, ...remaining] = points;
+		ctx.moveTo(first.x, first.y);
+
+		for (const { x, y } of remaining) {
+			ctx.lineTo(x, y);
+		}
+
+		colorize(ctx, style);
+	}
+
+	public renderPath(entity : PathEntity) : void {
+		const ctx = this.getContext();
+		const { path, style } = entity;
+
+		const handleRecord = (record : AllRecord, _index : number, _array : Array<AllRecord>) : void => {
+			record as Record;
+			switch (record.type) {
+				case RecordType.moveTo: {
+					const r = record as MoveToRecord;
+					ctx.moveTo(r.x, r.y);
+					break;
+				}
+				case RecordType.lineTo: {
+					const r = record as LineToRecord;
+					ctx.lineTo(r.x, r.y);
+					break;
+				}
+				case RecordType.rect:
+					const r = record as RectRecord;
+					this.drawRoundedRectPath(new SimpleRect(r.x, r.y, r.w, r.h, r.radii));
+					break;
+				case RecordType.arc: {
+					const r = record as ArcRecord;
+					ctx.arc(r.cx, r.cy, r.radius, r.startAngle, r.endAngle, r.counterclockwise);
+					break;
+				}
+				case RecordType.closePath: {
+					ctx.closePath();
+					break;
+				}
+				case RecordType.arcTo: {
+					const r = record as ArcToRecord;
+					ctx.arcTo(r.x1, r.y1, r.x2, r.y2, r.radius);
+					break;
+				}
+			}
+		}
+
+		path.records.forEach(handleRecord);
+
+		colorize(ctx, style);
+	}
+
+	private drawRoundedRectPath(rect : SimpleRect) {
+		const ctx = this.getContext();
+		const { x, y, w, h, radii } = rect;
+		const points : Point[] = [new Point(x, y), new Point(x + w, y), new Point(x + w, y + h), new Point(x, y + h)];
+
+		ctx.moveTo(points[0].x, points[0].y + radii);
+		ctx.quadraticCurveTo(points[0].x, points[0].y, points[0].x + radii, points[0].y);
+
+		ctx.lineTo(points[1].x - radii, points[1].y);
+		ctx.quadraticCurveTo(points[1].x, points[1].y, points[1].x, points[1].y + radii);
+
+		ctx.lineTo(points[2].x, points[2].y - radii);
+		ctx.quadraticCurveTo(points[2].x, points[2].y, points[2].x - radii, points[2].y);
+
+		ctx.lineTo(points[3].x + radii, points[3].y);
+		ctx.quadraticCurveTo(points[3].x, points[3].y, points[3].x, points[3].y - radii);
+
+		ctx.closePath();
+	}
+
+}
+
+
+/**
+ * 路径上色
+ * @param style 样式，默认以 stroke 方式上色
+ * @param ctx canvas 上下文
+ */
+export function colorize(ctx : CanvasRenderingContext2D, style ?: Style | null) {
+	applyStyle(ctx, style);
+
+	if (style?.fill != null && style?.stroke != null) {
+		ctx.fill();
+		ctx.stroke();
+	} else if (style?.fill != null) {
+		ctx.fill();
+	} else {
+		ctx.stroke();
+	}
+}
+
+class SimpleRect {
+	constructor(
+		public readonly x : number,
+		public readonly y : number,
+		public readonly w : number,
+		public readonly h : number,
+		public readonly radii : number,
+	) { }
+}

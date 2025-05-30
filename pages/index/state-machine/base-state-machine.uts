@@ -1,0 +1,29 @@
+// #ifdef WEB
+import { PointerwheelEvent } from "@/uni_modules/u-pointer";
+// #endif
+import {
+	PointerclickEvent,
+	PointerdownEvent,
+	PointermoveEvent,
+	PointerupEvent,
+	PointercancelEvent,
+} from "@/uni_modules/u-pointer";
+import { UCanvas } from "@/uni_modules/u-canvas";
+
+export abstract class BaseStateMachine {
+	constructor(protected canvas : UCanvas) { }
+
+	public onpointerclick(e : PointerclickEvent) : void { }
+
+	public onpointerdown(e : PointerdownEvent) : void { }
+
+	public onpointermove(e : PointermoveEvent) : void { }
+
+	public onpointerup(e : PointerupEvent) : void { }
+
+	public onpointercancel(e : PointercancelEvent) : void { }
+	
+	// #ifdef WEB
+	public onpointerwheel(e : PointerwheelEvent) : void { }
+	// #endif
+}

@@ -1,0 +1,22 @@
+import { Point } from "./point";
+import { PointBase } from "./point-base";
+import { OffsetBase } from "./offset-base";
+
+export class Line {
+	constructor(
+		public start: Point,
+		public end: Point
+	) {}
+
+	public offseted(offset: OffsetBase): Line {
+		return new Line(this.start.offseted(offset), this.end.offseted(offset));
+	}
+
+	public grew(point: PointBase): Line {
+		return new Line(this.start.added(point), this.end.added(point));
+	}
+
+	public subtracted(point: PointBase): Line {
+		return new Line(this.start.subtracted(point), this.end.subtracted(point));
+	}
+}

@@ -1,0 +1,79 @@
+import { AllRecord, RecordFactory } from "./recored";
+
+export class Path {
+	/**
+	 * 落笔记录列表
+	 */
+	public readonly records: Array<AllRecord> = [];
+
+	/**
+	 *
+	 * @param cx 中心点 x 坐标
+	 * @param cy 中心点 y 坐标
+	 * @param radius 内半径
+	 * @param startAngle  起始角度
+	 * @param endAngle 结束角度
+	 * @param counterclockwise 绘制方向, true 逆时针, false 顺时针.
+	 */
+	public arc(
+		cx: number,
+		cy: number,
+		radius: number,
+		startAngle: number,
+		endAngle: number,
+		counterclockwise: boolean
+	): void {
+		this.records.push(RecordFactory.createArcRecord(cx, cy, radius, startAngle, endAngle, counterclockwise));
+	}
+
+	/**
+	 * 移动落笔点
+	 * @param x x 坐标
+	 * @param y y 坐标
+	 */
+	public moveTo(x: number, y: number): void {
+		this.records.push(RecordFactory.createMoveToRecord(x, y));
+	}
+
+	/**
+	 * 绘制一条线到坐标点
+	 * @param x x 坐标
+	 * @param y y 坐标
+	 */
+	public lineTo(x: number, y: number): void {
+		this.records.push(RecordFactory.createLineToRecord(x, y));
+	}
+
+	/**
+	 * 绘制矩形
+	 * @param x x 坐标
+	 * @param y y 坐标
+	 * @param w 宽度
+	 * @param h 高度
+	 * @param radii 圆角
+	 */
+	public rect(x: number, y: number, w: number, h: number, radii: number): void {
+		this.records.push(RecordFactory.createRectRecord(x, y, w, h, radii));
+	}
+
+	/**
+	 * 根据控制点和半径绘制圆弧路径，使用当前的描点 (前一个 moveTo 或 lineTo 等函数的止点)。
+	 *
+	 * 根据当前描点与给定的控制点 1 连接的直线，和控制点 1 与控制点 2 连接的直线，作为使用指定半径的圆的切线，画出两条切线之间的弧线路径
+	 * @param x1 x 坐标控制点1
+	 * @param y1 y 坐标控制点1
+	 * @param x2 x 坐标控制点2
+	 * @param y2 y 坐标控制点2
+	 * @param radius 半径
+	 */
+	public arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
+		this.records.push(RecordFactory.createArcToRecord(x1, y1, x2, y2, radius));
+	}
+
+	/**
+	 * 关闭路径
+	 */
+	public closePath(): void {
+		this.records.push(RecordFactory.createClosePathRecord());
+	}
+}

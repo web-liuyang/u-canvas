@@ -1,5 +1,8 @@
-export * from "./u-canvas";
-export * from "./graphics";
+import { Point, Graphic, Aabb, Canvas, Offset } from "..";
+
 export * from "./coords";
-export * from "./types";
+export * from "./graphics";
+export * from "./renderer";
 export * from "./transform";
+export * from "./types";
+export * from "./u-canvas";
